@@ -24,7 +24,7 @@ class DogovorController extends Controller
     {
         $avg = Dogovor::avg('allstoimost');
 
-        return view ('dogovor/dogovor', [
+        return view('dogovor/dogovor', [
             'data' => Dogovor::orderByDesc('created_at')->get()
         ], [
             'avg' => $avg,
@@ -36,10 +36,10 @@ class DogovorController extends Controller
 
     public function showdogovorById($id)
     {
-        return view ('dogovor/showdogovorById', [
+        return view('dogovor/showdogovorById', [
             'data' => Dogovor::with('userFunc', 'clientFunc')->find($id)
         ], [
-            'datalawyers' =>  User::all(),
+            'datalawyers' => User::all(),
         ]);
     }
 

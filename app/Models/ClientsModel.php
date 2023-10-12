@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Http\Requests\ClientsRequest;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -12,13 +13,18 @@ use Illuminate\Http\Request;
  * @property string $name
  * @property string $phone
  * @property string $source
+ * @property string $description
  * @property int $created_at
  * @property int $updated_at
  * @property boolean $status
  * @property int $lawyer
  * @property string $email
  * @property string $address
+ * @property string $rating
+ * @property string $change_status_at Дата переключения статуса в неактивное зн-ие
  * @property int $tgid
+ *
+ * @property User $userFunc
  */
 class ClientsModel extends Model
 {
@@ -40,6 +46,7 @@ class ClientsModel extends Model
         if (!is_null($request->input('email'))) { $client->email = $request->input('email'); }
         if (!is_null($request->input('address'))) { $client->address = $request->input('address'); }
         $client->tgid = rand(0, 1000000);
+        if (!$request->input('status')) $client->change_status_at = Carbon::now()->toDateTimeString();
 
         return $client;
     }
@@ -56,6 +63,7 @@ class ClientsModel extends Model
         if ($request->input('status') == 'выполнена') {
             $this->status = static::STATUS_INACTIVE;
         }
+        if (!$request->input('status')) $this->change_status_at = Carbon::now()->toDateTimeString();
     }
 
     /**
@@ -103,6 +111,11 @@ class ClientsModel extends Model
     public function tasksFunc()
     {
         return $this->hasMany(Tasks::class, 'clientid' , 'id');
+    }
+
+    public function task()
+    {
+        return $this->hasOne(Tasks::class, 'clientid', 'id');
     }
 
     /**

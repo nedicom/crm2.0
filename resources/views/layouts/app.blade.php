@@ -29,6 +29,7 @@
             @if (request()->is('clients/*'))
                 @include('inc./modal/editclient')
             @endif
+
             @if (request()->is('services'))
                 @include('inc./modal/addservice')
             @endif
@@ -45,9 +46,9 @@
                 @include('inc./modal/addmeeting')
             @endif
 
-             @if (request()->is('meetings/*'))
+            @if (request()->is('meetings/*'))
                 @include('inc./modal/editmeeting')
-             @endif
+            @endif
 
             @if (request()->is('tasks/*'))
                 @include('inc./modal/edittask')

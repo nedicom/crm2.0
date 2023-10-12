@@ -28,9 +28,7 @@ class SendToTelegram
         $task = $event->task;
 
         $owner = User::find($task->postanovshik);
-
         $contractor = User::find($task->lawyer);
-
         $contractor2 = User::find($task->soispolintel);
 
         $message = view('telegram.task.created', [
@@ -48,7 +46,6 @@ class SendToTelegram
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
-
         }
 
         if ($contractor2?->tg_id) {

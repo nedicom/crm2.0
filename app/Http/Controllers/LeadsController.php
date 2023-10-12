@@ -43,7 +43,6 @@ class LeadsController extends Controller
         if (!empty($req->checkedresponsible)){$responsible='responsible';}
 
         return view ('leads/leads', ['data' => Leads::where($lawyer, $req->checkedlawyer)
-            //->where($status, $req->checkedstatus)
             ->when($status, function ($query, $status) {
                 $query->where('status', $status);
             })
@@ -51,21 +50,27 @@ class LeadsController extends Controller
             ->where($source, $req->checkedsources)
             ->where($responsible, $req->checkedresponsible)
             ->orderBy('created_at', 'desc')
-            ->get()], ['datalawyers' =>  User::all(),
-                'dataservices' =>  Services::all(), 'datasources' =>  Source::all('name'),
-                'datasource' => Source::all(),
-                'datalawyers' => User::all()]
+            ->get()], [
+                'datalawyers'  => User::active()->get(),
+                'dataservices' => Services::all(), 'datasources' =>  Source::all('name'),
+                'datasource'   => Source::all(),
+            ]
         );
     }
 
     public function showLeadById($id)
     {
         return view ('leads/showLeadById', ['data' => Leads::with('userFunc',
-            'responsibleFunc' , 'servicesFunc')->find($id)], ['datalawyers' =>  User::all(),
-            'dataservices' =>  Services::all(), 'datasource' => Source::all()]);
+            'responsibleFunc' , 'servicesFunc')->find($id)], [
+                'datalawyers' => User::active()->get(),
+                'dataservices' => Services::all(),
+                'datasource' => Source::all()
+            ]
+        );
     }
 
-    public function LeadUpdateSubmit($id, LeadsRequest $req){
+    public function LeadUpdateSubmit($id, LeadsRequest $req)
+    {
         $lead = Leads::find($id);
         $lead -> name = $req -> input('name');
         $lead -> source = $req -> input('source');
@@ -74,14 +79,14 @@ class LeadsController extends Controller
         $lead -> lawyer = $req -> input('lawyer');
         $lead -> responsible = $req -> input('responsible');
         $lead -> service = $req -> input('service');
-
         $lead -> save();
 
         return redirect() -> route('showLeadById', $id) -> with('success', 'Все в порядке, лид обновлен');
     }
 
 
-    public function leadToWork($id, Request $req){
+    public function leadToWork($id, Request $req)
+    {
         $lead = Leads::find($id);
         $lead -> status = 'в работе';
         $lead -> action = $req -> input('action');

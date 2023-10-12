@@ -13,7 +13,6 @@ use App\Http\Controllers\DogovorController;
 use App\Http\Controllers\GetclientAJAXController;
 use App\Http\Controllers\TaskAJAXController;
 use App\Http\Controllers\BotController;
-use App\Http\Controllers\CalendarController;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 
@@ -33,12 +32,11 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
 Route::get('/contacts', function () {return view('contacts');})->middleware('auth');
 
-// CalDav for yandex and other
-Route::controller(CalendarController::class)->group(function () {
-    Route::get('/calendar/{lawyerid}', 'calendar')->name('calendar');
-});
+// iCalendar
+Route::get('/calendar/create', [\App\Http\Controllers\iCalendar\ManageController::class, 'create'])->name('calendar.create');
+Route::get('/calendar/{userID}/calendar.ics', [\App\Http\Controllers\iCalendar\ManageController::class, 'browse'])->name('calendar.browse');
 
-Route::middleware(['verified'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
     });
@@ -89,8 +87,11 @@ Route::middleware(['verified'])->group(function () {
     Route::post('/deal/{id}/update', [DealController::class, 'update'])->name('deal.update');
     Route::post('/deal/{id}/delete', [DealController::class, 'delete'])->name('deal.delete');
 
-    Route::get('/services', [ServicesController::class, 'showservices'])->name('showservices')->middleware('auth');
-    Route::post('/services/add', [ServicesController::class, 'addservice'])->name('addservice')->middleware('auth');
+    Route::resource('services', ServicesController::class)->except('show', 'edit')->middleware(['auth', 'can:manage-services']);
+    Route::post('/services/edit/{service}', [ServicesController::class, 'ajaxEdit'])->name('services.edit')->middleware(['auth', 'can:manage-services']);
+    Route::get('/services/ajax/list', [ServicesController::class, 'ajaxList'])->name('services.list.ajax')->middleware('auth');
+    Route::post('/services/ajax/element', [ServicesController::class, 'ajaxElement'])->name('services.element.ajax')->middleware('auth');
+    Route::get('/services/ajax/search', [ServicesController::class, 'ajaxSearch'])->name('services.search.ajax')->middleware('auth');
 
     Route::controller(PaymentsController::class)->group(function () {
         Route::get('/payments', 'showpayments')->name('payments');

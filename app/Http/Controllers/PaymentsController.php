@@ -123,7 +123,13 @@ class PaymentsController extends Controller
                 ->where($calculation, $req->calculation)
                 ->whereMonth('created_at', $month)
                 ->whereYear('created_at', $year)
-                ->get()], ['months' => $months, 'month' => $month, 'datalawyers' =>  User::all(), 'dataservices' =>  Services::all(), 'dataclients' =>  ClientsModel::all()]);
+                ->get()], [
+                    'months' => $months,
+                    'month' => $month,
+                    'datalawyers' => User::active()->get(),
+                    'dataservices' => Services::all(),
+                    'dataclients' => ClientsModel::all(),
+                ]);
         } else { //для не авторизированных
             if (!empty($req->nameOfAttractioner)){$nameOfAttractioner='nameOfAttractioner';}
             if (!empty($req->nameOfSeller)){$nameOfSeller='nameOfSeller';}
@@ -145,7 +151,13 @@ class PaymentsController extends Controller
                 ->where($calculation, $req->calculation)
                 ->whereMonth('created_at', $month)
                 ->whereYear('created_at', $year)
-                ->get()], ['months' => $months, 'month' => $month, 'datalawyers' =>  User::all(), 'dataservices' =>  Services::all(), 'dataclients' =>  ClientsModel::all()]);
+                ->get()], [
+                    'months' => $months,
+                    'month' => $month,
+                    'datalawyers' => User::active()->get(),
+                    'dataservices' => Services::all(),
+                    'dataclients' => ClientsModel::all(),
+                ]);
         }
     }
 
@@ -166,9 +178,9 @@ class PaymentsController extends Controller
             'data' => Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc')->find($id)
         ],[
             'creator' => $creator,
-            'datalawyers' => User::all(),
-            'dataservices' =>  Services::all(),
-            'dataclients' =>  ClientsModel::all()
+            'datalawyers' => User::active()->get(),
+            'dataservices' => Services::all(),
+            'dataclients' => ClientsModel::all()
         ]);
     }
 

@@ -31,7 +31,7 @@
             </div>
 
             <table class="mt-2 text-center w-100">
-              <thead class="">              
+              <thead class="">
                 <th>Привлечение</th>
                 <th>Продажа</th>
                 <th>Развитие</th>
@@ -47,8 +47,8 @@
                 </tr>
               </tbody>
             </table>
-          </div>          
-        </div> 
+          </div>
+        </div>
       </div>
 
       <div class="col-4">
@@ -60,7 +60,7 @@
             </div>
 
             <table class="mt-2 text-center w-100">
-              <thead class="">              
+              <thead class="">
                 <th>Привлечение</th>
                 <th>Продажа</th>
                 <th>Развитие</th>
@@ -77,8 +77,8 @@
                 </tr>
               </tbody>
             </table>
-          </div>          
-        </div> 
+          </div>
+        </div>
       </div>
 
 
@@ -91,7 +91,7 @@
             </div>
 
             <table class="mt-2 text-center w-100">
-              <thead class="">              
+              <thead class="">
                 <th>Привлечение</th>
                 <th>Продажа</th>
                 <th>Развитие</th>
@@ -107,8 +107,8 @@
                 </tr>
               </tbody>
             </table>
-          </div>          
-        </div> 
+          </div>
+        </div>
       </div>
 
 
@@ -121,30 +121,30 @@
                 <thead class="fw-bold text-center">
                   <form action="{{route('payments')}}" method="get">
                   @csrf
-                
-                  
+
+
                   <div class="d-flex">
 
                   <div class="d-flex">
                     <div class="px-3">
-                        <select class="form-select form-select-sm" name="year">                       
+                        <select class="form-select form-select-sm" name="year">
                           <option value="2022">2022</option>
-                          <option value="2023" selected>2023</option>                        
+                          <option value="2023" selected>2023</option>
                         </select>
                     </div>
 
-                    <div class="px-3">                   
-                        <select class="form-select form-select-sm" name="month">                        
-                          @foreach($months as $number => $name)                          
+                    <div class="px-3">
+                        <select class="form-select form-select-sm" name="month">
+                          @foreach($months as $number => $name)
                             <option value="{{$number}}" @if ($number == (request()->get('month'))) selected @endif
                             @if ( request()->get('month') == '' && $number == $month ) selected @endif
                              >{{$name}}
                             </option>
-                          @endforeach                        
-                        </select>                    
+                          @endforeach
+                        </select>
                     </div>
 
-                    <div class="px-3">   
+                    <div class="px-3">
                         <select class="form-select form-select-sm" name="calculation">
                         <option value="">куда поступили</option>
                           <option value="РНКБ" @if ("РНКБ" == (request()->get('calculation'))) selected @endif>РНКБ</option>
@@ -154,7 +154,7 @@
                         </select>
                     </div>
 
-                    <div class="px-3">   
+                    <div class="px-3">
                         <select class="form-select form-select-sm" name="nameOfAttractioner">
                         <option value="">привлек</option>
                           @foreach($datalawyers as $el)
@@ -163,32 +163,32 @@
                         </select>
                     </div>
 
-                    <div class="px-3">                          
+                    <div class="px-3">
                         <select class="form-select form-select-sm" name="nameOfSeller">
                         <option value="">продал</option>
                           @foreach($datalawyers as $el)
                           <option value="{{$el -> id}}" @if ($el -> id == (request()->get('nameOfSeller'))) selected @endif>{{$el -> name}}</option>
                           @endforeach
                         </select>
-                    </div>   
-                    
-                    <div class="px-3">                      
+                    </div>
+
+                    <div class="px-3">
                         <select class="form-select form-select-sm" name="directionDevelopment" id="directionDevelopment">
                           <option value="">направление</option>
                           @foreach($datalawyers as $el)
                           <option value="{{$el -> id}}" @if ($el -> id == (request()->get('directionDevelopment'))) selected @endif>{{$el -> name}}</option>
                           @endforeach
-                        </select>   
+                        </select>
                     </div>
 
-                  <div class="d-flex px-3">                   
+                  <div class="d-flex px-3">
                         <button type="submit" class="mx-1 btn btn-primary  btn-sm">Применить</button></form>
                         <a class="mx-1 btn btn-secondary btn-sm" href="payments" role="button">сбросить</a>
                   </div>
 
                   </div>
 
-                
+
                 <tr>
                     <th style="width: 2%">№</th>
                     <th scope="col">дата</th>
@@ -198,7 +198,7 @@
                     <th scope="col">Оплачено</th>
                     <th scope="col">Куда поступили</th>
                     <th scope="col">
-                      
+
                     </th>
                     <th scope="col">Оплата + повышение</th>
                     <th scope="col">
@@ -209,28 +209,30 @@
                     <th scope="col">Оплата</th>
                     @if (auth()->user()->role == 'admin')
                       <th scope="col">Доход компании</th>
-                    @endif                    
+                    @endif
                     <th style="width: 4%"></th>
                 </tr>
                 </thead>
 
                 <tbody class="fw-light text-center">
-                  @php 
+                  @php
                     $total = 0; $totalattr = 0; $totalattrup = 0; $totalsell = 0; $totalsellup = 0; $totaldirect = 0; $totalfirmearning=0;
-                    $number = 1;                    
+                    $number = 1;
                   @endphp
 
-                  @foreach($data as $el)
+                  @foreach ($data as $el)
                       <tr>
                           <td>{{$number}}</td>
                           <td>{{$el -> created_at->format('j / m')}}</td>
                           <td class = "text-truncate" data-bs-toggle="tooltip" data-bs-title="{{$el -> client}}">
                             <a href = "clients/{{$el -> clientid}}" target="_blank">{{$el -> client}} </a>
                           </td>
-                          <td class = "text-truncate" data-bs-toggle="tooltip" data-bs-title="{{$el -> serviceFunc -> name}}">
-                           {{$el -> serviceFunc -> name}}
-                          </td>
-                          <td class="text-center">{{$el -> serviceFunc -> price}}</td>                          
+                          @if (!empty($el->serviceFunc->name))
+                              <td class="text-truncate" data-bs-toggle="tooltip" data-bs-title="{{ $el->serviceFunc->name }}">
+                                {{ $el->serviceFunc->name }}
+                              </td>
+                          @endif
+                          <td class="text-center">{{$el -> serviceFunc -> price}}</td>
                           <td class="fw-bold text-center">{{$el -> summ}}</td>
                           <td>
                           <span class="badge py-1 px-1
@@ -243,14 +245,14 @@
                           ">{{$el -> calculation}}</span></td>
                           <td>{{$el -> AttractionerFunc -> name}}</td>
                           <td class="fw-bold text-center">{{$el -> AttaractionerSalary}} + {{$el -> modifyAttraction}}</td>
-                          
+
                           <td>{{$el -> sellerFunc -> name}}</td>
                           <td class="fw-bold text-center">{{$el -> SallerSalary}} + {{$el -> modifySeller}}</td>
                           <td>{{$el -> developmentFunc -> name}}</td>
-                          <td class="fw-bold text-center">{{$el -> DeveloperSalary}}</td>                          
+                          <td class="fw-bold text-center">{{$el -> DeveloperSalary}}</td>
                           @if (auth()->user()->role == 'admin')
                             <th scope="col">{{$el -> firmearning}}</th>
-                          @endif   
+                          @endif
                           <td>
                             <a class="btn btn-light w-100" href="{{ route ('showPaymentById', $el->id) }}">
                               <i class="bi-three-dots"></i></a>
@@ -259,10 +261,10 @@
 
                       @php
                         $number++;
-                        $total = $total + ($el -> summ); 
-                        $totalattr= $totalattr + ($el -> AttaractionerSalary); $totalattrup = $totalattrup + ($el -> modifyAttraction); 
+                        $total = $total + ($el -> summ);
+                        $totalattr= $totalattr + ($el -> AttaractionerSalary); $totalattrup = $totalattrup + ($el -> modifyAttraction);
                         $totalsell = $totalsell + ($el -> SallerSalary); $totalsellup = $totalsellup + ($el -> modifySeller);
-                        $totaldirect = $totaldirect + ($el -> DeveloperSalary); $totalfirmearning = $totalfirmearning + ($el -> firmearning);   
+                        $totaldirect = $totaldirect + ($el -> DeveloperSalary); $totalfirmearning = $totalfirmearning + ($el -> firmearning);
                       @endphp
                   @endforeach
                   <tfoot class="border-top">
@@ -302,7 +304,7 @@
                       <td class="fw-bold text-center">развитие:</br></br>{{$totaldirect}}</td>
                                       @if (auth()->user()->role == 'admin')
                                       <td class="fw-bold text-center">{{$totalfirmearning}}</td>
-                                      @endif    
+                                      @endif
                       <td></td>
                     </tr>
                   </tfoot>

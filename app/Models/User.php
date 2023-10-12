@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\ClientsModel;
+use App\Scopes\UserActiveScope;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Hash;
@@ -34,6 +35,7 @@ class User extends Authenticatable //implements MustVerifyEmail
 
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
+    public const STATUS_INACTIVE = 'inactive';
 
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
@@ -52,6 +54,21 @@ class User extends Authenticatable //implements MustVerifyEmail
     ];
 
     /**
+     * The "booting" method of the model.
+     * @return void
+     */
+    /*protected static function boot()
+    {
+        parent::boot();
+        static::addGlobalScope(new UserActiveScope());
+    }*/
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', self::STATUS_ACTIVE);
+    }
+
+    /**
      * Массив именования ролей
      * @return string[]
      */
@@ -68,6 +85,7 @@ class User extends Authenticatable //implements MustVerifyEmail
     {
         return [
             self::STATUS_ACTIVE => 'Активный',
+            self::STATUS_INACTIVE => 'Неактивен',
             self::STATUS_WAIT => 'Ожидает',
         ];
     }
@@ -119,9 +137,10 @@ class User extends Authenticatable //implements MustVerifyEmail
      * @param string $email
      * @param string $password
      * @param string $role
+     * @param int $status
      * @return static
      */
-    public static function new(string $name, string $email, string $password, string $role): self
+    public static function new(string $name, string $email, string $password, string $role, int $status): self
     {
         return static::create([
             'name' => $name,
@@ -129,8 +148,26 @@ class User extends Authenticatable //implements MustVerifyEmail
             'password' => Hash::make($password),
             'avatar' => static::generateRandomAvatar(),
             'role' => $role,
-            'status' => self::STATUS_ACTIVE,
+            'status' => ($status) ? self::STATUS_ACTIVE : self::STATUS_INACTIVE,
         ]);
+    }
+
+    /**
+     * Редактирование пользователя
+     * @param string $name
+     * @param string $email
+     * @param string $role
+     * @param int $status
+     * @return void
+     */
+    public function edit(string $name, string $email, string $role, int $status)
+    {
+        $this->name = $name;
+        $this->email = $email;
+        $this->status = ($status) ? self::STATUS_ACTIVE : self::STATUS_INACTIVE;
+        if ($role !== $this->role) {
+            $this->changeRole($role);
+        }
     }
 
     public function isWait(): bool
@@ -187,7 +224,7 @@ class User extends Authenticatable //implements MustVerifyEmail
         if ($this->role === $role) {
             throw new \DomainException('Role is already assigned.');
         }
-        $this->update(['role' => $role]);
+        $this->role = $role;
     }
 
     /**

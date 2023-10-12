@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Enums\Clients\Rating;
 use Illuminate\Http\Request;
 use App\Http\Requests\ClientsRequest;
 use App\Models\ClientsModel;
@@ -10,6 +11,7 @@ use App\Models\Tasks;
 use App\Models\Source;
 use App\Models\Services;
 use App\Repository\ClientRepository;
+use Illuminate\Support\Facades\Auth;
 
 class ClientsController extends Controller
 {
@@ -27,28 +29,26 @@ class ClientsController extends Controller
      */
     public function index(Request $request)
     {
-        $checkedlawyer = $statusclient = $lawyertask = null;
-
-        if (!empty($request->status)) { $statusclient = 'status'; }
-        if (!empty($request->checkedlawyer)) { $checkedlawyer = 'lawyer'; $lawyertask = $request->checkedlawyer; }
-
+        $lawyerId = (!empty($request->checkedlawyer)) ? $request->checkedlawyer : null;
+        /** @var User $user */
+        $user = Auth::user();
         // Фильтр по статусам задач
         if (!empty($request->statustask)) {
             $statusTask = $request->statustask;
 
-            return view ('clients/clients', [
-                'data' => $this->repository->getByStatusTasks($lawyertask, $statusTask, $checkedlawyer),
+            return view('clients/clients', [
+                'data' => $this->repository->getByStatusTasks($lawyerId, $statusTask),
             ], [
-                'datalawyers' => User::all(),
+                'datalawyers' => User::active()->get(),
                 'dataservices' => Services::all(),
                 'datatasks' => Tasks::all(),
                 'datasource' => Source::all(),
             ]);
         } else {
-            return view ('clients/clients', [
-                'data' => $this->repository->getByClientAndLawyer($request, $checkedlawyer, $statusclient),
+            return view('clients/clients', [
+                'data' => $this->repository->getByClientByLawyer($request, ($user->isAdmin() || $user->isModerator())),
             ], [
-                'datalawyers' => User::all(),
+                'datalawyers' => User::active()->get(),
                 'dataservices' => Services::all(),
                 'datasource' => Source::all(),
             ]);
@@ -59,10 +59,10 @@ class ClientsController extends Controller
     {
         $client =  $this->repository->findById($id);
 
-        return view ('clients/clientbyid', [
+        return view('clients/clientbyid', [
             'data' => $client,
         ], [
-            'datalawyers' =>  User::all(),
+            'datalawyers' => User::active()->get(),
             'datasource' => Source::all(),
         ]);
     }
@@ -72,14 +72,17 @@ class ClientsController extends Controller
         $client = ClientsModel::new($request);
         $client->saveOrFail();
 
-        return redirect()->route('clients')->with('success', 'Все в порядке, клиент добавлен');
+        return redirect()->route('clients', [
+            'checkedlawyer' => Auth::user()->id,
+            'status' => 1,
+        ])->with('success', 'Все в порядке, клиент добавлен');
     }
 
     public function update(int $id, ClientsRequest $request)
     {
         $client = ClientsModel::find($id);
-        $client->edit($request);        
-        if(!$request->status){$client->status = null;};
+        $client->edit($request);
+        if (!$request->status){$client->status = null;};
         $client->save();
 
         return redirect()->route('showClientById', $id)->with('success', 'Все в порядке, клиент обновлен');
@@ -91,6 +94,9 @@ class ClientsController extends Controller
         $client->status = null;
         $client->save();
 
-        return redirect()->route('clients')->with('success', 'Все в порядке, клиент удален (не в работе)');
+        return redirect()->route('clients', [
+            'checkedlawyer' => Auth::user()->id,
+            'status' => 1,
+        ])->with('success', 'Все в порядке, клиент удален (не в работе)');
     }
 }

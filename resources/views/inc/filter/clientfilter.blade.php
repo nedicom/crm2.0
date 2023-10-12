@@ -35,16 +35,18 @@
                 <input type = "text" name="findclient" placeholder = "введите клиента"
                     value="@if (!empty(request()->input('findclient'))) {{request()->input('findclient')}} @endif" id="findclient" class="form-control">
             </div>
-            <div class="col-2">
-                <select class="form-select" name="checkedlawyer" id="checkedlawyer">
-                    <option value="">все клиенты</option>
-                    @foreach($datalawyers as $el)
-                        <option value="{{$el->id}}" @if (($el->id) == request()->input('checkedlawyer'))) selected @endif>
-                            {{$el->name}}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+            @can('manage-users')
+                <div class="col-2">
+                    <select class="form-select" name="checkedlawyer" id="checkedlawyer">
+                        <option value="">все клиенты</option>
+                        @foreach($datalawyers as $el)
+                            <option value="{{$el->id}}" @if (($el->id) == request()->input('checkedlawyer'))) selected @endif>
+                                {{$el->name}}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            @endcan
             <div class="col-2">
                 <button type="submit" class="btn btn-sm btn-primary">Применить</button>
                 <a href='clients' class='button btn-sm btn btn-secondary'>Сбросить</a>

@@ -21,13 +21,13 @@
 @endsection
 
 @section('main')
-    <h2 class="px-3">Клиенты ({{$data->count()}})</h2>
+    <h2 class="px-3">Клиенты ({{ count($data) }})</h2>
     <!-- Фильтр -->
     @include('inc/filter.clientfilter')
 
-    <div class = "row p-4">
+    <div class="row p-4">
         @foreach ($data as $client)
-            <div class= 'card row my-3 p-3 border'>
+            <div class='card row my-3 p-3 border'>
               <div class="text-center d-inline-flex justify-content-between align-items-center">
                   <div class="col-4">
                       <div class="col-12 d-flex justify-content-center">
@@ -139,27 +139,27 @@
             var checkedvipolnena = this.checked;
 
             $.ajax({
-              method:"POST",
-              url: "{{ route('setstatus') }}",
-              data: { id: id, checkedvipolnena: checkedvipolnena, _token: '{{csrf_token()}}' },
-              success: function(data) {
-                var toast = document.getElementById('toast');
-                var toastbody = document.getElementById('toast-body');
-                  if(data=="true"){
-                  $( toast ).addClass( "show");
-                  $( toastbody ).html("Выполнена!");
-                    setTimeout(function() {
-                        $(toast).removeClass('show');
-                    }, 1000)
-                  }
-                  if(data=="false"){
-                  $( toast ).addClass( "show");
-                  $( toastbody ).html("Ожидает!");
-                    setTimeout(function() {
-                        $(toast).removeClass('show');
-                    }, 1000)
-                  }
-              }
+                method:"POST",
+                url: "{{ route('setstatus') }}",
+                data: { id: id, checkedvipolnena: checkedvipolnena, _token: '{{csrf_token()}}' },
+                success: function(data) {
+                    var toast = document.getElementById('toast');
+                    var toastbody = document.getElementById('toast-body');
+                    if (data=="true"){
+                        $( toast ).addClass( "show");
+                        $( toastbody ).html("Выполнена!");
+                        setTimeout(function() {
+                            $(toast).removeClass('show');
+                        }, 1000)
+                    }
+                    if (data=="false"){
+                        $( toast ).addClass( "show");
+                        $( toastbody ).html("Ожидает!");
+                        setTimeout(function() {
+                            $(toast).removeClass('show');
+                        }, 1000)
+                    }
+                }
             });
         });
        });

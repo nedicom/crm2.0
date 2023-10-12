@@ -16,23 +16,38 @@
                             <label for="description">Описание</label>
                             <textarea rows="3" name="description" placeholder="Немного подробнее, если это нужно" id="description" class="form-control">{{ old('description') }}</textarea>
                         </div>
+                        <div class="form-group mb-3 hideme">
+                            <label for="name">Яндекс-диск</label>
+                            <input type="url" name="hrftodcm" placeholder="https://disk.yandex.ru" id="hrftodcm" class="form-control">
+                        </div>
 
                         <div class="row">
                             <div class="col-4 form-group mb-3">
                                 <label for="date">Время начала: <span class="text-danger">*</span></label>
                                 <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}">
                             </div>
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span>
-                                <div class="input-group form-group mb-3">
-                                    <label class="input-group-text" for="duration"><i class="bi bi-stopwatch"></i></label>
-                                    <input type="number" name="duration" min="0.5" max="25" step="0.5" id="duration" class="form-control" required />
-                                    <span class="input-group-text">час</span>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <!-- Продолжительность в часах -->
+                                        <div class="input-group">
+                                            <label class="input-group-text" for="duration_h"><i class="bi bi-stopwatch"></i></label>
+                                            <input @cannot('manage-services') readonly @endcannot type="number" name="duration[hours]"
+                                                value="{{ \App\Helpers\TaskHelper::transformDuration(0)['hours'] }}" min="0" max="24" step="1" id="duration_h" class="form-control" />
+                                            <span class="input-group-text">час</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <!-- Продолжительность в минутах -->
+                                        <div class="input-group">
+                                            <label class="input-group-text" for="duration_m"><i class="bi bi-stopwatch"></i></label>
+                                            <input @cannot('manage-services') readonly @endcannot type="number" name="duration[minutes]"
+                                                value="{{ \App\Helpers\TaskHelper::transformDuration(0)['minutes'] }}" min="0" max="60" step="1" id="duration_m" class="form-control" />
+                                            <span class="input-group-text">мин</span>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4 form-group mb-3 hideme">
-                                <label for="name">Яндекс-диск</label>
-                                <input type="url" name="hrftodcm" placeholder="https://disk.yandex.ru" id="hrftodcm" class="form-control">
                             </div>
                         </div>
                         <div class="row">

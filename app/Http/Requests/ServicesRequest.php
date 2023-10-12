@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use Illuminate\Foundation\Http\FormRequest;
 
 class ServicesRequest extends FormRequest
@@ -23,16 +24,20 @@ class ServicesRequest extends FormRequest
     public function rules()
     {
         return [
-          'price' => 'numeric|required',
-          'name' => 'required'
+            'price' => 'required|numeric',
+            'name' => 'required|string|max:255',
+            'execution_time.*' => 'nullable|numeric',
+            'description' => 'nullable|string|max:500',
+            'url_disk' => 'nullable|url',
         ];
     }
 
-    public function messages(){
-      return [
-        'price' => 'В поле цена допускаются только числа (не используйте запятую)',
-        'price.required' => 'Цена обязательна',
-        'name.required' => 'Название обязательно'
-      ];
+    public function messages()
+    {
+        return [
+            'price' => 'В поле цена допускаются только числа (не используйте запятую)',
+            'price.required' => 'Цена обязательна',
+            'name.required' => 'Название обязательно'
+        ];
     }
 }

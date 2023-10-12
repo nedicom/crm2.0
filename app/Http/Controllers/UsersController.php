@@ -6,44 +6,32 @@ use App\Http\Requests\Users\CreateRequest;
 use App\Http\Requests\Users\UpdateRequest;
 use App\Http\Requests\Users\PasswordRequest;
 use App\Models\User;
+use App\Scopes\UserActiveScope;
 use App\Services\Auth\RegisterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Repository\UserRepository;
 
 class UsersController extends Controller
 {
     private $register;
+    private $repository;
 
-    public function __construct(RegisterService $register)
+    public function __construct(RegisterService $register, UserRepository $repository)
     {
         $this->register = $register;
+        $this->repository = $repository;
         $this->middleware('can:manage-users');
     }
 
     public function index(Request $request)
     {
-        $query = User::orderByDesc('id');
-
-        if (!empty($value = $request->get('name'))) {
-            $query->where('name', 'like', '%' . $value . '%');
-        }
-        if (!empty($value = $request->get('email'))) {
-            $query->where('email', 'like', '%' . $value . '%');
-        }
-        if (!empty($value = $request->get('status'))) {
-            $query->where('status', $value);
-        }
-        if (!empty($value = $request->get('role'))) {
-            $query->where('role', $value);
-        }
-
+        $query = $this->repository->search($request);
         $users = $query->paginate(10);
-
         $statuses = [
             User::STATUS_WAIT => 'Ожидает',
             User::STATUS_ACTIVE => 'Активирован',
         ];
-
         $roles = User::rolesList();
 
         return view('users.index', compact('users', 'statuses', 'roles'));
@@ -61,15 +49,16 @@ class UsersController extends Controller
             $request['name'],
             $request['email'],
             $request['password'],
-            $request['role']
+            $request['role'],
+            (int) $request['status']
         );
 
-        return redirect()->route('users.show', $user)->with('success', 'Пользователь создан.');
+        return redirect()->route('users.index')->with('success', 'Пользователь создан.');
     }
 
     /**
      * Детальная страница
-     * @param User $user
+     * @param int $id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function show(User $user)
@@ -80,16 +69,18 @@ class UsersController extends Controller
     /**
      * Обновление пользователя
      * @param UpdateRequest $request
-     * @param User $user
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(UpdateRequest $request, User $user)
     {
-        $user->update($request->only(['name', 'email']));
-
-        if ($request['role'] !== $user->role) {
-            $user->changeRole($request['role']);
-        }
+        $user->edit(
+            $request['name'],
+            $request['email'],
+            $request['role'],
+            (int) $request['status']
+        );
+        $user->save();
 
         return redirect()->route('users.show', $user)->with('success', 'Пользователь обновлен.');
     }
@@ -115,7 +106,7 @@ class UsersController extends Controller
     {
         $this->register->verify($user->id);
 
-        return redirect()->route('users.show', $user);
+        return redirect()->route('users.index');
     }
 
     /**

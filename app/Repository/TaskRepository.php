@@ -2,10 +2,13 @@
 
 namespace App\Repository;
 
+use App\Models\Enums\Tasks\DateInterval;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Tasks;
+use Illuminate\Database\Eloquent\Builder;
 
 class TaskRepository
 {
@@ -19,38 +22,39 @@ class TaskRepository
     }
 
     /**
-     * Выборка записей по интервалу даты
-     * @param \Carbon\Carbon $startDate
-     * @param \Carbon\Carbon $endDate
-     * @param array $fields
-     * @return \Illuminate\Database\Eloquent\Collection
+     * Выборка задач по поиску
+     * @return Builder
      */
-    public function getByBetweenDate(\Carbon\Carbon $startDate, \Carbon\Carbon $endDate, array $fields)
+    public function search(Request $request)
     {
-        $query = Tasks::select("*")
-            ->whereBetween('date', [$startDate, $endDate]) // variable were using
-            ->where($fields['lawyerfilter'], '=', $fields['checkedlawyer'])
-            ->where($fields['typefilter'], '=', $fields['type'])
-            ->orderBy('date', 'asc')
-            ->get();
+        $query = Tasks::select("*");
+        if ($request->input('calendar') !== null && $request->input('calendar') !== DateInterval::AllTime->name)
+            $query = $this->betweenDate($query, $request);
+        if ($request->input('checkedlawyer')) $query->where('lawyer', '=', $request->input('checkedlawyer'));
+        if ($request->input('type')) $query->where('type', '=', $request->input('type'));
+        $query->orderBy('date');
 
         return $query;
     }
 
     /**
-     * Коллекция всех задач в диапазоне ограничения
-     * @param array $fields
-     * @return \Illuminate\Database\Eloquent\Collection
+     * Фильтр по интервалу даты
+     * @param Builder $query
+     * @param Request $request
+     * @return Builder
      */
-    public function getAll(array $fields)
+    private function betweenDate(Builder $query, Request $request): Builder
     {
-        $query = Tasks::select("*")
-            ->where($fields['lawyerfilter'], '=', $fields['checkedlawyer'])
-            ->where($fields['typefilter'], '=', $fields['type'])
-            ->orderBy('date', 'asc')
-            ->get();
+        $month = ($request->input('months')) ? ($request->input('months')) : ((Carbon::now()->month) - 1);
 
-        return $query;
+        return match($request->input('calendar')) {
+            DateInterval::Yesterday->name => $query->whereBetween('date', [Carbon::yesterday()->startOfDay(), Carbon::yesterday()->endOfDay()]),
+            DateInterval::Today->name => $query->whereBetween('date', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]),
+            DateInterval::Tomorrow->name => $query->whereBetween('date', [Carbon::tomorrow()->startOfDay(), Carbon::tomorrow()->endOfDay()]),
+            DateInterval::Day->name => $query->whereBetween('date', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]),
+            DateInterval::Week->name => $query->whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]),
+            DateInterval::Month->name => $query->whereBetween('date', [Carbon::now()->startOfYear()->addMonth($month), Carbon::now()->startOfYear()->addMonth($month + 1)]),
+        };
     }
 
     /**

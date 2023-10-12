@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Auth;
  * @property string $preduslugi
  * @property string $predoplata
  * @property string $url
+ *
+ * @property ClientsModel $clientFunc
  */
 class Dogovor extends Model
 {

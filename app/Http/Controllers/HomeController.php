@@ -57,7 +57,7 @@ class HomeController extends Controller
                     ->count(),
                 'tasks' => Tasks::with('userFunc')
                     ->where('lawyer', $crtuser)
-                    ->count(),               
+                    ->count(),
                 'datalawyers' =>  User::all()
             ],
         ], [
@@ -79,16 +79,16 @@ class HomeController extends Controller
                     ->get(),
                 'alltaskssoispolnitel' => Tasks::where('soispolintel', $crtuser)
                     ->where('status', 'просрочена')
-                    ->get(),                    
+                    ->get(),
                 'alltasksnew' => Tasks::where('lawyer', $crtuser)
                     ->where('new', 1)
                     ->get(),
                 'alltasksnewsoispolnitel' => Tasks::where('soispolintel', $crtuser)
-                ->where('new', 1)
-                ->get(),
+                    ->where('new', 1)
+                    ->get(),
                 'alltasksnewpostanovshik' => Tasks::where('postanovshik', $crtuser)
-                ->where('new', 1)
-                ->get(),
+                    ->where('new', 1)
+                    ->get(),
                 'allpayments' => Payments::where('nameOfAttractioner', $crtuser)
                     ->$where('created_at', (Carbon::today()))
                     ->get(),

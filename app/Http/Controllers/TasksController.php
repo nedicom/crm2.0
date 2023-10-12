@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Events\Task\TaskCompleted;
 use App\Events\Task\TaskCreated;
+use App\Events\Task\TaskDeleted;
+use App\Events\Task\TaskUpdated;
 use App\Models\ClientsModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\TasksRequest;
@@ -13,7 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\TaskRepository;
 use App\Services\TaskService;
-use App\Models\TaskPaymentAssign;
+use Illuminate\Support\Facades\View;
 
 class TasksController extends Controller
 {
@@ -28,44 +30,10 @@ class TasksController extends Controller
 
     public function index(Request $request)
     {
-        $lawyerfilter = $typefilter = null;
-        $checkedlawyer = $type = null;
-        $calendar = $request->input('calendar'); // Month, year, day
-        if ($request->input('checkedlawyer')) { $lawyerfilter = 'lawyer'; $checkedlawyer = $request->input('checkedlawyer'); } // Lawyer
-        if ($request->input('type')) { $typefilter = 'type'; $type = $request->input('type'); } // Type
-        $fields = compact('lawyerfilter','checkedlawyer', 'typefilter', 'type');
-
-        // Фильтр по календарю
-        if ($calendar == 'week') {
-            return view ('tasks/tasks', [
-                'data' => $this->repository->getByBetweenDate(Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek(), $fields),
-            ], [
-                'datalawyers' => User::all()
-            ]);
-        } else if ($calendar == 'day') {
-            return view ('tasks/tasks', [
-                'data' => $this->repository->getByBetweenDate(Carbon::now()->startOfDay(), Carbon::now()->endOfDay(), $fields),
-            ], [
-                'datalawyers' =>  User::all()
-            ]);
-        } elseif ($calendar == 'month') {
-              if ($request->input('months')) { // check number of monts
-                  $month = ($request->input('months'));
-              } else {
-                  $month = ((Carbon::now()->month) - 1);
-              }
-              return view ('tasks/tasks', [
-                  'data' => $this->repository->getByBetweenDate(Carbon::now()->startOfYear()->addMonth($month), Carbon::now()->startOfYear()->addMonth($month + 1), $fields),
-              ], [
-                  'datalawyers' =>  User::all()
-              ]);
-        } else {
-            return view ('tasks/tasks', [
-                'data' => $this->repository->getAll($fields),
-            ], [
-                'datalawyers' =>  User::all()
-            ]);
-        }
+        return view('tasks/tasks', [
+            'data' => $this->repository->search($request)->get(),
+            'datalawyers' => User::active()->get(),
+        ]);
     }
 
     /**
@@ -89,6 +57,9 @@ class TasksController extends Controller
         return redirect()->back()->with('success', 'Все в порядке, задача добавлена.');
     }
 
+    /**
+     * Создание задачи с раздела лидов
+     */
     public function storeByLead(TasksRequest $request)
     {
         $task = Tasks::newFromLead($request);
@@ -123,12 +94,16 @@ class TasksController extends Controller
     {
         /** @var Tasks $task */
         $task = Tasks::find($request);
+
         if ($task->lawyer == Auth::user()->id) {
            $task->new = $task::STATE_OLD;
            $task->save();
         }
 
-        return view('tasks/taskById', ['data' => Tasks::find($request)], ['datalawyers' => User::all()]);
+        return view('tasks/taskById', [
+            'data' => Tasks::find($request)], [
+            'datalawyers' => User::active()->get(),
+        ]);
     }
 
     /**
@@ -153,8 +128,11 @@ class TasksController extends Controller
         if ($task->status === $task::STATUS_COMPLETE) {
             $task->donetime = Carbon::now();
             $task->save();
+            // Events
             TaskCompleted::dispatch($task);
         }
+        //Events
+        TaskUpdated::dispatch($task);
 
         return redirect()->route('showTaskById', $id)->with('success', 'Все в порядке, событие обновлено');
     }
@@ -166,7 +144,10 @@ class TasksController extends Controller
      */
     public function delete(int $id)
     {
-        Tasks::find($id)->delete();
+        $task = Tasks::find($id);
+        // Events
+        TaskDeleted::dispatch($task);
+        $task->delete();
 
         return redirect()->route('tasks')->with('success', 'Все в порядке, задача удалена');
     }
@@ -199,14 +180,7 @@ class TasksController extends Controller
     {
         if ($request->has('query')) {
             $query = $this->repository->getByClientQuery($request->input('query'));
-
-            $output = '<ul class="list-group">';
-            foreach ($query as $value) {
-                $output .= '<li class="list-group-item taskList taskIndex"
-                    data-task-id="'. $value->id .'"><a href="#" class="text-decoration-none"><span class="name-client">' .
-                    $value->client . '</span> - ' . $value->name . ' - ' . $value->created_at .'</a></li>';
-            }
-            $output .= '</ul>';
+            $output = View::make('inc/modal/_part-edit-payment', compact('query'))->render();
 
             return $output;
         }

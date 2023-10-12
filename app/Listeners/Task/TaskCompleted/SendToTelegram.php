@@ -28,7 +28,6 @@ class SendToTelegram
         $task = $event->task;
 
         $contractor = User::find($task->lawyer);
-
         $owner = User::find($task->postanovshik);
 
         if ($owner?->tg_id) {

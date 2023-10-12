@@ -26,6 +26,13 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1"
+                                    @if ($user->isActive()) checked @endif>
+                                <label class="form-check-label" for="status">Активен</label>
+                            </div>
+                        </div>
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
                     </form>
                 </div>

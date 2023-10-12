@@ -39,17 +39,12 @@
                         </a>
                     </div>
                     <div class="col-4 mb-3">
-                        <a class="btn btn-light w-100" href="{{ route ('Client-Delete', $data->id) }}">
-                            <i class="bi-trash"></i>
-                        </a>
-                    </div>
-                    <div class="col-4 mb-3">
                         <a class="btn btn-light w-100 nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
                             data-client="{{$data->name}}" data-value-id="{{$data->id}}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Task->value }}">
                             <i class="bi-clipboard-plus"></i>
                         </a>
                     </div>
-                    <div class="px-1 col-3">
+                    <div class="px-1 col-4">
                         <a class="btn btn-light w-100 addDeal" href="#" data-client-id="{{$data->id}}" data-bs-toggle="modal" data-bs-target="#dealModal" title="Добавить дело">
                             <i class="bi-clipboard-plus"></i>
                         </a>
