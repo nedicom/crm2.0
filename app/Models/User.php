@@ -2,16 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\ClientsModel;
-use App\Scopes\UserActiveScope;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property int $id
@@ -27,22 +24,23 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $tg_id
  * @property string $status
  */
-class User extends Authenticatable //implements MustVerifyEmail
+class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-
-    // HasFactory
 
     public const STATUS_WAIT = 'wait';
     public const STATUS_ACTIVE = 'active';
     public const STATUS_INACTIVE = 'inactive';
 
-    public const ROLE_USER = 'user';
-    public const ROLE_ADMIN = 'admin';
-    public const ROLE_MODERATOR = 'moderator';
+    public const ROLE_USER = 'user'; // Юрист
+    public const ROLE_ADMIN = 'admin'; // Администратор
+    public const ROLE_MODERATOR = 'moderator'; // Модератор
+    public const ROLE_USER_SERVICE_CLIENTS = 'user_service_clients'; // Юрист по работе с клиентами
+    public const ROLE_HEAD_LAWYER = 'head_lawyer'; // Начальник юр. отдела
+    public const ROLE_HEAD_SALES = 'head_sales'; // Начальник отдела продаж
 
     protected $fillable = [
-        'name', 'email', 'password', 'avatar', 'tg_id', 'status', 'role', //'remember_token',
+        'name', 'email', 'password', 'avatar', 'tg_id', 'status', 'role',
     ];
 
     protected $hidden = [
@@ -53,23 +51,13 @@ class User extends Authenticatable //implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * The "booting" method of the model.
-     * @return void
-     */
-    /*protected static function boot()
-    {
-        parent::boot();
-        static::addGlobalScope(new UserActiveScope());
-    }*/
-
     public function scopeActive($query)
     {
         return $query->where('status', self::STATUS_ACTIVE);
     }
 
     /**
-     * Массив именования ролей
+     * Список ролей
      * @return string[]
      */
     public static function rolesList(): array
@@ -78,9 +66,16 @@ class User extends Authenticatable //implements MustVerifyEmail
             self::ROLE_USER => 'Пользователь (юрист)',
             self::ROLE_ADMIN => 'Администратор',
             self::ROLE_MODERATOR => 'Модератор',
+            self::ROLE_USER_SERVICE_CLIENTS => 'Юрист по работе с клиентами',
+            self::ROLE_HEAD_LAWYER => 'Начальник юридического отдела',
+            self::ROLE_HEAD_SALES => 'Начальник отдела продаж',
         ];
     }
 
+    /**
+     * Список статусов
+     * @return string[]
+     */
     public static function statusList(): array
     {
         return [
@@ -94,7 +89,7 @@ class User extends Authenticatable //implements MustVerifyEmail
      * Генерация случайного аватара
      * @return string
      */
-    private static function generateRandomAvatar(): string
+    public static function generateRandomAvatar(): string
     {
         $imgNames = ["rabbit.png", "bear.png", "cat.png"];
         $randKey = rand(0, 2);
@@ -105,9 +100,9 @@ class User extends Authenticatable //implements MustVerifyEmail
 
     public function getAvatar(): ?string
     {
-        return $this->avatar
+        return (!empty($this->avatar))
             ? Str::replaceFirst('/public/', '/', $this->avatar)
-            : $this->avatar;
+            : null;
     }
 
     /**
@@ -192,7 +187,14 @@ class User extends Authenticatable //implements MustVerifyEmail
 
     public function isModerator(): bool
     {
-        return $this->role === self::ROLE_MODERATOR;
+        return $this->role === self::ROLE_MODERATOR
+            || $this->role === self::ROLE_HEAD_SALES
+            || $this->role === self::ROLE_HEAD_LAWYER;
+    }
+
+    public function isUserServiceClients(): bool
+    {
+        return $this->role === self::ROLE_USER_SERVICE_CLIENTS;
     }
 
     /**

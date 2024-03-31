@@ -24,9 +24,7 @@
                             <label for="source">Укажите источник</label>
                             <select class="form-select" name="source" id="source" class="form-control">
                                 @foreach($datasource as $el)
-                                    <option value="{{$el -> name}}"
-                                            @if($data->source == $el -> name) selected @endif
-                                    >{{$el -> name}}</option>
+                                    <option value="{{$el->name}}" @if($data->source == $el->name) selected @endif>{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -34,7 +32,7 @@
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
                                 @foreach($dataservices as $el)
-                                    <option value="{{$el -> id}}" @if($data->service == $el -> id) selected @endif>{{$el -> name}}</option>
+                                    <option value="{{$el->id}}" @if($data->service == $el->id) selected @endif>{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -42,7 +40,7 @@
                             <label for="lawyer">Укажите кто привлек лид</label>
                             <select class="form-select" name="lawyer" id="lawyer" class="form-control">
                                 @foreach($datalawyers as $el)
-                                    <option value="{{$el -> id}}"  @if($data->lawyer == $el -> id) selected @endif>{{$el -> name}}</option>
+                                    <option value="{{$el->id}}"  @if($data->lawyer == $el->id) selected @endif>{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -53,6 +51,11 @@
                                     <option value="{{$el -> id}}" @if($data->responsible == $el -> id) selected @endif>{{$el -> name}}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            @if ($data->ring_recording_url !== null)
+                                <a href="{{ $data->ring_recording_url }}" class="btn btn-primary">Ссылка на запись разговора</a>
+                            @endif
                         </div>
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
                     </form>

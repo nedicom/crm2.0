@@ -12,6 +12,7 @@ use App\Models\Source;
 use App\Models\Services;
 use App\Repository\ClientRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ClientsController extends Controller
 {
@@ -46,7 +47,10 @@ class ClientsController extends Controller
             ]);
         } else {
             return view('clients/clients', [
-                'data' => $this->repository->getByClientByLawyer($request, ($user->isAdmin() || $user->isModerator())),
+                'data' => $this->repository->getByClientByLawyer(
+                    $request,
+                    ($user->isAdmin() || $user->isModerator() || $user->isUserServiceClients())
+                ),
             ], [
                 'datalawyers' => User::active()->get(),
                 'dataservices' => Services::all(),

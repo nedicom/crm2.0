@@ -35,7 +35,8 @@
                         <div class="row">
                             <div class="col-4 form-group mb-3">
                                 <label for="date">Время начала:<span class="text-danger">*</span></label>
-                                <input type="text" id="date" value="{{$data->date['value']}}" class="form-control" name="date">
+                                <input type="text" id="date" value="{{$data->date['value']}}" class="form-control"
+                                    name="date" @if ($data->isAtDepartment()) disabled @endif>
                             </div>
                             <div class="col-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span></span>
@@ -79,12 +80,7 @@
                             </div>
                             <div class="col-3 form-group mb-3">
                                 <label for="status">Cтатус</label>
-                                <select class="form-select" name="status" id="status">
-                                    <option value="в работе"  @if ($data->status == "в работе") selected @endif>в работе</option>
-                                    <option value="просрочена" @if ($data->status == "просрочена") selected @endif>просрочена</option>
-                                    <option value="выполнена"  @if ($data->status == "выполнена") selected @endif>выполнена</option>
-                                    <option value="ожидает"  @if ($data->status == "ожидает") selected @endif>ожидает</option>
-                                </select>
+                                {!! \App\Helpers\TaskHelper::statusList($data, $data->isOverdueAtDepartment()) !!}
                             </div>
                         </div>
                         <div class="row">
@@ -111,6 +107,24 @@
                                         <option value="{{ $type->value }}"  @if ($data->type == $type->value) selected @endif>{{ $type->value }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                        </div>
+                        <!-- Согласовано начальниками -->
+                        <div class="row">
+                            <label>Согласовано</label>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="lawyer_agree" id="lawyer_agree"
+                                        @cannot('manage-users') disabled @endcan @if($data->lawyer_agree) checked @endif>
+                                    <label class="form-check-label" for="lawyer_agree">Начальником юр. отдела</label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" role="switch" name="sales_agree" id="sales_agree"
+                                        @cannot('manage-users') disabled @endcan @if($data->sales_agree) checked @endif>
+                                    <label class="form-check-label" for="sales_agree">Начальником отдела продаж</label>
+                                </div>
                             </div>
                         </div>
                         <!-- Список дел -->

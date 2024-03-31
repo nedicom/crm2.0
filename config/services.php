@@ -31,4 +31,8 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'my_calls' => [
+        'username' => env('MY_CALLS_USERNAME'),
+        'api_key' => env('MY_CALLS_API_KEY'),
+    ],
 ];

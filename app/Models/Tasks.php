@@ -28,6 +28,8 @@ use Illuminate\Support\Facades\Auth;
  * @property string $description
  * @property \DateTime $donetime
  * @property string $type
+ * @property boolean $lawyer_agree Согласовано нач-ом юр. отдела
+ * @property boolean $sales_agree Согласовано нач-ом отдела продаж
  * @property string $calendar_uid
  * @property boolean $new
  * @property int $deal_id
@@ -35,6 +37,7 @@ use Illuminate\Support\Facades\Auth;
  * @property int $service_id
  *
  * @property Services|null $service
+ * @property User $performer Исполнитель задачи
  */
 class Tasks extends Model
 {
@@ -84,10 +87,12 @@ class Tasks extends Model
         $task->name = $request->nameoftask;
         $task->clientid = $request->clientidinput;
         $task->deal_id = ($request->deals !== null) ? $request->deals : null;
-        $task->new = static::STATE_NEW;
+        $task->new = (Auth::user()->id == $request->lawyer) ? static::STATE_OLD : static::STATE_NEW;
+        //$task->new = static::STATE_NEW;
         $task->postanovshik = Auth::user()->id;
         $task->status = static::STATUS_WAITING;
         $task->setDuration($request->input('duration'));
+        $task->setAgreed($request);
 
         return $task;
     }
@@ -107,6 +112,7 @@ class Tasks extends Model
         $task->postanovshik = Auth::user()->id;
         $task->status = static::STATUS_WAITING;
         $task->setDuration($request->input('duration'));
+        $task->setAgreed($request);
 
         return $task;
     }
@@ -117,11 +123,12 @@ class Tasks extends Model
      */
     public function edit(TasksRequest $request): void
     {
-        $this->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', '_token']));
+        $this->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', 'lawyer_agree', 'sales_agree', '_token']));
         $this->name = $request->nameoftask;
         $this->clientid = $request->clientidinput;
         $this->deal_id = ($request->deals !== null) ? $request->deals : null;
         $this->setDuration($request->input('duration'));
+        $this->setAgreed($request);
     }
 
     /** Устанавливаем значение продоолжительности
@@ -134,6 +141,35 @@ class Tasks extends Model
         $minutes = (!empty($duration['minutes'])) ? $duration['minutes'] : 0;
         $this->duration = ($hours * 60) + $minutes;
         $this->type_duration = static::TYPE_DURATION_NEW;
+    }
+
+    /**
+     * Согласование начальников отделов
+     * @param TasksRequest $request
+     * @return void
+     */
+    public function setAgreed(TasksRequest $request): void
+    {
+        if ($request->lawyer_agree !== null) $this->lawyer_agree = ($request->lawyer_agree) ? 1 : 0;
+        if ($request->sales_agree !== null) $this->sales_agree = ($request->sales_agree) ? 1 : 0;
+    }
+
+    /** Проверка просрочена ли задача при включенной согласованности начальником юр. отдела
+     * @return bool
+     */
+    public function isOverdueAtDepartment(): bool
+    {
+        return $this->lawyer_agree == 1
+            && Carbon::parse($this->date['value'])->addMinutes($this->duration) <= Carbon::parse()->toDateTimeString()
+            && Auth::user()->role == User::ROLE_USER;
+    }
+
+    /** Проверка при включенной согласованности начальником юр. отдела
+     * @return bool
+     */
+    public function isAtDepartment(): bool
+    {
+        return $this->lawyer_agree == 1 && Auth::user()->role == User::ROLE_USER;
     }
 
     /**
@@ -165,5 +201,10 @@ class Tasks extends Model
     public function payments()
     {
         return $this->belongsToMany(Payments::class, 'task_payment_assigns', 'task_id', 'payment_id');
+    }
+
+    public function performer()
+    {
+        return $this->belongsTo(User::class, 'lawyer', 'id');
     }
 }

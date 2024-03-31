@@ -21,7 +21,7 @@
                 <span class="px-2 text-truncate text-center">
                   @foreach ($dataclients as $elclient)
                         @if ($elclient->id == $el->client_id)
-                            {{$elclient->name}}
+                            {{ $elclient->name }}
                         @endif
                     @endforeach
                 </span>

@@ -2,21 +2,7 @@
     <div class="col-10 d-flex justify-content-center">
         <form class="row gx-3 gy-2 align-items-center d-flex justify-content-between" action="{{route('leads')}}" method="GET">
             <div class="col-2">
-                <select class="form-select" name="checkedstatus" id="checkedstatus">
-                    <option value="">статус</option>
-                    <option value="поступил" @if ('поступил' == (app('request')->input('checkedstatus'))) selected @endif>
-                        поступил
-                    </option>
-                    <option value="в работе" @if ('в работе' == (app('request')->input('checkedstatus'))) selected @endif>
-                        в работе
-                    </option>
-                    <option value="конвертирован" @if ('конвертирован' == (app('request')->input('checkedstatus'))) selected @endif>
-                        конвертирован
-                    </option>
-                    <option value="удален" @if ('удален' == (app('request')->input('checkedstatus'))) selected @endif>
-                        удален
-                    </option>
-                </select>
+                {!! \App\Helpers\LeadHelper::statusList() !!}
             </div>
             <div class="col-2">
                 <select class="form-select" name="checkedsources" id="checkedsources">

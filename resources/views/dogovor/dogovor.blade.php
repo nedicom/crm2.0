@@ -14,14 +14,7 @@
 
     @php /** @var \App\Models\Dogovor $el */ @endphp
     @foreach ($data as $el)
-        @cannot('manage-contracts')
-            @if ($el->clientFunc->userFunc->id === \Illuminate\Support\Facades\Auth::id())
-                @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
-            @endif
-        @endcannot
-        @can('manage-contracts')
-           @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
-        @endcan
+        @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
     @endforeach
 
     <script>

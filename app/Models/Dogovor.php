@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 /**
  * @property int $id
  * @property int $client_id
+ * @property int $lead_id
  * @property string $name
  * @property string $lawyer_id
  * @property \DateTime $date
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Auth;
  * @property string $url
  *
  * @property ClientsModel $clientFunc
+ * @property User $userFunc
  */
 class Dogovor extends Model
 {
@@ -40,6 +42,11 @@ class Dogovor extends Model
         $contract = new self();
         $contract->fill($request->except(['_token', 'clientidinput', 'adress', 'client', 'phone']));
         $contract->client_id = $request->input('clientidinput');
+
+        $client = ClientsModel::find($request->input('clientidinput'));
+        if ($client->lead_id) {
+            $contract->lead_id = $client->lead_id;
+        }
         $contract->lawyer_id = Auth::id();
         $contract->date = $date;
         $contract->url = $filePath;

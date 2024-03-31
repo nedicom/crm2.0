@@ -78,6 +78,9 @@ class ClientsModel extends Model
         if (!is_null($request->input('phone'))) { $this->phone = $request->input('phone'); }
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
     public function serviceFunc()
     {
         return $this->hasManyThrough(
@@ -90,6 +93,10 @@ class ClientsModel extends Model
         );
     }
 
+    /**
+     * Relation Payments
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function paymentsFunc()
     {
         return $this->hasMany(Payments::class, 'clientid' , 'id');
@@ -105,7 +112,7 @@ class ClientsModel extends Model
     }
 
     /**
-     * Relations Tasks
+     * Relations Tasks[]
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tasksFunc()
@@ -113,17 +120,30 @@ class ClientsModel extends Model
         return $this->hasMany(Tasks::class, 'clientid' , 'id');
     }
 
+    /**
+     * Relations Tasks
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function task()
     {
         return $this->hasOne(Tasks::class, 'clientid', 'id');
     }
 
     /**
-     *  Relation Deals
+     * Relation Deals[]
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function deals()
     {
         return $this->hasMany(Deal::class, 'client_id', 'id');
+    }
+
+    /**
+     * Relation Dogovor[]
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contracts()
+    {
+        return $this->hasMany(Dogovor::class, 'client_id', 'id');
     }
 }

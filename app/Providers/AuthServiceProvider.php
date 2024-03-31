@@ -34,12 +34,16 @@ class AuthServiceProvider extends ServiceProvider
             return $user->isAdmin() || $user->isModerator();
         });
 
+        Gate::define('manage-clients', function (User $user) {
+            return $user->isAdmin() || $user->isModerator() || $user->isUserServiceClients();
+        });
+
         Gate::define('manage-services', function (User $user) {
-            return $user->isAdmin() || $user->isModerator();
+            return $user->isAdmin() || $user->isModerator() || $user->isUserServiceClients();
         });
 
         Gate::define('manage-contracts', function (User $user) {
-           return $user->isAdmin() || $user->isModerator();
+           return $user->isAdmin() || $user->isModerator(); // || $user->isUser();
         });
     }
 }

@@ -24,7 +24,7 @@
                             <label for="source">Укажите источник</label>
                             <select class="form-select" name="source" id="source" class="form-control">
                                 @foreach($datasource as $el)
-                                    <option value="{{$el -> name}}">{{$el -> name}}</option>
+                                    <option value="{{$el->name}}">{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -32,7 +32,7 @@
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
                                 @foreach($dataservices as $el)
-                                    <option value="{{$el -> id}}">{{$el -> name}}</option>
+                                    <option value="{{$el->id}}">{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,7 +40,7 @@
                             <label for="lawyer">Укажите кто привлек лид</label>
                             <select class="form-select" name="lawyer" id="lawyer" class="form-control">
                                 @foreach($datalawyers as $el)
-                                    <option value="{{$el -> id}}">{{$el -> name}}</option>
+                                    <option value="{{$el->id}}">{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -48,7 +48,7 @@
                             <label for="responsible">Укажите кто ответсвенный за лид</label>
                             <select class="form-select" name="responsible" id="responsible" class="form-control">
                                 @foreach($datalawyers as $el)
-                                    <option value="{{$el -> id}}">{{$el -> name}}</option>
+                                    <option value="{{$el->id}}">{{$el->name}}</option>
                                 @endforeach
                             </select>
                         </div>

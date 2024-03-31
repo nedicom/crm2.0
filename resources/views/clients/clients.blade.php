@@ -31,7 +31,7 @@
               <div class="text-center d-inline-flex justify-content-between align-items-center">
                   <div class="col-4">
                       <div class="col-12 d-flex justify-content-center">
-                          <div class="px-1 col-3">
+                          <div class="px-1 col-2">
                               <a class="btn btn-light w-100" href="{{ route ('showClientById', $client->id) }}">
                                   <i class="bi-three-dots"></i>
                               </a>
@@ -48,9 +48,21 @@
                               </a>
                           </div>
                           <div class="px-1 col-3">
-                              <img src="@if ($client->userFunc->avatar){{$client->userFunc->avatar}} @endif" style="width: 30px;  height:30px"
-                                class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                                title="@if ($client->userFunc->name){{$client->userFunc->name}} @endif" />
+                              <form action="{{  route('client.generate.document', ['client' => $client->id]) }}" method="POST">
+                                  @csrf
+                                  <button type="submit" class="btn btn-light w-100" title="Скачать акт выполненных работ">
+                                      <i class="bi bi-clipboard-data"></i>
+                                  </button>
+                              </form>
+                              <!--<a class="btn btn-light w-100" href="{{ route('client.generate.document', ['client' => $client->id]) }}" title="Сгенерировать документ акта выполненных работ">
+                                  <i class="bi bi-clipboard-data"></i>
+                              </a> -->
+                          </div>
+                          <div class="px-1 col-2">
+                              @if ((!empty($client->userFunc)) && ($client->userFunc->getAvatar() !== null))
+                                  <img src="{{ $client->userFunc->avatar }}" style="width: 30px;  height:30px" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                                    title="@if ($client->userFunc->name) {{ $client->userFunc->name }} @endif" />
+                              @endif
                           </div>
                       </div>
                   </div>

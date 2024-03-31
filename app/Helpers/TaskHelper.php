@@ -142,4 +142,23 @@ class TaskHelper
 
         return ($valPrm == DateInterval::Yesterday->name || $valPrm == DateInterval::Today->name || $valPrm == DateInterval::Tomorrow->name);
     }
+
+    /**
+     * Список статусов
+     * @param Tasks $task
+     * @param bool $overdue просрочена ли задача
+     * @return string
+     */
+    public static function statusList(Tasks $task, bool $overdue = false): string
+    {
+        $html = "<select class='form-select' name='status' id='status'>";
+        foreach (Status::cases() as $status) {
+            if ($overdue && ($status === Status::IN_WORK || $status === Status::WAITING)) continue;
+            $sel = ($task->status == $status->value)  ? 'selected' : '';
+            $html .= "<option value='{$status->value}' {$sel}>{$status->value}</option>";
+        }
+        $html .= "</select>";
+
+        return $html;
+    }
 }

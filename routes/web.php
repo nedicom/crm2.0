@@ -36,6 +36,13 @@ Route::get('/contacts', function () {return view('contacts');})->middleware('aut
 Route::get('/calendar/create', [\App\Http\Controllers\iCalendar\ManageController::class, 'create'])->name('calendar.create');
 Route::get('/calendar/{userID}/calendar.ics', [\App\Http\Controllers\iCalendar\ManageController::class, 'browse'])->name('calendar.browse');
 
+// Сервис Мои звонки
+Route::post('/mycalls/subscribe/call', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'subscribeTrackingCalls'])->name('mycalls.subscribe.call');
+Route::post('/mycalls/unsubscribe/call', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'unsubscribeTrackingCalls'])->name('mycalls.unsubscribe.call');
+Route::post('/mycalls/action/call-start', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'actionCallStart'])->name('mycalls.action.call_start');
+Route::post('/mycalls/action/call-finished', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'actionCallFinished'])->name('mycalls.action.call_finished');
+Route::post('/mycalls/download-log', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'downloadLogFile'])->name('mycalls.download_log');
+
 Route::middleware(['auth'])->group(function () {
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
@@ -108,6 +115,9 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', \App\Http\Controllers\UsersController::class);
     Route::post('/users/{user}/verify', 'UsersController@verify')->name('users.verify');
     Route::put('/users/{user}/change-password', [\App\Http\Controllers\UsersController::class, 'changePassword'])->name('users.change-password');
+
+    // Генерация документов
+    Route::post('generate/cert-completion/{client}', [\App\Http\Controllers\GenerateDocumentController::class, 'certificateCompletion'])->name('client.generate.document');
 });
 
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');

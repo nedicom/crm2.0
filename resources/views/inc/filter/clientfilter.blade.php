@@ -32,10 +32,10 @@
                 </div>
             </div>
             <div class="col-3">
-                <input type = "text" name="findclient" placeholder = "введите клиента"
+                <input type = "text" name="findclient" placeholder="введите клиента"
                     value="@if (!empty(request()->input('findclient'))) {{request()->input('findclient')}} @endif" id="findclient" class="form-control">
             </div>
-            @can('manage-users')
+            @can('manage-clients')
                 <div class="col-2">
                     <select class="form-select" name="checkedlawyer" id="checkedlawyer">
                         <option value="">все клиенты</option>

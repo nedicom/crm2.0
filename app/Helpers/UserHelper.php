@@ -8,12 +8,21 @@ class UserHelper
 {
     public static function nameRole(User $user): string
     {
-        if ($user->isAdmin()) {
-            $role = 'Администратор';
-        } elseif ($user->isModerator()) {
-            $role = 'Модератор';
-        } else {
-            $role = 'Пользователь';
+        switch ($user->role) {
+            case $user::ROLE_ADMIN:
+                $role = 'Администратор';
+                break;
+            case $user::ROLE_MODERATOR:
+                $role = 'Модератор';
+                break;
+            case $user::ROLE_HEAD_LAWYER:
+                $role = 'Начальник юр. отдела';
+                break;
+            case $user::ROLE_HEAD_SALES:
+                $role = 'Начальник отдела продаж';
+                break;
+            default:
+                $role = 'Пользователь';
         }
 
         return $role;
@@ -24,5 +33,11 @@ class UserHelper
         $status = ($user->isWait()) ? 'Ожидает' : 'Активен';
 
         return $status;
+    }
+
+    /** Форматирование номера телефона */
+    public static function formatPhone(array $phones): array
+    {
+        return preg_replace(['/^(\+|[0-8]+|\s)+/', '/([\s|\(|\)|-]+)+/'], '', $phones);
     }
 }

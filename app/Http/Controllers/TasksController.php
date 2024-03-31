@@ -58,7 +58,7 @@ class TasksController extends Controller
     }
 
     /**
-     * Создание задачи с раздела лидов
+     * Создание задачи с раздела Лидов
      */
     public function storeByLead(TasksRequest $request)
     {
