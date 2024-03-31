@@ -30,7 +30,7 @@
             <thead>
                 <tr>
                     <th scope="col"># </th>
-                    <th scope="col">Дата обращения</th>
+                    <th scope="col">Дата обращения)</th>
                     <th scope="col">Суть проблемы</th>
                     <th scope="col">Имя клиента</th>
                     <th scope="col">Телефон</th>
