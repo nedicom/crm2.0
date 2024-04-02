@@ -52,6 +52,7 @@ final class GenerateCalendar
                 mkdir($dir, 0777);
             }
             file_put_contents($dir . "/calendar.ics", (string) $calendarComponent);
+            
         }
     }
 

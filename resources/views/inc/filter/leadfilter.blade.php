@@ -1,6 +1,6 @@
 <div class="row p-4">
     <div class="col-10 d-flex justify-content-center">
-        <form class="row gx-3 gy-2 align-items-center d-flex justify-content-between" action="{{route('leads')}}" method="GET">
+        <form class="row gx-3 gy-2 align-items-center d-flex justify-content-between" action="{{route('oldleads')}}" method="GET">
             <div class="col-2">
                 {!! \App\Helpers\LeadHelper::statusList() !!}
             </div>
@@ -36,7 +36,7 @@
             </div>
             <div class="col-4">
                 <button type="submit" class="btn btn-primary">Применить</button>
-                <a href='{{ route('leads') }}' class='button btn btn-secondary'>Сбросить</a>
+                <a href='{{ route('oldleads') }}' class='button btn btn-secondary'>Сбросить</a>
             </div>
         </form>
     </div>

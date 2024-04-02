@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class ="modal-header">
-                <h2>Редактировать лид</h2>
+                <h2>Обработать лид</h2>
             </div>
             <div class ="modal-body d-flex justify-content-center">
                 <div class ="col-10">
@@ -28,6 +28,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!--
                         <div class="form-group mb-3">
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
@@ -36,8 +38,9 @@
                                 @endforeach
                             </select>
                         </div>
+                            -->
                         <div class="form-group mb-3">
-                            <label for="lawyer">Укажите кто привлек лид</label>
+                            <label for="lawyer">Кто привлек лид</label>
                             <select class="form-select" name="lawyer" id="lawyer" class="form-control">
                                 @foreach($datalawyers as $el)
                                     <option value="{{$el->id}}"  @if($data->lawyer == $el->id) selected @endif>{{$el->name}}</option>
@@ -45,7 +48,7 @@
                             </select>
                         </div>
                         <div class="form-group mb-3">
-                            <label for="responsible">Укажите кто ответсвенный за лид</label>
+                            <label for="responsible">Кто ответсвенный за лид</label>
                             <select class="form-select" name="responsible" id="responsible" class="form-control">
                                 @foreach($datalawyers as $el)
                                     <option value="{{$el -> id}}" @if($data->responsible == $el -> id) selected @endif>{{$el -> name}}</option>

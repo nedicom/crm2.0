@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Leads;
 use App\Http\Requests\TasksRequest;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -105,14 +106,25 @@ class Tasks extends Model
     public static function newFromLead(TasksRequest $request): self
     {
         $task = new self();
-        $task->fill($request->except(['nameoftask', 'lead_id', '_token']));
-        $task->name = $request->nameoftask;
+        $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token']));
+        $task->name = $request->type.' - '. $request->lead_phone;
         $task->lead_id = $request->lead_id;
         $task->new = static::STATE_NEW;
         $task->postanovshik = Auth::user()->id;
         $task->status = static::STATUS_WAITING;
-        $task->setDuration($request->input('duration'));
+        $task->duration = 30;
+        $task->type_duration = 'new';
         $task->setAgreed($request);
+
+        $lead = Leads::find($request->lead_id);
+        if($request->type == \App\Models\Enums\Tasks\Type::Consultation->value){
+            $lead->status = \App\Models\Enums\Tasks\Type::Consultation->value;
+        }
+        if($request->type == \App\Models\Enums\Tasks\Type::Ring->value){
+            $lead->status = \App\Models\Enums\Tasks\Type::Ring->value;
+        }
+        $lead->saveOrFail();
+
 
         return $task;
     }

@@ -1,7 +1,16 @@
 <div class="col-10 p-3 shadow-sm bg-white">
     <header class="d-flex justify-content-evenly">
-        <ul class="nav nav-pills">
-            <li class="nav-item"><a href="{{route('leads')}}" class="nav-link {{ (request()->is('leads*')) ? 'active' : '' }}">Лиды</a></li>
+        <ul class="nav nav-pills">            
+      
+            <li class="nav-item btn-group dropdown">
+                <a href="{{route('leads')}}" data-bs-toggle="dropdown" role="button" aria-expanded="false"
+                class="nav-link dropdown-toggle {{ (request()->is('leads*')) ? 'active' : '' }}">Лиды</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{route('leads')}}">Лиды</a></li>
+                    <li><a class="dropdown-item" href="{{route('oldleads')}}">Старая версия</a></li>
+                </ul>
+            </li>
+
             <li class="nav-item btn-group dropdown">
                 <a href="#" data-bs-toggle="dropdown" role="button" aria-expanded="false"
                     class="nav-link dropdown-toggle {{ (request()->is('clients*')) ? 'active' : '' }} {{ (request()->is('dogovor*')) ? 'active' : '' }}">Клиенты</a>

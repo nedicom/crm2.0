@@ -46,6 +46,7 @@ $(document).ready(function() {
     function fillForm(element) {
         var type = element.attr('data-type');
         document.getElementById("taskname").innerHTML = type;
+        document.getElementById("tasktype").value = type;
         document.getElementById("nameoftask").value = '';
         document.getElementById("type").value = type;
         var collection = document.getElementsByClassName("hideme")

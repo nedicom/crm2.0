@@ -28,6 +28,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+                    <!--
                         <div class="form-group mb-3">
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
@@ -36,6 +38,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+                    -->
                         <div class="form-group mb-3">
                             <label for="lawyer">Укажите кто привлек лид</label>
                             <select class="form-select" name="lawyer" id="lawyer" class="form-control">
@@ -52,6 +56,8 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!--
                         <div class="form-group mb-3">
                             <label for="status">Укажите статус</label>
                             <select class="form-select" name="status" id="status" class="form-control">
@@ -59,6 +65,7 @@
                                 <option value="в работе">в работе</option>
                             </select>
                         </div>
+                        -->
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
                     </form>
                 </div>

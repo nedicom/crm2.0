@@ -17,23 +17,71 @@
     </li>
 @endsection
 
-@section('main')
-    <h2 class="px-3">Лид</h2>
 
+@section('head')
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js" integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/resources/datetimepicker/jquery.datetimepicker.css">
+@endsection
+
+@section('footerscript')
+    <script src="/resources/datetimepicker/jquery.datetimepicker.full.js"></script>
+@endsection
+
+
+
+@section('main')
     <div class="row">
-        <div class="col-md-6 my-3">
-            <div class="card border-light">
+
+        <!-- карточка лида-->
+
+        <div class="col-md-6">
+            <div class="card border-secondary">
+
                 <div class="card-header d-flex justify-content-between">
-                    <h2 class="h3 mb-0 col-8">Инфорация о лиде</h2>
-                    <h3>{{$data->status}}</h3>
+                    <p class="col-2">{{$data->name}}</p>
+                    <p>{{$data->status}}</p>
+
+                    <div class="col-2 mb-3">
+                        <a class="btn btn-light w-100" href="#" data-bs-toggle="modal" data-bs-target="#editleadModal" data-toggle="tooltip" data-placement="top" title="Обработать">
+                            <i class="bi-pen"></i>
+                        </a>
+                    </div>
+
+                    <div class="col-2 mb-3">
+
+                        <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal" data-toggle="tooltip" data-placement="top" title="Дозвон"
+                            data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Ring->value }}">
+                            <i class="bi-phone"></i>
+                        </a>
+
+                    </div>
+
+                    <div class="col-2 mb-3">
+                        <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
+                         data-toggle="tooltip" data-placement="top" title="Консультация"
+                            data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" 
+                            data-type="{{ \App\Models\Enums\Tasks\Type::Consultation->value }}">
+                            <i class="bi-people"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="col-2 mb-3">
+                        <a class="btn btn-light w-100" href="#"
+                           data-toggle="tooltip" data-placement="top" title="Перевести в клиента"
+                           data-bs-toggle="modal" data-bs-target="#modalleadtoclient">
+                            <i class="bi-person-check"></i>
+                        </a>
+                    </div>
+
+
+
                 </div>
+
                 <div class="card-body row mb-4 d-flex justify-content-center">
                     <div class="row">
-                        <div class="col-3">ФИО</div>
-                        <h4 class="col-9">{{$data->name}}</h4>
-                    </div>
-                    <div class="row">
-                        <div class="col-3">Телефон</div>
                         <h4 class="col-9">{{$data->phone}}</h4>
                     </div>
                     <div class="row mt-5">
@@ -81,58 +129,63 @@
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="card-footer text-center">
                 <div class="mt-3 row d-flex justify-content-center">
                     <div class="mt-3 row d-flex justify-content-center">
-                        <div class="col-2 mb-3">
-                            <a class="btn btn-light w-100" href="#" data-bs-toggle="modal" data-bs-target="#editleadModal" data-toggle="tooltip" data-placement="top" title="Редактировать">
-                                <i class="bi-pen"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-3">
-                            <a class="btn btn-light w-100" href="#" data-bs-toggle="modal" data-bs-target="#modalleadtowork" data-toggle="tooltip" data-placement="top" title="Перевести в работу">
-                                <i class="bi-briefcase"></i>
-                            </a>
-                        </div>
-                        <div class="col-2 mb-3">
-                            <a class="btn btn-light w-100" href="#"
-                               data-toggle="tooltip" data-placement="top" title="Перевести в клиента"
-                               data-bs-toggle="modal" data-bs-target="#modalleadtoclient">
-                                <i class="bi-person-check"></i>
-                            </a>
-                        </div>
+
+
+
                         <div class="col-2 mb-3">
                             <a class="btn btn-light w-100 @if ($data -> status == 'конвертирован') disabled @endif"
-                                href="#" data-toggle="tooltip" data-placement="top" title="Удалить"
+                                href="#" data-toggle="tooltip" data-placement="top" title="Брак"
                                 data-bs-toggle="modal" data-bs-target="#modalleaddelete">
                                 <i class="bi-trash"></i>
                             </a>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
-        <div class='col-md-6 my-5'>
-            <div class='card border-light'>
-                <div class="text-center">
-                    <h6 class="mb-2 px-3 text-muted">Задачи не закрепленные к делам<span>({{ $data->tasks->count() }})</span></h6>
-                    <hr class="bg-dark-lighten my-3">
+
+        <!-- карточка лида-->
+
+        <!-- задачи по лиду-->
+
+        <div class='col-md-6'>
+            <div class='card border-light'>    
+                <div class="card ">
+                    <div class="card-header text-center">
+                        <p>Задачи <span>({{ $data->tasks->count() }})</p>
+                    </div>
+
                     @foreach ($data->tasks as $task)
                         <div class="mx-3 d-flex justify-content-start">
-                            <p class="mt-3 mx-3 text-start">{{$task->created_at->month}} / {{$task->created_at->day}}</p>
-                            <p class="mt-3 mx-3 text-center col-2">{{$task->status}}</p>
-                            <a class="mt-3 mx-3 text-start" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
+                            <span class="mt-3 mx-3 text-start col-2">{{$task->created_at->month}} / {{$task->created_at->day}}</span>
+                            <span class="mt-3 mx-3 text-center col-3">{{$task->status}}</span>
+                            <a class="mt-3 mx-3 text-start col-4" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>             
                         </div>
+                        @if($task->description !== null)
+                        <div class="mx-1 d-flex justify-content-start">
+                            <div class="mx-3 mb-2 text-start"> <small class="text-muted">{{$task->description}}</small></div>
+                        </div>
+                        @endif
+                        
                     @endforeach
-                </div>
+                </div>    
             </div>
         </div>
+
+        <!-- задачи по лиду-->
+
     </div>
 
     @include('../inc/modal/leadsmodal/editlead')
     @include('inc/modal/leadsmodal/leadtowork')
     @include('inc/modal/leadsmodal/leadtoclient')
     @include('inc/modal/leadsmodal/leaddelete')
+    @include('inc.modal.leadsmodal.add_task')
 @endsection

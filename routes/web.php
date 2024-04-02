@@ -61,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(LeadsController::class)->group(function () {
         Route::get('/leads', 'showleads')->name('leads');
+        Route::get('/oldleads', 'showoldleads')->name('oldleads');
         Route::post('/leads/add', 'addlead')->name('addlead');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');

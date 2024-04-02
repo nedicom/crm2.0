@@ -31,12 +31,7 @@
         @endforeach
     </td>
     <td>{{$el->source}}</td>
-    <td>
-        <a class="btn w-100 nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
-           data-lead-id="{{ $el->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Task->value }}">
-            <i class="bi-clipboard-plus"></i>
-        </a>
-    </td>
+
     <td>
         <a class="btn btn-light w-100" href="{{ route ('showLeadById', $el->id) }}" style="position: relative">
             <i class="bi-three-dots"></i>

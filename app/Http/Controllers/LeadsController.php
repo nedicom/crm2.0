@@ -9,6 +9,7 @@ use App\Models\Source;
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadsRequest;
 use App\Models\ClientsModel;
+use Carbon\Carbon;
 
 class LeadsController extends Controller
 {
@@ -21,8 +22,8 @@ class LeadsController extends Controller
         $lead->phone = $req->input('phone');
         $lead->lawyer = $req->input('lawyer');
         $lead->responsible = $req->input('responsible');
-        $lead->service = $req->input('service');
-        $lead->status = $req->input('status');
+        $lead->service = 11;
+        $lead->status = 'поступил';
 
         $lead->save();
 
@@ -30,6 +31,28 @@ class LeadsController extends Controller
     }
 
     public function showleads(Request $req)
+    {
+        $today_date = Carbon::now()->subMonths(2)->toDateTimeString();
+
+        return view ('leads/leads', 
+        [    
+            'newleads' => Leads::where('status', '=', 'поступил')->orderBy('id', 'desc')
+            ->with('userFunc')->get(),            
+            'phoneleads' => Leads::where('status', '=', \App\Models\Enums\Tasks\Type::Ring->value)->orderBy('id', 'desc')
+            ->with('userFunc')->get(),    
+            'consleads' => Leads::where('status', '=', \App\Models\Enums\Tasks\Type::Consultation->value)->orderBy('id', 'desc')
+            ->with('userFunc')->with('responsibleFunc')->get(),
+            'defeatleads' => Leads::where('status', '=', 'удален')->orderBy('id', 'desc')
+                ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->get(),
+            'winleads' => Leads::where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->get(),
+            'datasource'   => Source::all(),
+            'dataservices' => Services::all(), 'datasources' =>  Source::all('name'),
+            'datalawyers'  => User::active()->get(),
+        ],
+        );  
+    }
+
+    public function showoldleads(Request $req)
     {
         $lawyer = null;
         $source = null;
@@ -42,7 +65,7 @@ class LeadsController extends Controller
         if (!empty($req->checkedsources)){$source='source';}
         if (!empty($req->checkedresponsible)){$responsible='responsible';}
 
-        return view ('leads/leads', ['data' => Leads::where($lawyer, $req->checkedlawyer)
+        return view ('leads/oldleads', ['data' => Leads::where($lawyer, $req->checkedlawyer)
             ->when($status, function ($query, $status) {
                 $query->where('status', $status);
             })
@@ -56,6 +79,7 @@ class LeadsController extends Controller
                 'datasource'   => Source::all(),
             ]
         );
+        
     }
 
     public function showLeadById($id)
@@ -78,7 +102,7 @@ class LeadsController extends Controller
         $lead -> phone = $req -> input('phone');
         $lead -> lawyer = $req -> input('lawyer');
         $lead -> responsible = $req -> input('responsible');
-        $lead -> service = $req -> input('service');
+        $lead->service = 11;
         $lead -> save();
 
         return redirect() -> route('showLeadById', $id) -> with('success', 'Все в порядке, лид обновлен');

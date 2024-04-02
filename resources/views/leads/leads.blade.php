@@ -22,38 +22,74 @@
 @endsection
 
 @section('main')
-    <h2 class="px-3">Лиды</h2>
-    @include('inc/filter.leadfilter')
 
-    <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col"># </th>
-                    <th scope="col">Дата обращения)</th>
-                    <th scope="col">Суть проблемы</th>
-                    <th scope="col">Имя клиента</th>
-                    <th scope="col">Телефон</th>
-                    <th scope="col">Консультация</th>
-                    <th scope="col">Результат</th>
-                    <th scope="col">Ответственный юрист</th>
-                    <th scope="col">Привлек</th>
-                    <th scope="col">Источник</th>
-                    <th scope="col">Задача</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($data as $el)
-                    @include('leads/leadrow')
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="pills-newleads-tab" data-bs-toggle="pill" data-bs-target="#pills-newleads" type="button" role="tab" aria-controls="pills-newleads" aria-selected="true">Новые</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-phoneleads-tab" data-bs-toggle="pill" data-bs-target="#pills-phoneleads" type="button" role="tab" aria-controls="pills-phoneleads" aria-selected="false">Дозвон</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-consleads-tab" data-bs-toggle="pill" data-bs-target="#pills-consleads" type="button" role="tab" aria-controls="pills-consleads" aria-selected="false">Консультация</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-defeatleads-tab" data-bs-toggle="pill" data-bs-target="#pills-defeatleads" type="button" role="tab" aria-controls="pills-defeatleads" aria-selected="false">Провален</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="pills-winleads-tab" data-bs-toggle="pill" data-bs-target="#pills-winleads" type="button" role="tab" aria-controls="pills-winleads" aria-selected="false">Конвертирован</button>
+            </li>
+        </ul>
+
+
+        <div class="tab-content" id="pills-tabContent">
+            
+            <div class="tab-pane fade show active" id="pills-newleads" role="tabpanel" aria-labelledby="pills-newleads-tab">
+               <div class="row">
+                    @foreach ($newleads as $el)
+                        @include('leads/leadbadge')
+                    @endforeach
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-consleads" role="tabpanel" aria-labelledby="pills-consleads-tab">
+            <div class="row">
+                @foreach ($consleads as $el)
+                    @include('leads/leadbadge')
                 @endforeach
-            </tbody>
-        </table>
-    </div>
+            </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-phoneleads" role="tabpanel" aria-labelledby="pills-phoneleads-tab">
+            <div class="row"> @foreach ($phoneleads as $el)
+                @include('leads/leadbadge')
+                @endforeach
+            </div>
+            </div>
+
+
+            <div class="tab-pane fade" id="pills-defeatleads" role="tabpanel" aria-labelledby="pills-defeatleads-tab">
+            <div class="row">@foreach ($defeatleads as $el)
+                @include('leads/leadbadge')
+                @endforeach
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-winleads" role="tabpanel" aria-labelledby="pills-winleads-tab">
+            <div class="row">@foreach ($winleads as $el)
+            
+                @include('leads/leadbadge')
+                
+                @endforeach
+                </div>
+            </div>
+</div>
+
+
 
     <!-- Модальные окна -->
     @include('inc./modal/leadsmodal/addlead')
     @include('inc./modal/leadsmodal/sources')
-    @include('inc.modal.leadsmodal.add_task')
 
     <script>
         $(function () {

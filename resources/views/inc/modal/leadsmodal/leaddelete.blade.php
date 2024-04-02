@@ -2,7 +2,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
           <div class ="modal-header">
-            <h2>Удалить</h2>
+            <h2>В брак</h2>
           </div>
 
           <div class ="modal-body d-flex justify-content-center">
@@ -12,9 +12,9 @@
               @csrf
 
               <div class="form-group mb-3">
-                <label for="failurereason">Причина неудачи</label>
+                <label for="failurereason">Что не так с лидом?</label>
                 <textarea rows="3" name="failurereason"
-                placeholder="Что, по Вашему мнению, послужило причиной неудачи" id="failurereason" class="form-control" required>{{$data->failurereason}}</textarea>
+                placeholder="Дубль, нет телефона, спам и так далее" id="failurereason" class="form-control" required>{{$data->failurereason}}</textarea>
               </div>
 
               <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
