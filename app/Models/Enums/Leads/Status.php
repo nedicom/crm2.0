@@ -9,4 +9,5 @@ enum Status: string
     case Converted  = 'конвертирован';
     case Deleted    = 'удален';
     case Generated  = 'сгенерирован';
+    case Lazy  = 'бездельник';
 }

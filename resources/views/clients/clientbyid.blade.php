@@ -28,6 +28,7 @@
             <div class="text-center">
                 <h5 class="mb-2 px-3 text-muted">{{$data->name}}</h5>
                 <p class="mb-0 text-muted">{{$data->phone}}</p>
+                <p class="mb-0 text-muted">идентификатор - {{$data->id}}</p>
                 <p class="mb-0 text-muted">{{$data->email}}</p>
                 <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
                 <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer) {{$data->tgid}} @else скрыто @endif</p>

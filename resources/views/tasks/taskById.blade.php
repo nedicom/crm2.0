@@ -29,19 +29,15 @@
         <div class="card border-light">
             <div class="card-body">
                 <h5 class="card-title text-truncate">{{$data->name}}</h5>
-                <h5>
-                    <span class="badge bg-primary"> {{$data['date']['currentMonth']}}</span>
-                    <span class="badge bg-primary"> {{$data['date']['currentDay']}}</span>
-                    <span class="badge bg-success"> {{$data['date']['currentTime']}}</span>
-                </h5>
                 <h6>
                     @foreach($datalawyers as $ellawyer)
                         @if ($ellawyer->id == $data->lawyer) {{$ellawyer->name}} @endif
                     @endforeach
                 </h6>
                 <p class="text-truncate">начало: {{$data['date']['value'] }}</p>
+                <p class="text-truncate">статус: {{$data->status}}</p>
 
-                <p class="text-truncate">{{$data->client}}</p>
+                <p class="text-truncate"><a href="/clients/{{$data->clientid}}">{{$data->client}}</a></p>
                 <div class="mt-3 row d-flex justify-content-center">
                     @if ($data->hrftodcm)
                         <div class="col-2 mb-3">
@@ -62,8 +58,13 @@
                         </div>
                     @endif
                     <div class="col-2 mb-3">
-                        <a class="btn btn-light w-100" href="{{ route ('TaskDelete', $data->id) }}">
+                        <a class="btn btn-light w-100" href="{{ route ('TaskDelete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Удалить">
                             <i class="bi-trash"></i>
+                        </a>
+                    </div>
+                    <div class="col-2 mb-3">
+                        <a class="btn btn-light w-100" href="{{ route ('TaskComplete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Выполнить">
+                            <i class="bi-check-circle"></i>
                         </a>
                     </div>
                 </div>

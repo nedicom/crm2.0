@@ -163,10 +163,10 @@
                     </div>
 
                     @foreach ($data->tasks as $task)
-                        <div class="mx-3 d-flex justify-content-start">
-                            <span class="mt-3 mx-3 text-start col-2">{{$task->created_at->month}} / {{$task->created_at->day}}</span>
-                            <span class="mt-3 mx-3 text-center col-3">{{$task->status}}</span>
-                            <a class="mt-3 mx-3 text-start col-4" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>             
+                        <div class="mx-3 card-body d-flex justify-content-start">
+                            <span class="text-start col-2">{{$task->created_at->month}} / {{$task->created_at->day}}</span>
+                            <span class="text-center col-3">{{$task->status}}</span>
+                            <a class="text-start col-4" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>             
                         </div>
                         @if($task->description !== null)
                         <div class="mx-1 d-flex justify-content-start">

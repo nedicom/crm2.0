@@ -62,6 +62,7 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(LeadsController::class)->group(function () {
         Route::get('/leads', 'showleads')->name('leads');
         Route::get('/oldleads', 'showoldleads')->name('oldleads');
+        Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
         Route::post('/leads/add', 'addlead')->name('addlead');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');
@@ -86,6 +87,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tasks/{id}', 'showTaskById')->name('showTaskById');
         Route::post('/tasks/{id}/edit', 'editTaskById')->name('editTaskById');
         Route::get('/tasks/{id}/delete', 'delete')->name('TaskDelete');
+        Route::get('/tasks/{id}/complete', 'complete')->name('TaskComplete');
         Route::post('/tasks/get-deals', 'getDealsByClient')->name('task.get.deals');
         Route::post('/tasks/list/ajax', 'getAjaxList')->name('tasks.list.ajax');
     });

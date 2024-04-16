@@ -17,7 +17,7 @@ class PaymentRepository
      */
     public function searchByAdmin(Request $request): \Illuminate\Database\Eloquent\Builder
     {
-        $query = Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc');
+        $query = Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc', 'tasks');
         $query = $this->queryParams($query, $request);
 
         return $query;
@@ -30,7 +30,7 @@ class PaymentRepository
      */
     public function searchByOwner(Request $request)
     {
-        $query = Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc')
+        $query = Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc', 'tasks')
             ->where(function ($query) {
                 $currentuser = Auth::id();
                 $query->orWhere('nameOfAttractioner', $currentuser)

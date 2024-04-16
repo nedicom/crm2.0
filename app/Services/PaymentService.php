@@ -13,6 +13,7 @@ class PaymentService
      * @param array $input
      * @return void
      */
+
     public function assignTasks(Payments $payment, array $input): void
     {
         foreach ($input as $key => $value) {

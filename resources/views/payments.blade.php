@@ -179,6 +179,7 @@
             <tr>
                 <th style="width: 2%">№</th>
                 <th scope="col">дата</th>
+                <th scope="col">задача</th>
                 <th style="width: 10%">Клиент</th>
                 <th style="width: 8%">Услуга</th>
                 <th scope="col">Цена услуги</th>
@@ -206,6 +207,12 @@
                 <tr>
                     <td>{{$number}}</td>
                     <td>{{$el->created_at->format('j / m')}}</td>
+                    @if (!empty($el->tasks[0]))
+                        <td class="text-truncate" data-bs-toggle="tooltip" data-bs-title="{{$el->tasks[0]->name}}">
+                            <a href="tasks/{{$el->tasks[0]->id}}" target="_blank"><i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;"></i></a> </td>
+                        @else
+                        <td>-</td>
+                    @endif
                     <td class="text-truncate" data-bs-toggle="tooltip" data-bs-title="{{$el->client}}">
                         <a href="clients/{{$el->clientid}}" target="_blank">{{$el->client}} </a>
                     </td>

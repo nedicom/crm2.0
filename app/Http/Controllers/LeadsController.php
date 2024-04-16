@@ -8,7 +8,9 @@ use App\Models\Services;
 use App\Models\Source;
 use Illuminate\Http\Request;
 use App\Http\Requests\LeadsRequest;
+use App\Models\Enums\Leads\Status;
 use App\Models\ClientsModel;
+use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 class LeadsController extends Controller
@@ -36,12 +38,34 @@ class LeadsController extends Controller
 
         return view ('leads/leads', 
         [    
-            'newleads' => Leads::where('status', '=', 'поступил')->orderBy('id', 'desc')
+            'newleads' => Leads::where('status', '=', 'поступил')->orWhere('status', '=', 'сгенерирован')->orderBy('id', 'desc')
             ->with('userFunc')->get(),            
-            'phoneleads' => Leads::where('status', '=', \App\Models\Enums\Tasks\Type::Ring->value)->orderBy('id', 'desc')
-            ->with('userFunc')->get(),    
-            'consleads' => Leads::where('status', '=', \App\Models\Enums\Tasks\Type::Consultation->value)->orderBy('id', 'desc')
+
+            'phoneleads' => Leads::whereHas('tasks', function($q){
+                $q->where('type', \App\Models\Enums\Tasks\Type::Ring->value)->where('status', '!=', 'выполнена');
+            })
+            ->orderBy('id', 'desc')
             ->with('userFunc')->with('responsibleFunc')->get(),
+
+            'consleads' => Leads::whereHas('tasks', function($q){
+                $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('status', '!=', 'выполнена');
+            })
+            ->orderBy('id', 'desc')
+            ->with('userFunc')->with('responsibleFunc')->get(),
+
+            
+            'withoutcaseleads' => Leads::whereDoesntHave('tasks', function (Builder $query) {
+                $query->where('status', '!=', 'выполнена');
+            })
+                /*whereHas('tasks', function($q){
+                $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('status', '=', 'выполнена')->orWhere('status', '!=', 'выполнена');
+            })*/
+                ->whereNotIn('status', [Status::Entered->value, Status::Converted->value, Status::Deleted->value, Status::Generated->value])
+                ->orderBy('id', 'desc')
+                ->whereDate('created_at', '>=', $today_date)
+                ->with('userFunc')->with('responsibleFunc')
+                ->get(),
+
             'defeatleads' => Leads::where('status', '=', 'удален')->orderBy('id', 'desc')
                 ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->get(),
             'winleads' => Leads::where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->get(),
@@ -82,6 +106,12 @@ class LeadsController extends Controller
         
     }
 
+    public function leadanalitics()
+    {
+        return view ('leads/leadanalitics'
+        );
+    }
+
     public function showLeadById($id)
     {
         return view ('leads/showLeadById', ['data' => Leads::with('userFunc',
@@ -103,6 +133,7 @@ class LeadsController extends Controller
         $lead -> lawyer = $req -> input('lawyer');
         $lead -> responsible = $req -> input('responsible');
         $lead->service = 11;
+        $lead->status = Status::Lazy->value;
         $lead -> save();
 
         return redirect() -> route('showLeadById', $id) -> with('success', 'Все в порядке, лид обновлен');

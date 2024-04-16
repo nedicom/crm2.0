@@ -9,8 +9,10 @@ use App\Events\Task\TaskUpdated;
 use App\Models\ClientsModel;
 use Illuminate\Http\Request;
 use App\Http\Requests\TasksRequest;
+use App\Models\Enums\Leads\Status;
 use App\Models\Tasks;
 use App\Models\User;
+use App\Models\Leads;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Repository\TaskRepository;
@@ -96,12 +98,13 @@ class TasksController extends Controller
         $task = Tasks::find($request);
 
         if ($task->lawyer == Auth::user()->id) {
-           $task->new = $task::STATE_OLD;
-           $task->save();
+            $task->new = $task::STATE_OLD;
+            $task->save();
         }
 
         return view('tasks/taskById', [
-            'data' => Tasks::find($request)], [
+            'data' => Tasks::find($request)
+        ], [
             'datalawyers' => User::active()->get(),
         ]);
     }
@@ -124,6 +127,14 @@ class TasksController extends Controller
         if ($request->has('payID')) {
             $this->service->assignPayments($task, $request->input('payID'));
         }
+
+        // Меняем статус лида
+        if ($task->lead_id) {
+            $lead = Leads::find($task->lead_id);
+            $lead->status = Status::In_Working->value;
+            $lead->save();
+        }
+
         // Events
         if ($task->status === $task::STATUS_COMPLETE) {
             $task->donetime = Carbon::now();
@@ -150,6 +161,24 @@ class TasksController extends Controller
         $task->delete();
 
         return redirect()->route('tasks')->with('success', 'Все в порядке, задача удалена');
+    }
+
+    public function complete(int $id)
+    {
+        $task = Tasks::find($id);
+        // Events
+        $task->donetime = Carbon::now();
+        $task->status = $task::STATUS_COMPLETE;
+            if ($task->lead_id) {
+                $lead = Leads::find($task->lead_id);
+                $lead->status = Status::Lazy->value;
+                $lead->save();
+            }
+        $task->save();
+        // Events
+        TaskCompleted::dispatch($task);
+
+        return redirect()->route('showTaskById', $id)->with('success', 'Все в порядке, задача выполнена');
     }
 
     /**
