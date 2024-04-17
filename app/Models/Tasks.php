@@ -105,10 +105,12 @@ class Tasks extends Model
      */
     public static function newFromLead(TasksRequest $request): self
     {
+        dd($request);
         $task = new self();
         $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token']));
         $task->name = $request->type.' - '. $request->lead_phone;
         $task->lead_id = $request->lead_id;
+        //$task->type = $request->type;
         $task->new = static::STATE_NEW;
         $task->postanovshik = Auth::user()->id;
         $task->status = static::STATUS_WAITING;

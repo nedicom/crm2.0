@@ -61,10 +61,12 @@
                 <h6 class="mb-2 px-3 text-muted">Задачи не закрепленные к делам<span>({{ $data->tasksFunc->count() }})</span></h6>
                 <hr class="bg-dark-lighten my-3">
                 @foreach (($data->tasksFunc) as $task)
+                {{$task}}
                     <div class="mx-3 d-flex justify-content-start">
-                        <p class="mt-3 mx-3 text-start">{{$task->created_at->month}} / {{$task->created_at->day}}</p>
-                        <p class="mt-3 mx-3 text-center col-2">{{$task->status}}</p>
-                        <a class="mt-3 mx-3 text-start" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
+                        <p class="mt-3 mx-3 text-start col-1">{{$task->created_at->month}} / {{$task->created_at->day}}</p>
+                        <p class="mt-3 mx-3 text-center col-1">{{$task->status}}</p>
+                        <p class="mt-3 mx-3 text-center col-1"><i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;"></i></p>                        
+                        <a class="mt-3 mx-3 text-start col-6" href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
                     </div>
                 @endforeach
                 @if ($countTaskD = $data->tasksFunc()->whereNotNull('deal_id')->count() > 0)
