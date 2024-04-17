@@ -32,7 +32,7 @@
                      
                         <input type="hidden" name="lead_id" value="{{ $data->id }}">
                         <input type="hidden" name="lead_phone" value="{{ $data->phone }}">
-                        <input type="hidden" id="tasktype" name="type">
+                        <input type="hidden" id="tasktype" name="type" value="test">
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
                     </form>
                 </div>
