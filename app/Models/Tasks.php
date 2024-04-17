@@ -105,7 +105,7 @@ class Tasks extends Model
      */
     public static function newFromLead(TasksRequest $request): self
     {
-        dd($request);
+        //dd($request);
         $task = new self();
         $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token']));
         $task->name = $request->type.' - '. $request->lead_phone;
