@@ -16,9 +16,10 @@ $(document).ready(function() {
 
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
+            alert(leadIdValue);
             document.getElementById('lead_id').value = leadIdValue;            
-            var TaskType = $(this).attr('data-type');
-            document.getElementById('tasktype').value = TaskType;
+            //var TaskType = $(this).attr('data-type');
+           // document.getElementById('tasktype').value = TaskType;
         }
 
         if ($(this).hasClass('clientTask')) {
@@ -46,7 +47,7 @@ $(document).ready(function() {
 
     // Заполнение полей формы в модальном окне "Добавить задачу" в разделе Клиенты
     function fillForm(element) {
-        var type = element.attr('data-type');
+        var type = element.attr('data-type');        
         document.getElementById("taskname").innerHTML = type;
         document.getElementById("tasktype").value = type;
         document.getElementById("nameoftask").value = type;
