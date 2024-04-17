@@ -219,6 +219,6 @@ class Tasks extends Model
 
     public function performer()
     {
-        return $this->belongsTo(User::class, 'lawyer', 'id');
+        return $this->belongsTo(User::class, 'lawyer', 'id')->withDefault();
     }
 }

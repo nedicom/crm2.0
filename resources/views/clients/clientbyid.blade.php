@@ -82,7 +82,7 @@
                 <a  href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
                 <p class="mt-3 px-1 text-start col-1">
                     <span class="mt-3 text-end">
-                        <img src="$task->performer->avatar" class="rounded-circle" style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{$task->performer->name}}">
+                        <img src="{{$task->performer->avatar}}" class="rounded-circle" style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{$task->performer->name}}">
                     </span>
                     
                 </p>
