@@ -18,8 +18,8 @@ $(document).ready(function() {
             var leadIdValue = $(this).attr('data-lead-id');
             alert(leadIdValue);
             document.getElementById('lead_id').value = leadIdValue;            
-            //var TaskType = $(this).attr('data-type');
-           // document.getElementById('tasktype').value = TaskType;
+            var TaskType = $(this).attr('data-type');
+            document.getElementById('tasktype').value = TaskType;
         }
 
         if ($(this).hasClass('clientTask')) {
