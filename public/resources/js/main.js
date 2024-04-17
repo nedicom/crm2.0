@@ -16,7 +16,7 @@ $(document).ready(function() {
 
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
-            document.getElementById('lead_id').value = leadIdValue;
+            document.getElementById('lead_id').value = leadIdValue;            
             var TaskType = $(this).attr('data-type');
             document.getElementById('tasktype').value = TaskType;
         }
@@ -49,7 +49,7 @@ $(document).ready(function() {
         var type = element.attr('data-type');
         document.getElementById("taskname").innerHTML = type;
         document.getElementById("tasktype").value = type;
-        document.getElementById("nameoftask").value = '';
+        document.getElementById("nameoftask").value = type;
         document.getElementById("type").value = type;
         var collection = document.getElementsByClassName("hideme")
         for (let i = 0; i < collection.length; i++) {
