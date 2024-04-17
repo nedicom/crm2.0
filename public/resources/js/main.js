@@ -49,7 +49,7 @@ $(document).ready(function() {
         var type = element.attr('data-type');
         document.getElementById("taskname").innerHTML = type;
         document.getElementById("tasktype").value = type;
-        document.getElementById("nameoftask").value = '';
+        document.getElementById("nameoftask").value = type;
         document.getElementById("type").value = type;
         var collection = document.getElementsByClassName("hideme")
         for (let i = 0; i < collection.length; i++) {
