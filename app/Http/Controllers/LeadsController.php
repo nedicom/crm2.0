@@ -57,7 +57,7 @@ class LeadsController extends Controller
             'withoutcaseleads' => Leads::whereDoesntHave('tasks', function (Builder $query) {
                 $query->where('status', '!=', 'выполнена');
             })
-                /*whereHas('tasks', function($q){
+              /*  whereHas('tasks', function($q){
                 $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('status', '=', 'выполнена')->orWhere('status', '!=', 'выполнена');
             })*/
                 ->whereNotIn('status', [Status::Entered->value, Status::Converted->value, Status::Deleted->value, Status::Generated->value])

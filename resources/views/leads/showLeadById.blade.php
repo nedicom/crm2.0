@@ -7,9 +7,6 @@
         <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#editleadModal">Редактировать лид</a>
     </li>
     <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleadtowork">В работу</a>
-    </li>
-    <li class="nav-item text-center p-3">
         <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleadtoclient">В клиента</a>
     </li>
     <li class="nav-item text-center p-3">
@@ -50,7 +47,7 @@
 
                     <div class="col-2 mb-3">
 
-                        <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal" data-toggle="tooltip" data-placement="top" title="Дозвон"
+                        <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal" data-toggle="tooltip" data-placement="top" title="{{ \App\Models\Enums\Tasks\Type::Ring->value }}"
                             data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Ring->value }}">
                             <i class="bi-phone"></i>
                         </a>

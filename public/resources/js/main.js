@@ -17,6 +17,8 @@ $(document).ready(function() {
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
             document.getElementById('lead_id').value = leadIdValue;
+            var TaskType = $(this).attr('data-type');
+            document.getElementById('tasktype').value = TaskType;
         }
 
         if ($(this).hasClass('clientTask')) {
@@ -54,6 +56,7 @@ $(document).ready(function() {
             collection[i].style.display = "block";
         }
         document.getElementById("lawyer").value = element.attr('data-user-id');
+        document.getElementById("soispolintel").value = element.attr('data-user-id');
         document.getElementById("soispolintel").value = element.attr('data-user-id');
         var now = new Date();
         now.setHours(23);
