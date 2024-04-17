@@ -219,6 +219,8 @@ class Tasks extends Model
 
     public function performer()
     {
-        return $this->belongsTo(User::class, 'lawyer', 'id')->withDefault();
+        return $this->belongsTo(User::class, 'lawyer', 'id')->withDefault([
+            'name' => 'Пользователь удален', 'avatar' => 'https://crm.nedicom.ru/avatars/ahCEbgke0YxG2JYZYGb6usGJrbID6lMmIegaKZbq.jpg'
+        ]);
     }
 }
