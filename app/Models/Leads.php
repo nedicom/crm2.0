@@ -34,7 +34,7 @@ class Leads extends Model
 
     protected $fillable = [
         'name', 'phone', 'description', 'source',
-        'service', 'lawyer', 'responsible', 'status'
+        'service', 'lawyer', 'responsible', 'status', 'client_id'
     ];
 
     /**

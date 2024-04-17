@@ -8,11 +8,14 @@ use App\Http\Requests\ClientsRequest;
 use App\Models\ClientsModel;
 use App\Models\User;
 use App\Models\Tasks;
+use App\Models\Leads;
 use App\Models\Source;
 use App\Models\Services;
+use App\Models\Enums\Leads\Status;
 use App\Repository\ClientRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+
 
 class ClientsController extends Controller
 {
@@ -72,9 +75,31 @@ class ClientsController extends Controller
     }
 
     public function store(ClientsRequest $request)
+
     {
+
         $client = ClientsModel::new($request);
+
+        //возвращаем без создания клиента, если номер телефона уже существует 
+        if (ClientsModel::where('phone', 'like', '%' . $client->phone . '%')->first()) {
+            return redirect()->route('clients', [
+                'checkedlawyer' => Auth::user()->id,
+                'status' => 1,
+            ])->with('success', 'Клиент с таким номером телефона уже существует');
+        }
+        
         $client->saveOrFail();
+
+        //добавляем в лиды с тем же телефоном id клиента
+        if ($client->id) {
+            Leads::where('phone', 'like', '%' . $client->phone . '%')
+                ->update(['client_id' => $client->id, 'status' => Status::Converted->value]);
+
+                //и id первого лида в клиента
+                    if(Leads::where('phone', 'like', '%' . $client->phone . '%')->first()){
+                        ClientsModel::where('id',$client->id)->update(['lead_id' => Leads::where('phone', 'like', '%' . $client->phone . '%')->first()->id]);
+                    }
+        }
 
         return redirect()->route('clients', [
             'checkedlawyer' => Auth::user()->id,
@@ -86,7 +111,9 @@ class ClientsController extends Controller
     {
         $client = ClientsModel::find($id);
         $client->edit($request);
-        if (!$request->status){$client->status = null;};
+        if (!$request->status) {
+            $client->status = null;
+        };
         $client->save();
 
         return redirect()->route('showClientById', $id)->with('success', 'Все в порядке, клиент обновлен');
