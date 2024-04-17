@@ -126,6 +126,17 @@ class ClientsModel extends Model
         return $this->hasMany(Tasks::class, 'clientid' , 'id');
     }
 
+    public function paymsThroughTask()
+    {
+        return $this->hasManyThrough(TaskPaymentAssign::class, Tasks::class,  
+            'clientid', // Foreign key on the environments table...
+            'task_id', // Foreign key on the deployments table...
+            'id', // Local key on the projects table...
+            'id' // Local key on the environments table...
+        );
+    }
+
+
     /**
      * Relations Tasks
      * @return \Illuminate\Database\Eloquent\Relations\HasOne

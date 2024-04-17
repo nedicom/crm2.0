@@ -50,7 +50,8 @@ class ClientRepository
      */
     public function findById(int $id)
     {
-        $query = ClientsModel::with('userFunc', 'tasksFunc', 'serviceFunc', 'paymentsFunc')->find($id);
+        $query = ClientsModel::with('userFunc', 'tasksFunc', 'serviceFunc', 'paymentsFunc', 'paymsThroughTask') 
+        ->find($id);
         return $query;
     }
 }

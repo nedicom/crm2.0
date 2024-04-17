@@ -34,7 +34,7 @@ class LeadsController extends Controller
 
     public function showleads(Request $req)
     {
-        $today_date = Carbon::now()->subMonths(2)->toDateTimeString();
+        $today_date = Carbon::now()->subMonths(1)->toDateTimeString();
 
         return view ('leads/leads', 
         [    

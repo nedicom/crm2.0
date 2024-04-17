@@ -13,6 +13,7 @@ use App\Models\Source;
 use App\Models\Services;
 use App\Models\Enums\Leads\Status;
 use App\Repository\ClientRepository;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 

@@ -160,7 +160,7 @@ class TasksController extends Controller
         TaskDeleted::dispatch($task);
         $task->delete();
 
-        return redirect()->route('tasks')->with('success', 'Все в порядке, задача удалена');
+        return redirect()->route('home')->with('success', 'Все в порядке, задача удалена');
     }
 
     public function complete(int $id)
