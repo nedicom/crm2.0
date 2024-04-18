@@ -34,7 +34,14 @@ class ClientRepository
      */
     public function getByClientByLawyer(Request $request, $adminRole = false)
     {
-        $query = ClientsModel::where('name', 'like', '%' . $request->findclient . '%');
+        $findclient = $request->findclient;
+        //dd($request->findclient);
+        if($request->findclient){
+            $query = ClientsModel::where('name', 'LIKE', '%' . $findclient . '%')->orWhere('phone', 'LIKE', '%' . $findclient . '%');
+        }
+        else{
+            $query = ClientsModel::where('name', 'LIKE', '%' . $findclient . '%');
+        }
         if ($request->checkedlawyer && $adminRole) $query->where('lawyer', $request->checkedlawyer);
         // Если роль не админ, то список клиентов возвращать только для текущего пользователя
         if (!$adminRole) $query->where('lawyer', Auth::id());

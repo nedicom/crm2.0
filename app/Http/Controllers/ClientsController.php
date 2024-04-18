@@ -78,9 +78,9 @@ class ClientsController extends Controller
     public function store(ClientsRequest $request)
 
     {
-
+        
         $client = ClientsModel::new($request);
-
+        
         //возвращаем без создания клиента, если номер телефона уже существует 
         if (ClientsModel::where('phone', 'like', '%' . $client->phone . '%')->first()) {
             return redirect()->route('clients', [
@@ -90,7 +90,7 @@ class ClientsController extends Controller
         }
         
         $client->saveOrFail();
-
+        //dd($client);
         //добавляем в лиды с тем же телефоном id клиента
         if ($client->id) {
             Leads::where('phone', 'like', '%' . $client->phone . '%')
@@ -100,12 +100,11 @@ class ClientsController extends Controller
                     if(Leads::where('phone', 'like', '%' . $client->phone . '%')->first()){
                         ClientsModel::where('id',$client->id)->update(['lead_id' => Leads::where('phone', 'like', '%' . $client->phone . '%')->first()->id]);
                     }
+
+                    return redirect()->route('showClientById',$client->id)->with('success', 'Все в порядке, клиент добавлен, лид обновлен');
         }
 
-        return redirect()->route('clients', [
-            'checkedlawyer' => Auth::user()->id,
-            'status' => 1,
-        ])->with('success', 'Все в порядке, клиент добавлен');
+        return redirect()->route('showClientById',$client->id)->with('success', 'Все в порядке, клиент добавлен');
     }
 
     public function update(int $id, ClientsRequest $request)

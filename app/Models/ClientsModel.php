@@ -36,7 +36,7 @@ class ClientsModel extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'lead_id'
+        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer'
     ];
 
     /**
@@ -46,14 +46,15 @@ class ClientsModel extends Model
     public static function new(ClientsRequest $request): self
     {
         $client = new self();
-        $client->fill($request->except(['_token', 'email', 'address']));
-        if (!is_null($request->input('email'))) { $client->email = $request->input('email'); }
-        if (!is_null($request->input('address'))) { $client->address = $request->input('address'); }
+        
+        $client->fill($request->except(['_token']));
+            if (is_null($request->input('email'))) { $client->email = 'empty@empty.ru'; }
+            if (is_null($request->input('address'))) { $client->address = 'адрес не указан'; }            
         $client->tgid = rand(0, 1000000);
             $replacePhone = ['+7', ' ', '(', ')' , '-'];
             $client->phone = str_replace($replacePhone, '', $request->input('phone'));
         if (!$request->input('status')) $client->change_status_at = Carbon::now()->toDateTimeString();
-
+        
         return $client;
     }
 
@@ -63,13 +64,16 @@ class ClientsModel extends Model
      */
     public function edit(ClientsRequest $request): void
     {
-        $this->fill($request->except('_token', 'email', 'address'));
-        if (!is_null($request->input('email'))) { $this->email = $request->input('email'); }
-        if (!is_null($request->input('address'))) { $this->address = $request->input('address'); }
-        if ($request->input('status') == 'выполнена') {
+        $this->fill($request->except('_token', 'status'));        
+        //if (!is_null($request->input('email'))) { $this->email = $request->input('email'); }
+        //if (!is_null($request->input('address'))) { $this->address = $request->input('address'); }
+        if (!$request->input('status')) {
             $this->status = static::STATUS_INACTIVE;
         }
-        if (!$request->input('status')) $this->change_status_at = Carbon::now()->toDateTimeString();
+        else{
+            $this->status = static::STATUS_ACTIVE;
+        }
+        if (!$request->input('status')) $this->change_status_at = Carbon::now()->toDateTimeString();        
     }
 
     /**

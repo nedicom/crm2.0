@@ -24,7 +24,7 @@ class ClientsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone' => 'required|unique:clients_models|min:9|max:50',
+            'phone' => 'required|min:9|max:50|unique:clients_models,phone,'.$this->id,
             'name' => 'required|string',
             'email' => 'email|string|nullable',
             'address' => 'string|max:250|nullable',
