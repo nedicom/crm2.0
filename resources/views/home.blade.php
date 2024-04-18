@@ -90,7 +90,7 @@
     </div>
     <div class="row">
         <h3>Показатели <small class="text-muted">@if ('day' == (request()->get('date'))) сегодня @else месяц @endif</small></h3>
-        @if (!config('app.debug'))
+        @if (config('app.debug'))
             <div class = "row mt-2" style="height: 700px;">
                 <iframe src="https://datalens.yandex/gwhlvrc5b8es6"></iframe>
             </div>

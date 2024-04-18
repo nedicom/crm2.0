@@ -39,6 +39,13 @@
 
                 <p class="text-truncate"><a href="/clients/{{$data->clientid}}">{{$data->client}}</a></p>
                 <div class="mt-3 row d-flex justify-content-center">
+                <div class="col-6 mb-3">               
+                    <div class="col-2 mb-3">
+                        <a class="btn btn-light w-100" href="{{ route ('TaskDelete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Удалить">
+                            <i class="bi-trash"></i>
+                        </a>
+                    </div>
+                    </div>
                     @if ($data->hrftodcm)
                         <div class="col-2 mb-3">
                             <a href="{{$data->hrftodcm}}"class="btn btn-light w-100" target="_blank">
@@ -57,11 +64,6 @@
                             </a>
                         </div>
                     @endif
-                    <div class="col-2 mb-3">
-                        <a class="btn btn-light w-100" href="{{ route ('TaskDelete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Удалить">
-                            <i class="bi-trash"></i>
-                        </a>
-                    </div>
                     <div class="col-2 mb-3">
                         <a class="btn btn-light w-100" href="{{ route ('TaskComplete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Выполнить">
                             <i class="bi-check-circle"></i>
