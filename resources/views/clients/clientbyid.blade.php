@@ -30,7 +30,9 @@
             <p class="mb-0 text-muted">{{$data->phone}}</p>
             <p class="mb-0 text-muted">идентификатор - {{$data->id}}</p>
             <p class="mb-0 text-muted">{{$data->email}}</p>
-            <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
+            @if($data->userFunc)
+                <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
+            @endif
             <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer) {{$data->tgid}} @else скрыто @endif</p>
             <hr class="bg-dark-lighten my-3">
             <div class="mt-3 px-3 row d-flex justify-content-center">
@@ -73,8 +75,13 @@
                 <p class="mt-3 px-1 text-center col-2">{{$task->status}}</p>
                 <p class="mt-3 px-1 text-center col-1">
                     @foreach (($data->paymsThroughTask) as $paytask)
-                    @if($task->id == $paytask->task_id)
-                    <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>
+                    @if($task->id == $paytask->task_id)                    
+                        @if (!auth()->user()->role == 'admin')   
+                        <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>                     
+                        @else
+                        <a href="/payments/{{$paytask->payment_id}}" target="_blank"><i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i></a>                     
+                        @endif
+                    
                     @endif
                     @endforeach
                 </p>
