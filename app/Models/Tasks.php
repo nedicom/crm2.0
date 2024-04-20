@@ -109,6 +109,7 @@ class Tasks extends Model
         $task = new self();
         $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token']));
         $task->name = $request->type.' - '. $request->lead_phone;
+        $task->soispolintel = 41;
         $task->lead_id = $request->lead_id;
         //$task->type = $request->type;
         $task->new = static::STATE_NEW;
