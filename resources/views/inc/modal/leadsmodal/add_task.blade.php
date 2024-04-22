@@ -30,8 +30,7 @@
                             </div>  
                         </div>
                         <input type="hidden" name="nameoftask" value="" id="nameoftask">
-                        <input type="hidden" name="soispolintel" value="" id="soispolintel">
-                        <input type="hidden" name="type" value="" id="type">
+                        <input type="hidden" name="type" value="" id="tasktype">
                         <input type="hidden" name="lead_id" id="lead_id" value="{{ $data->id }}">
                         <input type="hidden" name="lead_phone" id="lead_phone" value="{{ $data->phone }}">
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
