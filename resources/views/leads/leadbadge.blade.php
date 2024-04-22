@@ -35,9 +35,9 @@
       <p class="mt-3 fw-lighter lh-sm" style="height: 3rem; display: -webkit-box;  -webkit-line-clamp: 3;  -webkit-box-orient: vertical;  overflow: hidden;">
         {{$el -> description}}
       </p>
-      <p class="text-muted">Поступил: <strong>{{$el -> created_at}}</strong> </p>
+      <p class="text-muted">Поступил: <strong>{{$el -> created_at->format('d.m.Y в H:i')}}</strong> </p>
       @if ($el->updated_at !== null)
-      <p class="text-muted">Обработан: <strong>{{$el -> updated_at}}</strong> </p>
+      <p class="text-muted">Обработан: <strong>{{$el -> updated_at->format('d.m.Y в H:i')}}</strong> </p>
       @else
       <p class="text-muted">не обработан</p>
       @endif
