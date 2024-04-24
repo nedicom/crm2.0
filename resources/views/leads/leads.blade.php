@@ -57,7 +57,7 @@
     </div>
 
     <div class="tab-pane fade" id="pills-consleads" role="tabpanel" aria-labelledby="pills-consleads-tab">
-    <p class="row font-weight-light bg-white">Тут лиды с задачей - звонок и любым статусом кроме "выполнена"</p>
+    <p class="row font-weight-light bg-white">Тут лиды с задачей - консультация и любым статусом кроме "выполнена"</p>
         <div class="row">
             @foreach ($consleads as $el)
             @include('leads/leadbadge')
@@ -66,7 +66,7 @@
     </div>
 
     <div class="tab-pane fade" id="pills-phoneleads" role="tabpanel" aria-labelledby="pills-phoneleads-tab">
-    <p class="row font-weight-light bg-white">Тут лиды с задачей - консультация и любым статусом кроме "выполнена"</p>
+    <p class="row font-weight-light bg-white">Тут лиды с задачей - Звонок и любым статусом кроме "выполнена"</p>
         <div class="row"> @foreach ($phoneleads as $el)
             @include('leads/leadbadge')
             @endforeach
