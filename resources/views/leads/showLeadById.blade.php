@@ -47,14 +47,14 @@
 
                 <div class="col-2 mb-3">
 
-                    <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal" data-toggle="tooltip" data-placement="top" title="{{ \App\Models\Enums\Tasks\Type::Ring->value }}" data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Ring->value }}">
+                    <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskringModal" data-toggle="tooltip" data-placement="top" title="{{ \App\Models\Enums\Tasks\Type::Ring->value }}" data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Ring->value }}">
                         <i class="bi-phone"></i>
                     </a>
 
                 </div>
 
                 <div class="col-2 mb-3">
-                    <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskModal" data-toggle="tooltip" data-placement="top" title="Консультация" data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Consultation->value }}">
+                    <a class="btn w-100 btn-light nameToForm lead" href="#" data-bs-toggle="modal" data-bs-target="#taskconsModal" data-toggle="tooltip" data-placement="top" title="Консультация" data-lead-id="{{ $data->id }}" data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Consultation->value }}">
                         <i class="bi-people"></i>
                     </a>
 
@@ -180,5 +180,6 @@
 @include('inc/modal/leadsmodal/leadtowork')
 @include('inc/modal/leadsmodal/leadtoclient')
 @include('inc/modal/leadsmodal/leaddelete')
-@include('inc.modal.leadsmodal.add_task')
+@include('inc.modal.leadsmodal.add_task_ring')
+@include('inc.modal.leadsmodal.add_task_cons')
 @endsection

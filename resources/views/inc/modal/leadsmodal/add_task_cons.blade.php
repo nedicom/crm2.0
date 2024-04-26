@@ -1,4 +1,4 @@
-<div class="modal fade" id="taskModal">
+<div class="modal fade" id="taskconsModal">
     <div class="modal-dialog  modal-lg">
         <div class="modal-content">
             <div class ="modal-header">
@@ -29,8 +29,8 @@
                                 </select>
                             </div>  
                         </div>
-                        <input type="hidden" name="nameoftask" value="" id="nameoftask">
-                        <input type="hidden" name="type" value="" id="tasktype">
+                        <input type="hidden" name="nameoftask" value="консультация" id="nameoftask">
+                        <input type="hidden" name="type" value="консультация" id="tasktype">
                         <input type="hidden" name="lead_id" id="lead_id" value="{{ $data->id }}">
                         <input type="hidden" name="lead_phone" id="lead_phone" value="{{ $data->phone }}">
                         <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>

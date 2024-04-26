@@ -78,9 +78,9 @@ class ClientsController extends Controller
     public function store(ClientsRequest $request)
 
     {
-        
+
         $client = ClientsModel::new($request);
-        
+
         //возвращаем без создания клиента, если номер телефона уже существует 
         if (ClientsModel::where('phone', 'like', '%' . $client->phone . '%')->first()) {
             return redirect()->route('clients', [
@@ -88,23 +88,37 @@ class ClientsController extends Controller
                 'status' => 1,
             ])->with('success', 'Клиент с таким номером телефона уже существует');
         }
-        
+
         $client->saveOrFail();
         //dd($client);
         //добавляем в лиды с тем же телефоном id клиента
         if ($client->id) {
-            Leads::where('phone', 'like', '%' . $client->phone . '%')
-                ->update(['client_id' => $client->id, 'status' => Status::Converted->value]);
+            //и id первого лида в клиента
+            if (Leads::where('phone', 'like', '%' . $client->phone . '%')->first()) {
+                Leads::where('phone', 'like', '%' . $client->phone . '%')->update(['client_id' => $client->id, 'status' => Status::Converted->value]);
+                ClientsModel::where('id', $client->id)->update(['lead_id' => Leads::where('phone', 'like', '%' . $client->phone . '%')->first()->id]);
+                return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен, лид обновлен');
+            }
+            else{
+                $lead = new Leads();
+                $lead->name = $client->name;
+                $lead->source = $client->source;
+                $lead->description = 'лид создан из клиента';
+                $lead->phone = $client->phone;
+                $lead->lawyer = $client->lawyer;
+                $lead->responsible = $client->lawyer;
+                $lead->service = 11;
+                $lead->status = 'конвертирован';        
+                $lead->save();
 
-                //и id первого лида в клиента
-                    if(Leads::where('phone', 'like', '%' . $client->phone . '%')->first()){
-                        ClientsModel::where('id',$client->id)->update(['lead_id' => Leads::where('phone', 'like', '%' . $client->phone . '%')->first()->id]);
-                    }
+                ClientsModel::where('id', $client->id)->update(['lead_id' => $lead->id]);
+                return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен, лид создан');
+            }
 
-                    return redirect()->route('showClientById',$client->id)->with('success', 'Все в порядке, клиент добавлен, лид обновлен');
+            
         }
 
-        return redirect()->route('showClientById',$client->id)->with('success', 'Все в порядке, клиент добавлен');
+        return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен');
     }
 
     public function update(int $id, ClientsRequest $request)

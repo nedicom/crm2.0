@@ -18,6 +18,7 @@
                     <div class="form-group mb-3">
                         <label for="address">Введите адрес</label>
                         <input type="text" name="address" placeholder="295000, Симферополь, ул. Кирова, 15" value='{{$data->address}}' id="address" class="form-control">
+                        <div class="form-text">Старайтесь указывать индекс, это облегчает работу юристам</div>
                     </div>
                     <div class="form-group mb-3">
                         <label for="description">Введите описание</label>
@@ -53,6 +54,7 @@
                                 <label class="form-check-label" for="rating{{ $i }}">{{ $rating->value }}</label>
                             </div>
                         @endforeach
+                        <div class="form-text">У положительных будем просить отзывы</div>
                     </div>
                     <div class="form-check form-switch">
                         <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1"
