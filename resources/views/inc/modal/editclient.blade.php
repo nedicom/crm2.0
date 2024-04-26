@@ -1,5 +1,5 @@
 <div class="modal fade client" id="editModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog  modal-lg">
         <div class="modal-content">
             <div class ="modal-header">
                 <h2>Редактировать клиента</h2>
@@ -44,6 +44,17 @@
                             @endforeach
                         </select>
                     </div>
+
+                    <div class="form-group mb-3">
+                        {!! \App\Helpers\ClientHelper::typeList($data->casettype) !!}
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="address">Ссылка на диск</label>
+                        <input type="text" name="url" value="{{ $data->url }}" placeholder="не копируйте ссылку из браузера" id="url" class="form-control">
+                        <div class="form-text">В яндекс диске нажмите поделиться</div>
+                    </div>
+
                     <div class="form-group mb-3 rating-list">
                         @php $i = 0; @endphp
                         <label style="display: block">Рейтинг</label>

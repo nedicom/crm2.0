@@ -31,9 +31,24 @@
             <p class="mb-0 text-muted">идентификатор - {{$data->id}}</p>
             <p class="mb-0 text-muted">{{$data->email}}</p>
             @if($data->userFunc)
-                <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
+            <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
             @endif
             <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer) {{$data->tgid}} @else скрыто @endif</p>
+            <p class="my-3 text-muted">описание: {{$data->description}}</p>
+            <p class="mb-0 text-muted">тип: {{$data->casettype}}</p>
+
+            @if ($data->url)
+            <div class="d-flex justify-content-center">
+                <div class="my-3">
+                    <a href="{{$data->url}}" class="btn btn-light w-100" target="_blank">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="Blue" class="bi bi-hdd" viewBox="0 0 16 16">
+                            <path d="M4.5 11a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1zM3 10.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"></path>
+                            <path d="M16 11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V9.51c0-.418.105-.83.305-1.197l2.472-4.531A1.5 1.5 0 0 1 4.094 3h7.812a1.5 1.5 0 0 1 1.317.782l2.472 4.53c.2.368.305.78.305 1.198V11zM3.655 4.26 1.592 8.043C1.724 8.014 1.86 8 2 8h12c.14 0 .276.014.408.042L12.345 4.26a.5.5 0 0 0-.439-.26H4.094a.5.5 0 0 0-.44.26zM1 10v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            @endif
             <hr class="bg-dark-lighten my-3">
             <div class="mt-3 px-3 row d-flex justify-content-center">
                 <div class="col-4 mb-3">
@@ -75,23 +90,23 @@
                 <p class="mt-3 px-1 text-center col-2">{{$task->status}}</p>
                 <p class="mt-3 px-1 text-center col-1">
                     @foreach (($data->paymsThroughTask) as $paytask)
-                    @if($task->id == $paytask->task_id)                    
-                        @if (!auth()->user()->role == 'admin')   
-                        <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>                     
-                        @else
-                        <a href="/payments/{{$paytask->payment_id}}" target="_blank"><i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i></a>                     
-                        @endif
-                    
+                    @if($task->id == $paytask->task_id)
+                    @if (!auth()->user()->role == 'admin')
+                    <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>
+                    @else
+                    <a href="/payments/{{$paytask->payment_id}}" target="_blank"><i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i></a>
+                    @endif
+
                     @endif
                     @endforeach
                 </p>
                 <p class="mt-3 px-1 text-start col-6">
-                <a  href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
+                    <a href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a>
                 <p class="mt-3 px-1 text-start col-1">
                     <span class="mt-3 text-end">
                         <img src="{{$task->performer->avatar}}" class="rounded-circle" style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="{{$task->performer->name}}">
                     </span>
-                    
+
                 </p>
                 </p>
             </div>
@@ -110,15 +125,15 @@
 
                     <p class="mt-3 px-1 text-center col-1">
                         @foreach (($data->paymsThroughTask) as $paytask)
-                            @if($task->id == $paytask->task_id)
-                            <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>
-                            @endif
+                        @if($task->id == $paytask->task_id)
+                        <i class="bi bi-clipboard-heart" style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip" data-bs-title="оплачена"></i>
+                        @endif
                         @endforeach
                     </p>
 
                     <p class="mt-3 px-1 text-start col-6">
                         <a href="/tasks/{{$task->id}}" target="_blank">{{$task->name}}</a> |
-                            <a href="{{ route("deal.show", ['id' => $task->deal->id]) }}" target="_blank">{{ $task->deal->name }}</a>
+                        <a href="{{ route("deal.show", ['id' => $task->deal->id]) }}" target="_blank">{{ $task->deal->name }}</a>
 
                     </p>
 

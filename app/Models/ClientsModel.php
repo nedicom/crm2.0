@@ -36,7 +36,7 @@ class ClientsModel extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer', 'status'
+        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer', 'status', 'url', 'casettype'
     ];
 
     /**
@@ -45,8 +45,7 @@ class ClientsModel extends Model
      */
     public static function new(ClientsRequest $request): self
     {
-        $client = new self();
-        //dd($request->input('status'));
+        $client = new self();        
         $client->fill($request->except(['_token']));
             if (is_null($request->input('email'))) { $client->email = 'empty@empty.ru'; }
             if (is_null($request->input('address'))) { $client->address = 'адрес не указан'; }            
