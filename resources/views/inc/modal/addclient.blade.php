@@ -7,10 +7,14 @@
                     <div class="col-10">
                         <h2>Добавить клиента</h2>
                     </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <div class="col-2 form-check form-switch">
+                        <div class="float-end">
+                            <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1" checked>
+                            <label class="form-check-label" for="status">В работе</label>
+                        </div>
                     </div>
                 </div>
+
                 <div class="modal-body">
                     <div class="row g-3 mb-1">
                         <div class="col">
@@ -84,10 +88,9 @@
                             @endforeach
                             <div class="form-text">у положительных будем просить отзывы</div>
                         </div>
-                        <div class="col-4 form-check form-switch">
-                            <div class="float-end">
-                                <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1" checked>
-                                <label class="form-check-label" for="status">В работе</label>
+                        <div class="col-4">
+                            <div class="float-end">    
+                                <button type="submit" class="btn btn-primary">Сохранить</button>
                             </div>
                         </div>
                     </div>

@@ -6,14 +6,18 @@
                 <div class="modal-header">
                     <div class="col-10">
                         <h2>Редактировать клиента</h2>
-                    </div>
-                    <div class="col-2">
-                        <button type="submit" class="btn btn-primary">Обновить</button>
-                    </div>
+                    </div>                    
+
+                        <div class="col-2 form-check form-switch">
+                            <div class="float-end">
+                                <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1"
+                                    @if ($data->status == 1) checked @endif>
+                                <label class="form-check-label" for="status">В работе</label>
+                            </div>
+                        </div>                    
                 </div>
+
                 <div class ="modal-body">
-
-
                     <div class="row g-3 mb-1">
                         <div class="col">
                             <label for="name">ФИО  <span class="text-danger">*</span></label>
@@ -70,9 +74,6 @@
                         </div>
                     </div>
 
-
-
-
                     <div class="row g-3 mb-1 align-items-center">
                         <div class="col-8 rating-list">
                             @php $i = 0; @endphp
@@ -87,11 +88,9 @@
                             <div class="form-text">У положительных будем просить отзывы</div>
                         </div>
 
-                        <div class="col-4 form-check form-switch">
+                        <div class="col-4">
                             <div class="float-end">
-                                <input class="form-check-input status-client" type="checkbox" name="status" id="status" value="1"
-                                    @if ($data->status == 1) checked @endif>
-                                <label class="form-check-label" for="status">В работе</label>
+                                <button type="submit" class="btn btn-primary">Обновить</button>
                             </div>
                         </div>
                     </div>
