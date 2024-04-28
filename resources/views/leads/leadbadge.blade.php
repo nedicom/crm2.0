@@ -1,5 +1,5 @@
 <div class='col-md-4 my-3'>
-  <div class='card border-secondary'>
+  <div class='card border-1 shadow'>
 
     <div class="card-header bg-transparent border-secondary">
       <div class="d-flex justify-content-between align-items-center m-1">

@@ -32,23 +32,23 @@
 @section('main')
     <div class="row">
         @can('manage-users')
-            <div class="px-3 col-8 pb-3">
+            <div class="px-3 col-md-6 col-12 pb-3">
                 <h5>Сервис Мои звонки</h5>
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-md-3 col-12">
                         <form action="{{ route('mycalls.subscribe.call') }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Подписаться на события</button>
+                            <button type="submit" class="btn btn-primary">Подписаться</button>
                         </form>
                     </div>
-                    <div class="col-3">
+                    <div class="col-md-3 col-12 my-1 my-md-0">
                         <form action="{{ route('mycalls.unsubscribe.call') }}" method="POST">
                             @csrf
-                            <button type="submit" class="btn btn-primary">Отписаться от событий</button>
+                            <button type="submit" class="btn btn-primary">Отписаться</button>
                         </form>
                     </div>
                     <!-- Для теста -->
-                    <div class="col-3">
+                    <div class="col-md-3 col-12">
                         <form action="{{ route('mycalls.download_log') }}" method="POST">
                             @csrf
                             <button type="submit" class="btn btn-primary">Скачать логи</button>
@@ -57,7 +57,9 @@
                 </div>
             </div>
         @endcan
-        <div class="col-4">
+        
+        <div class="col-md-6 col-12">
+            <h5>Бот информер</h5>
             <div class="mb-2">
                 @if($user->tg_id)
                     <a href="{{ config('app.bot_staff.link') }}?start={{ base64_encode($user->id) }}">Бот-информер подключен</a>.
@@ -66,6 +68,8 @@
                     <a href="{{ config('app.bot_staff.link') }}?start={{ base64_encode($user->id) }}">перейдите по ссылке</a>.
                 @endif
             </div>
+
+            <h5>Аватар</h5>
             <form enctype="multipart/form-data" action="{{ route('add-avatar') }}" method="POST">
                 @csrf
                 <div class="row">
@@ -77,7 +81,9 @@
                     </div>
                 </div>
             </form>
+
             <div class="pt-2">
+            <h5>Яндекс календарь</h5>
                 <label for="calendarurl" class="visually-hidden">Копировать ссылку</label>
                 <div class="input-group">
                     <div class="input-group-text" id="btnurl">Копировать ссылку</div>
@@ -88,7 +94,8 @@
             </div>
         </div>
     </div>
-    <div class="row">
+
+    <div class="row mt-5">
         <h3>Показатели <small class="text-muted">@if ('day' == (request()->get('date'))) сегодня @else месяц @endif</small></h3>
         @if (config('app.debug'))
             <div class = "row mt-2" style="height: 700px;">

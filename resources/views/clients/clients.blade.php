@@ -21,15 +21,16 @@
 @endsection
 
 @section('main')
-    <h2 class="px-3">Клиенты ({{ count($data) }})</h2>
+    <h2 class="px-3 text-center">Клиенты ({{ count($data) }})</h2>
     <!-- Фильтр -->
     @include('inc/filter.clientfilter')
 
-    <div class="row p-4">
         @foreach ($data as $client)
-            <div class='card row my-3 p-3 border'>
-              <div class="text-center d-inline-flex justify-content-between align-items-center">
-                  <div class="col-4">
+            <div class='card my-5 border border-2 shadow p-3'>
+              
+                <!-- Шапка клиента -->
+                <div class="row gx-0 text-center d-inline-flex justify-content-between align-items-center">                
+                    <div class="col-md-4 col-12">
                       <div class="col-12 d-flex justify-content-center">
                           <div class="px-1 col-2">
                               <a class="btn btn-light w-100" href="{{ route ('showClientById', $client->id) }}">
@@ -58,67 +59,68 @@
                                   <i class="bi bi-clipboard-data"></i>
                               </a> -->
                           </div>
-                          <div class="px-1 col-2">
-                              @if ((!empty($client->userFunc)) && ($client->userFunc->getAvatar() !== null))
-                                  <img src="{{ $client->userFunc->avatar }}" style="width: 30px;  height:30px" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                                    title="@if ($client->userFunc->name) {{ $client->userFunc->name }} @endif" />
-                              @endif
-                          </div>
                       </div>
-                  </div>
-                  <div class="col-4 text-muted text-truncate fw-bold">{{$client->name}}</div>
+                     </div>
+                
 
-                  <div class="col-4 d-flex align-items-center justify-content-end">
-                      <div class="col-6 d-flex align-items-cente justify-content-end">
-                          <div>
-                              <p class="mb-0 text-muted">{{$client->phone}}</p>
-                              <p class="mb-0 text-muted">{{$client->email}}</p>
-                          </div>
-                      </div>
-                      <div class="col-6 d-flex align-items-center justify-content-end">
-                          <div  class="px-3">
-                              @if ($client->status == 1)
-                                  <i class="bi bi-person" style = "font-size: 2rem; color: #0acf97;"></i>
-                              @else
-                                  <i class="bi bi-person" style = "font-size: 2rem; color: gray;"></i>
-                              @endif
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <!-- Список задач -->
-              <div class="row">
-                  @if ($client->deals()->count() === 0)
-                      <h6 style="text-align: center;">Задачи не закрепленные к делам</h6>
-                  @endif
-                  <div class="d-flex flex-wrap">
-                      @foreach ($client->tasksFunc()->where('deal_id', '=', null)->get() as $task)
-                          @if ($task->status !== 'выполнена')
-                              @include('/clients/_card_task')
-                          @endif
-                      @endforeach
-                      @include('/clients/_card_add_task')
-                  </div><!-- .d-flex.flex-wrap -->
-                  @if ($client->deals()->count() > 0)
-                      @foreach ($client->deals()->get() as $deal)
-                          @if ($deal->tasks()->count() > 0)
-                              <hr class="bg-dark-lighten my-3">
-                              <h6 style="text-align: center;">Дело: <a href="{{ route("deal.show", ['id' => $deal->id]) }}" target="_blank">{{ $deal->name }}</a></h6>
-                              <div class="d-flex flex-wrap">
-                                  @foreach ($deal->tasks()->orderBy('deal_id')->get() as $task)
-                                      @if ($task->status !== 'выполнена' && $task->clientid == $client->id)
-                                          @include('/clients/_card_task')
-                                      @endif
-                                  @endforeach
-                                  @include('/clients/_card_add_task')
-                              </div>
-                          @endif
-                      @endforeach
-                  @endif
-              </div>
+                    <div class="col-md-4 col-12 text-muted text-truncate fw-bold">
+                        <div class="px-1 text-center">
+                            @if ((!empty($client->userFunc)) && ($client->userFunc->getAvatar() !== null))
+                                <img src="{{ $client->userFunc->avatar }}" style="width: 30px;  height:30px" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                                title="@if ($client->userFunc->name) {{ $client->userFunc->name }} @endif" />
+                            @endif
+                        </div>
+                        {{$client->name}}
+                    </div>
+
+                    <div class="col-md-4 col-12">
+                        <div class="row">
+                            <div  class="px-3">
+                                @if ($client->status == 1)
+                                    <i class="bi bi-person" style = "font-size: 2rem; color: #0acf97;"></i>
+                                @else
+                                    <i class="bi bi-person" style = "font-size: 2rem; color: gray;"></i>
+                                @endif
+                            </div>
+                            <p class="mb-0 text-muted">{{$client->phone}}</p>
+                            <p class="mb-0 text-muted">{{$client->email}}</p>                          
+                        </div>
+                    </div>
+                </div>
+                <!-- Шапка клиента -->
+
+                <!-- Список задач -->
+                <div class="row gx-0 mt-3">                
+                    <h6 style="text-align: center;">Задачи не закрепленные к делам</h6>
+                    <div class="d-flex flex-wrap">                    
+                        @foreach ($client->tasksFunc()->where('deal_id', '=', null)->get() as $task)
+                            @if ($task->status !== 'выполнена')
+                                @include('/clients/_card_task')
+                            @endif
+                        @endforeach
+                        @include('/clients/_card_add_task')
+                    </div><!-- .d-flex.flex-wrap -->
+                    @if ($client->deals()->count() > 0)
+                        @foreach ($client->deals()->get() as $deal)                      
+                            @if ($deal->tasks()->where('status', '!=', 'выполнена')->count() > 0)
+                                
+                                <h6 class="border-top mt-3 pt-3" style="text-align: center;">Дело: <a href="{{ route("deal.show", ['id' => $deal->id]) }}" target="_blank">{{ $deal->name }}</a></h6>
+                                <div class="d-flex flex-wrap">
+                                    @foreach ($deal->tasks()->orderBy('deal_id')->get() as $task)
+                                        @if ($task->status !== 'выполнена' && $task->clientid == $client->id)
+                                            @include('/clients/_card_task')
+                                        @endif
+                                    @endforeach                                  
+                                </div>
+                            @endif
+                        @endforeach
+                        
+                    @endif
+                </div>
+                <!-- Список задач -->
+            
             </div><!-- .card.row -->
         @endforeach
-    </div>
 
     <div class="toast-container position-fixed my-2 top-0 start-50 translate-middle-x" aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
         <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="toast">

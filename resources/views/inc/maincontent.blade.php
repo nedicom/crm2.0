@@ -1,4 +1,4 @@
 @section('maincontent')
-  <div class="row px-5 py-2 min-h-100">
+  <div class="col-md-10 col-12 px-md-5 px-3 py-3" style="min-height: 100vh;">
           @yield('main')
   </div>

@@ -1,4 +1,4 @@
-<div class="col-2 px-3 py-3 border border-4 border-light" style="background-color:
+<div class="col-12 col-md-3 px-3 py-3 border border-4 border-light" style="background-color:
     @if($task->status == 'просрочена') LightCoral
     @elseif($task->status == 'в работе') MediumAquaMarine
     @elseif($task->status == 'ожидает') Cornsilk
