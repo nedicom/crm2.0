@@ -33,12 +33,12 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала:<span class="text-danger">*</span></label>
                                 <input type="text" id="date" value="{{$data->date['value']}}" class="form-control"
                                     name="date" @if ($data->isAtDepartment()) disabled @endif>
                             </div>
-                            <div class="col-8 form-group mb-3">
+                            <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span></span>
                                 <div class="row">
                                     <div class="col-6">
@@ -63,13 +63,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6 form-group mb-3">
+                            <div class="col-md-6 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
                                 <input type = "text" name="client" id="client" value="{{$data->client}}" class="form-control">
                                 <div id="clientList">
                                 </div>
                             </div>
-                            <div class="col-3 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="tag">Отметка</label>
                                 <select class="form-select" name="tag" id="tag">
                                     <option value="неважно"  @if ($data->tag == "в работе") selected @endif>неважно</option>
@@ -78,13 +78,13 @@
                                     <option value="приоритет"  @if ($data->tag == "приоритет") selected @endif>приоритет</option>
                                 </select>
                             </div>
-                            <div class="col-3 form-group mb-3">
+                            <div class="col-md-3 form-group mb-3">
                                 <label for="status">Cтатус</label>
                                 {!! \App\Helpers\TaskHelper::statusList($data, $data->isOverdueAtDepartment()) !!}
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="lawyer">Исполнитель<span class="text-danger">*</span></label>
                                 <select class="form-select" name="lawyer" id="lawyer" class="form-control">
                                     @foreach ($datalawyers as $el)
@@ -92,7 +92,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="soispolintel">соИсполнитель</label>
                                 <select class="form-select" name="soispolintel" id="soispolintel" class="form-control">
                                     @foreach ($datalawyers as $el)
@@ -100,7 +100,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="type">Тип</label>
                                 <select class="form-select" name="type" id="type">
                                     @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
@@ -144,20 +144,22 @@
                                                 </div>
                                             </td>
                                             <td class="info-payment">
-                                                {{ $payment->client  . ' - ' . $payment->serviceFunc->name . ' - ' . $payment->created_at }}
+                                                {{ $payment->client  . ' - ' . $payment->serviceFunc->name . ' - ' . $payment->created_at->format('d.m.Y') }}
                                             </td>
                                             <td><button type="button" class="btn btn-danger remove-tr">Удалить</button></td>
                                         </tr>
                                     @endforeach
                                 </table>
                             </div>
-                            <div class="col-4">
-                                <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success">Добавить платеж</button>
-                            </div>
+                           
+                                <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success col-md-4 col-12">Добавить платеж</button>
+                           
                         </div>
 
                         <input type="hidden" name="clientidinput" id="clientidinput" class="form-control" @if ($data->clientsModel) value="{{ $data->clientsModel->id }}" @endif>
-                        <button type="submit" id='submit' class="btn btn-primary">обновить</button>
+                        
+                        <div class="row"><button type="submit" id='submit' class="btn btn-primary col-12 col-md-4">обновить</button>
+                        </div>
                     </form>
                 </div>
             </div>

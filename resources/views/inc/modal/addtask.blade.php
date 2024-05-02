@@ -33,11 +33,11 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала: <span class="text-danger">*</span></label>
                                 <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}">
                             </div>
-                            <div class="col-8 form-group mb-3">
+                            <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span>
                                 <div class="row">
                                     <div class="col-6">
@@ -62,12 +62,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6 form-group mb-3">
+                            <div class="col-md-6 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
                                 <input type="text" name="client" id="client" class="form-control" required>
                                 <div id="clientList"></div>
                             </div>
-                            <div class="col-3 form-group mb-3 hideme">
+                            <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="tag">Сделайте отметку</label>
                                 <select class="form-select" name="tag" id="tag">
                                     <option value="неважно">неважно</option>
@@ -76,7 +76,7 @@
                                     <option value="приоритет">приоритет</option>
                                 </select>
                             </div>
-                            <div class="col-3 form-group mb-3 hideme">
+                            <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="status">Cтатус</label>
                                 <select class="form-select" name="status" id="status">
                                     <option value="в работе">в работе</option>
@@ -87,7 +87,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4 form-group mb-3 hideme">
+                            <div class="col-md-4 form-group mb-3 hideme">
                                 <label for="type">Тип</label>
                                 <select class="form-select" name="type" id="type">
                                     @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
@@ -95,7 +95,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-4 form-group mb-3">
+                            <div class="col-md-4 form-group mb-3">
                                 <label for="lawyer">Укажите исполнителя <span class="text-danger">*</span></label>
                                 <select name="lawyer" id="lawyer" class="form-select">
                                     @foreach ($datalawyers as $el)
@@ -103,7 +103,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-4 form-group mb-3 hideme">
+                            <div class="col-md-4 form-group mb-3 hideme">
                                 <label for="soispolintel">Укажите соИсполнителя</label>
                                 <select class="form-select" name="soispolintel" id="soispolintel">
                                     @foreach ($datalawyers as $el)
@@ -115,13 +115,13 @@
                         <!-- Согласовано начальниками -->
                         <div class="row">
                             <label>Согласовано</label>
-                            <div class="col-6">
+                            <div class="col-md-6">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch" name="lawyer_agree" id="lawyer_agree" @cannot('manage-users') disabled @endcan>
                                     <label class="form-check-label" for="lawyer_agree">Начальником юр. отдела</label>
                                 </div>
                             </div>
-                            <div class="col-6">
+                            <div class="col-md- 6">
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" role="switch" name="sales_agree" id="sales_agree" @cannot('manage-users') disabled @endcan>
                                     <label class="form-check-label" for="sales_agree">Начальником отдела продаж</label>
@@ -148,13 +148,13 @@
                                     </tr>
                                 </table>
                             </div>
-                            <div class="col-4">
-                                <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success">Добавить платеж</button>
-                            </div>
+                                <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success col-md-4 col-12">Добавить платеж</button>
                         </div>
 
                         <input type="hidden" name="clientidinput" id="clientidinput" class="form-control">
-                        <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
+                        <div class="row">
+                            <button type="submit" id='submit' class="btn btn-primary col-md-4">Сохранить</button>
+                        </div>
                     </form>
                 </div>
             </div>
