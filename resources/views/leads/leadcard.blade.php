@@ -12,7 +12,7 @@
                     @endif">{{$el -> status}} </span>
                   </div>
                 </div>
-123
+
                <h4 class="header-title mb-3">{{$el -> phone}}</h4>
 
                <div class ="d-flex justify-content-between">
