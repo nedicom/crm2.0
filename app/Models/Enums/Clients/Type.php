@@ -9,5 +9,8 @@ enum Type: string
     case War = 'Военный';
     case Pension = 'Пенсионный';
     case Family = 'Семейный';
+    case Home = 'Жилищный';
+    case Auto = 'Автоюрист';
+    case Energy = 'Крымэнерго';
     case Dontknow = 'Другой';
 }
