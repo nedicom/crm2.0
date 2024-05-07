@@ -1,4 +1,4 @@
-<div class="col-2 px-3 py-3 border border-4 border-light" style="background-color: Cornsilk;;">
+<div class="col-12 col-md-3 px-3 py-3 border border-4 border-light" style="background-color: Cornsilk;;">
     <span class="px-1 fw-normal bg-white border border-white" style="font-size: 14px;!important">добавить</span>
     <div class="px-1 fw-normal bg-white border border-white d-flex flex-wrap"  style="height: 80px; overflow: hidden; position: relative;">
         <div>

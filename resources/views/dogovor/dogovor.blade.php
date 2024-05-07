@@ -9,14 +9,15 @@
 @endsection
 
 @section('main')
-    <h2 class="px-3">Договоры</h2>
-    <div class="col-12"></div>
+    <h2 class="px-3 text-center">Договоры</h2>
 
-    @php /** @var \App\Models\Dogovor $el */ @endphp
-    @foreach ($data as $el)
-        @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
-    @endforeach
-
+    <div class="row">
+        @php /** @var \App\Models\Dogovor $el */ @endphp
+        @foreach ($data as $el)
+            @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
+        @endforeach
+    </div>
+    
     <script>
         var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
         var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {

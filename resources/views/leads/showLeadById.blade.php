@@ -25,14 +25,10 @@
 <script src="/resources/datetimepicker/jquery.datetimepicker.full.js"></script>
 @endsection
 
-
-
 @section('main')
 <div class="row">
-
     <!-- карточка лида-->
-
-    <div class="col-md-6">
+    <div class="col-xl-6">
         <div class="card border-secondary">
 
             <div class="card-header d-flex justify-content-between">
@@ -143,12 +139,10 @@
             </div>
         </div>
     </div>
-
     <!-- карточка лида-->
 
     <!-- задачи по лиду-->
-
-    <div class='col-md-6'>
+    <div class='col-xl-6'>
         <div class='card border-light'>
             <div class="card ">
                 <div class="card-header text-center">
@@ -171,11 +165,8 @@
             </div>
         </div>
     </div>
-
     <!-- задачи по лиду-->
-
 </div>
-
 @include('../inc/modal/leadsmodal/editlead')
 @include('inc/modal/leadsmodal/leadtowork')
 @include('inc/modal/leadsmodal/leadtoclient')

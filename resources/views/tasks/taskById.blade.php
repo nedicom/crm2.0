@@ -22,7 +22,7 @@
 @endsection
 
 @section('main')
-    <div class="col-4 text-center">
+    <div class="col-md-6 text-center">
         @php
             $weekMap = [0 => 'Понедельник', 1 => 'Вторник', 2 => 'Среда', 3 => 'Четерг', 4 => 'Пятница', 5 => 'Суббота', 6 => 'Воскресенье']
         @endphp
@@ -36,6 +36,7 @@
                 </h6>
                 <p class="text-truncate">начало: {{$data['date']['value'] }}</p>
                 <p class="text-truncate">статус: {{$data->status}}</p>
+                <p class="">{{$data->description}}</p>
 
                 <p class="text-truncate"><a href="/clients/{{$data->clientid}}">{{$data->client}}</a></p>
                 <div class="mt-3 row d-flex justify-content-center">

@@ -42,77 +42,69 @@
             Добавить задачу
         </a>
     </li>
-    <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
-           data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Consultation->value }}">
-            Добавить консультацию
-        </a>
-    </li>
-    <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
-           data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Ring->value }}">
-            Добавить звонок
-        </a>
-    </li>
-    <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
-           data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Meeting->value }}">
-            Добавить заседание
-        </a>
-    </li>
-    <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
-           data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Questioning->value }}">
-            Добавить допрос
-        </a>
-    </li>
 @endsection
 
 @section('main')
     @php $request = app('request'); @endphp
-    <div class="row">
         <!-- Фильтр поиска -->
-        <form class="row" action="" method="GET">
-            <h2 class="col-1 px-3">Задачи</h2>
-            <div class="col-12 d-flex justify-content-evenly align-items-center">
-                <div class="">
-                    <a href="{{route('tasks')}}?checkedlawyer={{ Auth::user()->id}}" class="btn btn-outline-primary btn-sm">мои задачи</a>
-                </div>
-                <!-- Чекбоксы по интервалу времени -->
-                <div>{!! \App\Helpers\TaskHelper::formCheckDateInterval($request) !!}</div>
+        <form class="row px-0" action="" method="GET">
+            <h2 class="col-md-1 px-3">Задачи</h2>
+            <div class="col-12">
+                <div class="row">
+                    <div class="col-12 col-md-2 my-2">
+                        <a href="{{route('tasks')}}?checkedlawyer={{ Auth::user()->id}}" class="btn btn-outline-primary btn-sm">мои задачи</a>
+                    </div>
+                    <!-- Чекбоксы по интервалу времени -->
+                    <div class="col-12 col-md-10">{!! \App\Helpers\TaskHelper::formCheckDateInterval($request) !!}</div>
 
-                @if ($request->input('calendar') == \App\Models\Enums\Tasks\DateInterval::Month->name)
-                    <!-- Вывод селекта со списком месяцев -->
-                    <div>{!! \App\Helpers\TaskHelper::formListMonths($request) !!}</div>
-                @endif
+                    @if ($request->input('calendar') == \App\Models\Enums\Tasks\DateInterval::Month->name)
+                        <!-- Вывод селекта со списком месяцев -->
+                        <div class="col-12 col-md-3">{!! \App\Helpers\TaskHelper::formListMonths($request) !!}</div>
+                    @endif
+                    
+                </div>
 
-                <div>
-                    <select class="form-select" name="checkedlawyer" id="checkedlawyer">
-                        <option value=''>не выбрано</option>
-                        @foreach ($datalawyers as $el)
-                            <option value="{{ $el->id }}" @if ($el->id == $request->input('checkedlawyer')) selected @endif>
-                                {{ $el->name }}
-                            </option>
-                        @endforeach
-                    </select>
+            <div class="row">
+                <div class="col-md-6 mt-2">
+                    <div class="row justify-content-start">
+                        <div class="col-6 col-md-4">
+                            <select class="form-select" name="checkedlawyer" id="checkedlawyer">
+                                <option value=''>не выбрано</option>
+                                @foreach ($datalawyers as $el)
+                                    <option value="{{ $el->id }}" @if ($el->id == $request->input('checkedlawyer')) selected @endif>
+                                        {{ $el->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-6 col-md-">
+                            <select class="form-select" name="type" id="type">
+                                <option value="" @if ($request->input('type') == "") selected @endif >все типы</option>
+                                @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
+                                    <option value="{{ $type->value }}" @if ($request->input('type') == $type->value) selected @endif >
+                                        {{ $type->value }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <select class="form-select" name="type" id="type">
-                        <option value="" @if ($request->input('type') == "") selected @endif >все типы</option>
-                        @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
-                            <option value="{{ $type->value }}" @if ($request->input('type') == $type->value) selected @endif >
-                                {{ $type->value }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="">
-                    <button type="submit" class="btn btn-primary btn-sm">Применить</button>
-                    <a href='tasks' class='button btn btn-secondary btn-sm'>Сбросить</a>
+
+                <div class="col-md-6 mt-4 mt-md-2">
+                    <div class="row justify-content-end">
+                        <div class="col-6 col-md-4">
+                            <button type="submit" class="btn btn-primary btn-sm col-12">Применить</button>                        
+                        </div>
+                        <div class="col-6 col-md-4">
+                            <a href='tasks' class='button btn btn-secondary btn-sm col-12'>Сбросить</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            </div>
         </form>
-    </div>
+    
 
     <div class="row" id="taskarea">
         @php
@@ -121,7 +113,7 @@
         @if ($request->input('calendar') == '' || $request->input('calendar') == \App\Models\Enums\Tasks\DateInterval::AllTime->name
             || \App\Helpers\TaskHelper::isDayInterval($request))
             <div class="row pt-4">
-                <div class="col-3 columncard text-center" id="timeleft">
+                <div class="col-md-3 columncard text-center" id="timeleft">
                     <h5 class="page-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Сюда попадают просроченные задачи каждый день в 8.00 утра">просрочка</h5>
                     @foreach ($data as $el)
                         @if ($el->status == "просрочена")
@@ -129,7 +121,7 @@
                         @endif
                     @endforeach
                 </div>
-                <div class="col-3 columncard text-center" id="waiting">
+                <div class="col-md-3 columncard text-center" id="waiting">
                     <h5 class="page-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Тут задачи которые Вам поставили, но не принятые в работу">ожидает</h5>
                     @foreach ($data as $el)
                         @if ($el->status == "ожидает")
@@ -137,7 +129,7 @@
                         @endif
                     @endforeach
                 </div>
-                <div class="col-3 columncard text-center" id="inwork">
+                <div class="col-md-3 columncard text-center" id="inwork">
                     <h5 class="page-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Здесь задачи с которыми вы работаете сейчас. Позже будет учитываться время потраченное на выполнение">в работе</h5>
                     @foreach ($data as $el)
                         @if ($el->status == "в работе")
@@ -145,7 +137,7 @@
                         @endif
                     @endforeach
                 </div>
-                <div class="col-3 columncard text-center" id="finished">
+                <div class="col-md-3 columncard text-center" id="finished">
                     <h5 class="page-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Каждый день в 00.00 выполненные задачи будут пропадать из списка">выполнена</h5>
                     @foreach ($data as $el)
                         @if (($el->status == "выполнена") && ($el->donetime > Carbon\Carbon::today()))
