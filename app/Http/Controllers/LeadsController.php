@@ -24,6 +24,7 @@ class LeadsController extends Controller
         $lead->phone = $req->input('phone');
         $lead->lawyer = $req->input('lawyer');
         $lead->responsible = $req->input('responsible');
+        $lead->casettype = $req->input('casettype');
         $lead->service = 11;
         $lead->status = 'поступил';
 
@@ -132,6 +133,7 @@ class LeadsController extends Controller
         $lead -> phone = $req -> input('phone');
         $lead -> lawyer = $req -> input('lawyer');
         $lead -> responsible = $req -> input('responsible');
+        $lead->casettype = $req->input('casettype');
         $lead->service = 11;
         $lead->status = Status::Lazy->value;
         $lead -> save();
