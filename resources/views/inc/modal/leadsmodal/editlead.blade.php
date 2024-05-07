@@ -51,11 +51,10 @@
                             </div>
 
                             <div class="col">
-                                <label for="responsible">ответсвенный</label>
+                                <label for="responsible">ответственный</label>
                                 <select class="form-select" name="responsible" id="responsible" class="form-control">
                                     @foreach($datalawyers as $el)
                                         <option value="{{$el -> id}}" @if($data->responsible == $el -> id) selected @endif>{{$el -> name}} 
-                                            <span>123</span>
                                         </option>
                                     @endforeach
                                 </select>
