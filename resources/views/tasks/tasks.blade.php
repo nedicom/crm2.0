@@ -37,7 +37,7 @@
 
 @section('leftmenuone')
     <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none nameToForm" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
+        <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#taskModal"
            data-user-id="{{ Auth::id() }}" data-type="{{ \App\Models\Enums\Tasks\Type::Task->value }}">
             Добавить задачу
         </a>

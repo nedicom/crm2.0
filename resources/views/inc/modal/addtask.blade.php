@@ -64,8 +64,9 @@
                         <div class="row">
                             <div class="col-md-6 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
-                                <input type="text" name="client" id="client" class="form-control" required>
-                                <div id="clientList"></div>
+                                <input type="text" name="client" id="client" class="form-control" @if(isset($data->name) ) value="{{$data->name}}" @endif required>
+                                <div id="clientList"></div> 
+                                @if(isset($data->name) ) value="{{$data->name}}" @endif
                             </div>
                             <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="tag">Сделайте отметку</label>
@@ -151,7 +152,8 @@
                                 <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success col-md-4 col-12">Добавить платеж</button>
                         </div>
 
-                        <input type="hidden" name="clientidinput" id="clientidinput" class="form-control">
+                        <input type="hidden" name="clientidinput" id="clientidinput" class="form-control" @if(isset($data->id)) value="{{$data->id}}" @endif>
+                        <input type="hidden" name="type" value="задача" id="tasktype">
                         <div class="row">
                             <button type="submit" id='submit' class="btn btn-primary col-md-4">Сохранить</button>
                         </div>
