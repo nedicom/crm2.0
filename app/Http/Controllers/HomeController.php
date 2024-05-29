@@ -79,7 +79,7 @@ class HomeController extends Controller
                     ->where('status', 'просрочена')
                     ->where('donetime', '=', null)                    
                     ->select(
-                        'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
+                        'tasks.id', 'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
                         DB::raw("DATE_FORMAT(tasks.created_at, '%d %M %Y в %H:%m') as created"),
                         DB::raw("DATE_FORMAT(tasks.date, '%d %M %Y в %H:%m') as donedate"),
                     ) 
@@ -88,7 +88,7 @@ class HomeController extends Controller
                     ->where('status', 'просрочена')
                     ->where('donetime', '=', null)                    
                     ->select(
-                        'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
+                        'tasks.id', 'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
                         DB::raw("DATE_FORMAT(tasks.created_at, '%d %M %Y в %H:%m') as created"),
                         DB::raw("DATE_FORMAT(tasks.date, '%d %M %Y в %H:%m') as donedate"),
                     )                    
@@ -100,7 +100,7 @@ class HomeController extends Controller
                     ->where('new', 1)
                     ->where('donetime', '=', null)                    
                     ->select(
-                        'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
+                        'tasks.id', 'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
                         DB::raw("DATE_FORMAT(tasks.created_at, '%d %M %Y в %H:%m') as created"),
                         DB::raw("DATE_FORMAT(tasks.date, '%d %M %Y в %H:%m') as donedate"),
                     )                        
@@ -112,7 +112,7 @@ class HomeController extends Controller
                     ->where('new', 1)
                     ->where('donetime', '=', null) 
                     ->select(
-                        'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
+                        'tasks.id', 'tasks.name', 'tasks.tag', 'tasks.client', 'tasks.type',
                         DB::raw("DATE_FORMAT(tasks.created_at, '%d %M %Y в %H:%m') as created"),
                         DB::raw("DATE_FORMAT(tasks.date, '%d %M %Y в %H:%m') as donedate"),
                     )  
