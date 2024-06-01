@@ -144,6 +144,8 @@
 
               <input type="hidden" name="clientidinput" id="clientidinput" class="form-control">
 
+              <input type="hidden" name="ispolnitelinput" id="ispolnitelinput" class="form-control">
+
               <div class="d-flex align-items-center">
                 <p><button type="submit" id='submit' class="btn btn-primary" disabled>Сохранить</button></p>  
                 <p class="small mx-3" id="newclient" style="color:red;">Нового клиента добавлять нельзя</p>             
@@ -158,6 +160,10 @@
     </div>
 
     <script>
+      function checkIspolnitel(e){
+        document.getElementById("ispolnitelinput").value = e;
+      }
+
       function addServiceFunc(e) {
         document.getElementById("subject").value += e.innerHTML +"\n";
         let price = e.getAttribute("data-price");
@@ -188,9 +194,5 @@
             var allprice = price2 + commonprice2;
           }       
         document.getElementById("predoplata").value = allprice;        
-      }
-
-
-
-      
+      }      
     </script>
