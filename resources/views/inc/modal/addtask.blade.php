@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала: <span class="text-danger">*</span></label>
-                                <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}">
+                                <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}" required>
                             </div>
                             <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span>
@@ -45,7 +45,8 @@
                                         <div class="input-group">
                                             <label class="input-group-text" for="duration_h"><i class="bi bi-stopwatch"></i></label>
                                             <input @cannot('manage-services') readonly @endcannot type="number" name="duration[hours]"
-                                                value="{{ \App\Helpers\TaskHelper::transformDuration(0)['hours'] }}" min="0" max="24" step="1" id="duration_h" class="form-control" />
+                                                value="{{ \App\Helpers\TaskHelper::transformDuration(0)['hours'] }}" min="0" max="24" step="1" id="duration_h" class="form-control" 
+                                                 />
                                             <span class="input-group-text">час</span>
                                         </div>
                                     </div>
@@ -65,8 +66,7 @@
                             <div class="col-md-6 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
                                 <input type="text" name="client" id="client" class="form-control" @if(isset($data->name) ) value="{{$data->name}}" @endif required>
-                                <div id="clientList"></div> 
-                                @if(isset($data->name) ) value="{{$data->name}}" @endif
+                                <div id="clientList"></div>                                 
                             </div>
                             <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="tag">Сделайте отметку</label>

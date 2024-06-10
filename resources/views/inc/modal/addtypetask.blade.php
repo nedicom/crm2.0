@@ -36,6 +36,7 @@ $(document).ready(function(){
       $('input#date').datetimepicker({
           lang: 'ru',
           step: 5,
+          mask:true,
       });
     });
 });

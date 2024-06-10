@@ -87,11 +87,21 @@ $(document).ready(function() {
 
     // Datetimepicker
     if (typeof $('input#date').datetimepicker !== "undefined") { //check if function exist to avoid err
+        jQuery.datetimepicker.setLocale('ru');
         $('input#date').datetimepicker({
-            lang: 'ru',
             step: 15, //more useful for lawyers
             minTime:'8:00',
-            maxTime:'22:00'
+            maxTime:'22:00',
+            mask: true,
+        });
+    }
+
+    if (typeof $('input#dateedittask').datetimepicker !== "undefined") { //check if function exist to avoid err
+        jQuery.datetimepicker.setLocale('ru');
+        $('input#dateedittask').datetimepicker({
+            step: 15, //more useful for lawyers
+            minTime:'8:00',
+            maxTime:'22:00',
         });
     }
 
