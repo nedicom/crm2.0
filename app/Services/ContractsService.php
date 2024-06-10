@@ -30,8 +30,18 @@ class ContractsService
     public function attachFile(string $contractUrl, $today, Request $request): string
     {
         $data = $request->only(['client', 'adress', 'phone', 'subject', 'allstoimost', 'preduslugi', 'predoplata']);
-        $performer = env('COMPANY_NAME', 'Адвокатский кабинет Мина Марк Анатольевич');
-        $addressPerformer = env('COMPANY_ADDRESS', '295000, РФ, Респ. Крым, ул. Долгоруковская 13а');
+       
+        if ($request->ispolnitelinput == 'ipmina') {
+            $performer = env('COMPANY_NAME', 'Индивидуальный предприниматель Мина Ольга Викторовна');
+            $psthxml = public_path('dogovor-template/ip/document.xml');
+            $tmpFile = storage_path('app/public/dogovor/ip/soglashenie.docx');  
+        } else {
+            $performer = env('COMPANY_NAME', 'Адвокатский кабинет Мина Марк Анатольевич');
+            $psthxml = public_path('dogovor-template/document.xml');
+            $tmpFile = storage_path('app/public/dogovor/soglashenie.docx');  
+        }
+
+        $addressPerformer = env('COMPANY_ADDRESS', '295000, РФ, Респ. Крым, ул. Долгоруковская 5');
         $phonePerformer = env('COMPANY_PHONE', '+7978 8838 978');
 
         $requisitesContracts = [
@@ -44,13 +54,11 @@ class ContractsService
         $requisitesContractsVar = array_merge(
             $requisitesContractsVar,
             $data,
-        );
+        );  
 
-        $psthxml = public_path('dogovor-template/document.xml');
-        $tmpFile = storage_path('app/public/dogovor/soglashenie.docx');
         $zip = new ZipArchive; // пакуем в архив наши переменные
 
-        if ($zip->open($tmpFile) === true) {
+        if ($zip->open($tmpFile) === true) {  
             $handle = fopen($psthxml, "r");
             $content = fread($handle, filesize($psthxml));
             fclose($handle);
@@ -60,8 +68,8 @@ class ContractsService
             $zip->close();
         }
 
-        $file = ($tmpFile);	// мы уже заменили содержиое файла на сервере
-        copy($file, $contractUrl);  // копируем обработанный договор в общую папку
+        $file = ($tmpFile);	// заменили содержимое файла на сервере
+        copy($file, $contractUrl);  // копируем обработанный договор в общую папку, для виндовс смотрим запрещенные символы в названии файла
         session()->flash('url', $contractUrl);
 
         if (!file_exists($file)) {

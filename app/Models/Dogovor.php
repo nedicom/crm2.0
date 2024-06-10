@@ -40,7 +40,7 @@ class Dogovor extends Model
     public static function new(Request $request, $date, string $filePath): self
     {
         $contract = new self();
-        $contract->fill($request->except(['_token', 'clientidinput', 'adress', 'client', 'phone']));
+        $contract->fill($request->except(['_token', 'clientidinput', 'adress', 'client', 'phone', 'name']));
         $contract->client_id = $request->input('clientidinput');
 
         $client = ClientsModel::find($request->input('clientidinput'));
@@ -50,7 +50,11 @@ class Dogovor extends Model
         $contract->lawyer_id = Auth::id();
         $contract->date = $date;
         $contract->url = $filePath;
-
+        if ($request->ispolnitelinput == 'ipmina') {
+            $contract->name = 'ИП Мина ' . $request->name;
+        } else {
+            $contract->name = 'Адвокат Мина ' . $request->name;
+        }
         return $contract;
     }
 

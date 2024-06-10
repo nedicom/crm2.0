@@ -45,9 +45,15 @@ class DogovorController extends Controller
 
     public function store(Request $request)
     {
-        $name = $request->input('name');
         $today = Carbon::now()->toDateString(); // Дата без времени
-        $contractUrl = 'dogovors/'.$name.' - '. Carbon::now() .'.docx';
+        
+        if($request->input('ispolnitelinput') == 'ipmina'){
+            $name = 'ИП Мина ' . $request->input('name'); 
+        }
+        else{
+            $name = 'Адвокат Мина ' . $request->input('name'); 
+        }
+        $contractUrl = 'dogovors/'.$name.' - '. $today .'.docx';
 
         try {
             $contacts = $this->service->new($today, $contractUrl, $request);

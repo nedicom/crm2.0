@@ -4,7 +4,10 @@
 
 @section('leftmenuone')
     <li class="nav-item text-center p-3">
-        <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#dogovorModal">Добавить договор</a>
+        <a class="text-white text-decoration-none" href="#" id="ipmina" onclick="checkIspolnitel('ipmina')" data-bs-toggle="modal" data-bs-target="#dogovorModal">договор с ИП Мина О. В.</a>
+    </li>
+    <li class="nav-item text-center p-3">
+        <a class="text-white text-decoration-none" href="#" id="advoakatmina" onclick="checkIspolnitel('advokatmina')" data-bs-toggle="modal" data-bs-target="#dogovorModal">договор с адвокатом</a>
     </li>
 @endsection
 

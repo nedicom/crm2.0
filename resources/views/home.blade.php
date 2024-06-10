@@ -114,9 +114,6 @@
                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Исполнитель</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Соисполнитель</button>
-            </li>
-            <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Постановщик</button>
             </li>
         </ul>
@@ -124,12 +121,13 @@
             <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                 @foreach($all['alltasksnew'] as $el)
                     <div class="d-flex text-body-secondary pt-3">
-                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#ff0000"></rect><text x="50%" y="50%" fill="#ff0000" dy=".3em">32x32</text></svg>
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#ff0000"></rect><text x="50%" y="50%" fill="#ff0000" dy=".3em">{{$el->type}}</text></svg>
                         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong class="text-gray-dark">@ {{$el->client}}</strong>
-                                </div>
+                            <div class="d-flex justify-content-between">                               
+                                <div @if($el->client)@endif>
+                                    <strong class="text-gray-dark"> {{$el->client}} </strong>
+                                    {{$el->type}}
+                                </div>                                 
                                 <span
                                     @if ($el->tag == "неважно")
                                     class="badge bg-secondary rounded-pill"
@@ -142,52 +140,29 @@
                                     @else
                                     class="badge bg-secondary rounded-pill"
                                     @endif
-                                ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                            </div>
+                                ><div>{{$el->tag}}</div></span>
+                            </div>  
+                                          
                             <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+                            <div class="d-flex justify-content-between"> 
+                                <div>поставлена - {{$el->created}} </div>
+                                <div>срок - {{$el->donedate}} </div>
+                            </div>
                         </div>
-
                     </div>
                 @endforeach
             </div>
-            <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                @foreach($all['alltasksnewsoispolnitel'] as $el)
-                    <div class="d-flex text-body-secondary pt-3">
-                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"></rect><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-                        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong class="text-gray-dark">@ {{$el->client}}</strong>
-                                </div>
-                                <span
-                                    @if ($el->tag == "неважно")
-                                    class="badge bg-secondary rounded-pill"
-                                    @elseif($el->tag == "срочно ")
-                                    class="badge bg-danger rounded-pill"
-                                    @elseif($el->tag == "приоритет")
-                                    class="badge bg-success rounded-pill"
-                                    @elseif($el->tag == "перенос")
-                                    class="badge bg-info rounded-pill"
-                                    @else
-                                    class="badge bg-secondary rounded-pill"
-                                    @endif
-                                ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                            </div>
-                            <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
-                        </div>
 
-                    </div>
-                @endforeach
-            </div>
             <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                 @foreach($all['alltasksnewpostanovshik'] as $el)
                     <div class="d-flex text-body-secondary pt-3">
                         <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"></rect><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
                         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong class="text-gray-dark">@ {{$el->client}}</strong>
-                                </div>
+                            <div class="d-flex justify-content-between">                               
+                                <div @if($el->client)@endif>
+                                    <strong class="text-gray-dark"> {{$el->client}} </strong>
+                                    {{$el->type}}
+                                </div>                                 
                                 <span
                                     @if ($el->tag == "неважно")
                                     class="badge bg-secondary rounded-pill"
@@ -200,119 +175,115 @@
                                     @else
                                     class="badge bg-secondary rounded-pill"
                                     @endif
-                                ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                            </div>
+                                ><div>{{$el->tag}}</div></span>
+                            </div>  
+                                          
                             <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+                            <div class="d-flex justify-content-between"> 
+                                <div>поставлена - {{$el->created}} </div>
+                                <div>срок - {{$el->donedate}} </div>
+                            </div>
                         </div>
                     </div>
                 @endforeach
             </div>
         </div>
 
-        <!-- новые задачи -->
-        <div class="d-flex align-items-center p-3 my-3 text-white rounded shadow-sm" style="background-color: #6f42c1;">
-            <div class="lh-1">
-                <h1 class="h6 mb-0 text-white lh-1">Просрочка</h1>
-                <small>{{$crtuser->name}}</small>
-            </div>
-        </div>
-
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">
-                Я - исполнитель
-            </h6>
-            @foreach($all['alltaskstime'] as $el)
-                <div class="d-flex text-body-secondary pt-3">
-                    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong class="text-gray-dark">@ {{$el->client}}</strong>
-                            </div>
-                            <span
-                                @if ($el->tag == "неважно")
-                                class="badge bg-secondary rounded-pill"
-                                @elseif($el->tag == "срочно ")
-                                class="badge bg-danger rounded-pill"
-                                @elseif($el->tag == "приоритет")
-                                class="badge bg-success rounded-pill"
-                                @elseif($el->tag == "перенос")
-                                class="badge bg-info rounded-pill"
-                                @else
-                                class="badge bg-secondary rounded-pill"
-                                @endif
-                            ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                        </div>
-                        <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
-                    </div>
-
-                </div>
-            @endforeach
-        </div>
-
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">
-                Я - постановщик
-            </h6>
-            @foreach($all['alltaskspostanovshik'] as $el)
-                <div class="d-flex text-body-secondary pt-3">
-                    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"></rect><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
-                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong class="text-gray-dark">@ {{$el->client}}</strong>
-                            </div>
-                            <span
-                                @if ($el->tag == "неважно")
-                                class="badge bg-secondary rounded-pill"
-                                @elseif($el->tag == "срочно ")
-                                class="badge bg-danger rounded-pill"
-                                @elseif($el->tag == "приоритет")
-                                class="badge bg-success rounded-pill"
-                                @elseif($el->tag == "перенос")
-                                class="badge bg-info rounded-pill"
-                                @else
-                                class="badge bg-secondary rounded-pill"
-                                @endif
-                            ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                        </div>
-                        <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+        <!-- просрочка -->
+                <div class="d-flex align-items-center p-3 my-3 text-white rounded shadow-sm" 
+                style="background-color: #6f42c1;">
+                    <div class="lh-1">
+                        <h1 class="h6 mb-0 text-white lh-1">Просрочка</h1>
+                        <small>{{$crtuser->name}}</small>
                     </div>
                 </div>
-            @endforeach
-        </div>
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-isp-tab" data-bs-toggle="pill" data-bs-target="#pills-isp" type="button" role="tab" aria-controls="pills-isp" aria-selected="true">Исполнитель</button>
+                    </li>                   
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-post-tab" data-bs-toggle="pill" data-bs-target="#pills-post" type="button" role="tab" aria-controls="pills-post" aria-selected="false">Постановщик</button>
+                    </li>
+                </ul>
 
-        <div class="my-3 p-3 bg-body rounded shadow-sm">
-            <h6 class="border-bottom pb-2 mb-0">
-                Я - соисполнитель
-            </h6>
-            @foreach($all['alltaskssoispolnitel'] as $el)
-                <div class="d-flex text-body-secondary pt-3">
-                    <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"></rect><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
-                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong class="text-gray-dark">@ {{$el->client}}</strong>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-isp" role="tabpanel" aria-labelledby="pills-isp-tab">
+                        <h6 class="border-bottom pb-2 mb-0">
+                            Я - исполнитель
+                        </h6>
+                        @foreach($all['alltaskstime'] as $el)
+                            <div class="d-flex text-body-secondary pt-3">
+                                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"></rect><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+                                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                    <div class="d-flex justify-content-between">                               
+                                        <div @if($el->client)@endif>
+                                            <strong class="text-gray-dark"> {{$el->client}} </strong>
+                                            {{$el->type}}
+                                        </div>                                 
+                                        <span
+                                            @if ($el->tag == "неважно")
+                                            class="badge bg-secondary rounded-pill"
+                                            @elseif($el->tag == "срочно ")
+                                            class="badge bg-danger rounded-pill"
+                                            @elseif($el->tag == "приоритет")
+                                            class="badge bg-success rounded-pill"
+                                            @elseif($el->tag == "перенос")
+                                            class="badge bg-info rounded-pill"
+                                            @else
+                                            class="badge bg-secondary rounded-pill"
+                                            @endif
+                                        ><div>{{$el->tag}}</div></span>
+                                    </div>  
+                                                  
+                                    <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+                                    <div class="d-flex justify-content-between"> 
+                                        <div>поставлена - {{$el->created}} </div>
+                                        <div>срок - {{$el->donedate}} </div>
+                                    </div>
+                                </div>
+            
                             </div>
-                            <span
-                                @if ($el->tag == "неважно")
-                                class="badge bg-secondary rounded-pill"
-                                @elseif($el->tag == "срочно ")
-                                class="badge bg-danger rounded-pill"
-                                @elseif($el->tag == "приоритет")
-                                class="badge bg-success rounded-pill"
-                                @elseif($el->tag == "перенос")
-                                class="badge bg-info rounded-pill"
-                                @else
-                                class="badge bg-secondary rounded-pill"
-                                @endif
-                            ><div>{{$el->tag}} - {{$el->duration}}</div></span>
-                        </div>
-                        <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+                        @endforeach
                     </div>
-
                 </div>
-            @endforeach
-        </div>
-    </div>
+
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show" id="pills-post" role="tabpanel" aria-labelledby="pills-post-tab">
+                        <h6 class="border-bottom pb-2 mb-0">
+                            Я - постановщик
+                        </h6>
+                        @foreach($all['alltaskspostanovshik'] as $el)
+                            <div class="d-flex text-body-secondary pt-3">
+                                <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"></rect><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>
+                                <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                                    <div class="d-flex justify-content-between">                               
+                                        <div @if($el->client)@endif>
+                                            <strong class="text-gray-dark"> {{$el->client}} </strong>
+                                            {{$el->type}}
+                                        </div>                                 
+                                        <span
+                                            @if ($el->tag == "неважно")
+                                            class="badge bg-secondary rounded-pill"
+                                            @elseif($el->tag == "срочно ")
+                                            class="badge bg-danger rounded-pill"
+                                            @elseif($el->tag == "приоритет")
+                                            class="badge bg-success rounded-pill"
+                                            @elseif($el->tag == "перенос")
+                                            class="badge bg-info rounded-pill"
+                                            @else
+                                            class="badge bg-secondary rounded-pill"
+                                            @endif
+                                        ><div>{{$el->tag}}</div></span>
+                                    </div>  
+                                                  
+                                    <a href="tasks/{{$el->id}}" class="text-decoration-none" target="_blank">{{$el->name}}</a>
+                                    <div class="d-flex justify-content-between"> 
+                                        <div>поставлена - {{$el->created}} </div>
+                                        <div>срок - {{$el->donedate}} </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
 @endsection
