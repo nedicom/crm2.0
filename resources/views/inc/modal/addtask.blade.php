@@ -153,7 +153,7 @@
                         </div>
 
                         <input type="hidden" name="clientidinput" id="clientidinput" class="form-control" @if(isset($data->id)) value="{{$data->id}}" @endif>
-                        <input type="hidden" name="type" value="задача" id="tasktype">
+                        <input type="hidden" name="tasktype" value="задача" id="tasktype">
                         <div class="row">
                             <button type="submit" id='submit' class="btn btn-primary col-md-4">Сохранить</button>
                         </div>

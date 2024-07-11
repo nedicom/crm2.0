@@ -83,6 +83,7 @@ class Tasks extends Model
      */
     public static function new(TasksRequest $request): self
     {
+        
         $task = new self();
         $task->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', '_token']));
         $task->name = $request->nameoftask;
