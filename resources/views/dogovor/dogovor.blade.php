@@ -16,9 +16,21 @@
 
     <div class="row">
         @php /** @var \App\Models\Dogovor $el */ @endphp
-        @foreach ($data as $el)
-            @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
-        @endforeach
+        @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales')
+
+            @foreach ($data as $el)
+                @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
+            @endforeach
+
+        @else
+
+            @foreach ($data as $el)
+                @if($currentuser->id == $el->lawyer_id)
+                    @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
+                @endif
+            @endforeach
+
+        @endif 
     </div>
     
     <script>

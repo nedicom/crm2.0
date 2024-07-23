@@ -164,7 +164,7 @@
                                 </div>
                                 <div class="d-flex px-3">
                                     <button type="submit" class="mx-1 btn btn-primary  btn-sm">Применить</button>
-                                    <a class="mx-1 btn btn-secondary btn-sm" href="payments" role="button">сбросить</a>
+                                   
                                 </div>
                             </div>
                         </div>

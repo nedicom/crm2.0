@@ -10,6 +10,7 @@ use App\Models\ClientsModel;
 use App\Models\Services;
 use Illuminate\Support\Facades\File;
 use App\Services\ContractsService;
+use Illuminate\Support\Facades\Auth;
 
 class DogovorController extends Controller
 {
@@ -31,6 +32,7 @@ class DogovorController extends Controller
             'dataservice' => Services::all(),
             'datalawyers' => User::all(),
             'dataclients' => ClientsModel::all(),
+            'currentuser' => Auth::user(),
         ]);
     }
 
