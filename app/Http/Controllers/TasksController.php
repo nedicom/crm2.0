@@ -50,7 +50,7 @@ class TasksController extends Controller
         $task->saveOrFail();
 
         if ($request->has('payID')) {
-            // Присваевываем добавленные платежи
+            // Присваиваем добавленные платежи
             $this->service->assignPayments($task, $request->input('payID'));
         }
         // Events

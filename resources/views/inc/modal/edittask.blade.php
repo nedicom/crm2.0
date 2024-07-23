@@ -35,8 +35,8 @@
                         <div class="row">
                             <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала:<span class="text-danger">*</span></label>
-                                <input type="text" id="date" value="{{$data->date['value']}}" class="form-control"
-                                    name="date" @if ($data->isAtDepartment()) disabled @endif>
+                                <input type="text" id="dateedittask" value="{{$data->date['value']}}" class="form-control"
+                                    name="date" @if ($data->isAtDepartment()) disabled @endif required>
                             </div>
                             <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span></span>
