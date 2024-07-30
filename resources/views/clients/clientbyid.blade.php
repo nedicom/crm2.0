@@ -149,6 +149,8 @@
                 </div>
                 <hr class="bg-dark-lighten my-3">
                 @endif
+
+                @if($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales')
                 <h6 class="mb-2 px-3 text-muted">платежи <span>({{$data -> serviceFunc -> count()}})</span></h6>
                 <hr class="bg-dark-lighten my-3">
                 <div class="row">
@@ -168,6 +170,8 @@
                         @endforeach
                     </div>
                 </div>
+                @endif
+
             </div>
         </div>
     </div>

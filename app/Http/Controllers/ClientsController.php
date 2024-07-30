@@ -72,6 +72,7 @@ class ClientsController extends Controller
         ], [
             'datalawyers' => User::active()->get(),
             'datasource' => Source::all(),
+            'currentuser' => Auth::user(),
         ]);
     }
 
