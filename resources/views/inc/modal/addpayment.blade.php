@@ -83,6 +83,7 @@
                             <select class="form-select" name="calculation" id="calculation" aria-label="Default select example">
                                 <option value="РНКБ" selected>РНКБ</option>
                                 <option value="СБЕР">СБЕР</option>
+                                <option value="БАНКРОССИИ">БАНКРОССИИ</option>
                                 <option value="ГЕНБАНК">ГЕНБАНК</option>
                                 <option value="НАЛИЧНЫЕ">НАЛИЧНЫЕ</option>
                             </select>

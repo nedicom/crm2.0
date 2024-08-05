@@ -33,6 +33,7 @@
                   @elseif ($data -> calculation == 'РНКБ') bg-info
                   @elseif ($data -> calculation == 'НАЛИЧНЫЕ') bg-secondary
                   @elseif ($data -> calculation == 'СБЕР') bg-success
+                  @elseif ($data -> calculation == 'БАНКРОССИИ') bg-danger
                   @else bg-light
                   @endif">{{$data -> calculation}}</span>
                   </td>

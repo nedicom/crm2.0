@@ -135,6 +135,7 @@
                                         <option value="РНКБ" @if ("РНКБ" == (request()->get('calculation'))) selected @endif>РНКБ</option>
                                         <option value="СБЕР" @if ("СБЕР" == (request()->get('calculation'))) selected @endif>СБЕР</option>
                                         <option value="ГЕНБАНК" @if ("ГЕНБАНК" == (request()->get('calculation'))) selected @endif>ГЕНБАНК</option>
+                                        <option value="БАНКРОССИИ" @if ("БАНКРОССИИ" == (request()->get('calculation'))) selected @endif>БАНКРОССИИ</option>
                                         <option value="НАЛИЧНЫЕ" @if ("НАЛИЧНЫЕ" == (request()->get('calculation'))) selected @endif>НАЛИЧНЫЕ</option>
                                     </select>
                                 </div>
@@ -233,6 +234,7 @@
                             @elseif ($el->calculation == 'РНКБ') bg-info
                             @elseif ($el->calculation == 'НАЛИЧНЫЕ') bg-secondary
                             @elseif ($el->calculation == 'СБЕР') bg-success
+                            @elseif ($el->calculation == 'БАНКРОССИИ') bg-danger
                             @else bg-light
                             @endif
                           ">

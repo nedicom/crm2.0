@@ -83,6 +83,7 @@
                         <select class="form-select" name="calculation" id="calculation" aria-label="Default select example">
                             <option value="РНКБ" @if ($data->calculation == "РНКБ") selected @endif>РНКБ</option>
                             <option value="СБЕР" @if ($data->calculation == "СБЕР") selected @endif>СБЕР</option>
+                            <option value="БАНКРОССИИ" @if ($data->calculation == "БАНКРОССИИ") selected @endif>БАНКРОССИИ</option>
                             <option value="ГЕНБАНК" @if ($data->calculation == "ГЕНБАНК") selected @endif>ГЕНБАНК</option>
                             <option value="НАЛИЧНЫЕ" @if ($data->calculation == "НАЛИЧНЫЕ") selected @endif>НАЛИЧНЫЕ</option>
                         </select>
