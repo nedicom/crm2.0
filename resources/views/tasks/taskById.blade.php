@@ -36,6 +36,7 @@
                 </h6>
                 <p class="text-truncate">начало: {{$data['date']['value'] }}</p>
                 <p class="text-truncate">статус: {{$data->status}}</p>
+               @if ($data->donetime) <p class="">выполнена: {{$data->donetime}}</p> @endif
                 <p class="">{{$data->description}}</p>
 
                 <p class="text-truncate"><a href="/clients/{{$data->clientid}}">{{$data->client}}</a></p>
