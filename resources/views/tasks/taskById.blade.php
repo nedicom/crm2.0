@@ -66,8 +66,9 @@
                         </div>
                     @endif
                     <div class="col-2 mb-3">
-                        <a class="btn btn-light w-100" href="{{ route ('TaskComplete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Выполнить">
-                            <i class="bi-check-circle"></i>
+                        <a class="btn btn-light w-100" href="{{ route ('TaskComplete', $data->id) }}" data-toggle="tooltip" data-placement="top" title="Выполнить" 
+                            @if ($data->status == 'выполнена') disabled @endif>
+                           <i class="bi-check-circle"></i>
                         </a>
                     </div>
                 </div>
