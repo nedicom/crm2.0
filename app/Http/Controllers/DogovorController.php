@@ -27,7 +27,7 @@ class DogovorController extends Controller
 
         return view('dogovor/dogovor', [
             'data' => Dogovor::orderByDesc('created_at')
-            ->where( 'created_at', '>', Carbon::now()->subDays(730))
+            ->where( 'created_at', '>', Carbon::now()->subDays(365))
             ->get()
         ], [
             //'avg' => $avg,
