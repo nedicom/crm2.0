@@ -26,12 +26,11 @@ class DogovorController extends Controller
         $avg = Dogovor::avg('allstoimost');
 
         return view('dogovor/dogovor', [
-            'data' => Dogovor::orderByDesc('created_at')->whereBetween('created_at', [
-                Carbon::now()->startOfYear(),
-                Carbon::now()->endOfYear(),
-            ])->get()
+            'data' => Dogovor::orderByDesc('created_at')
+            ->where( 'created_at', '>', Carbon::now()->subDays(730))
+            ->get()
         ], [
-            'avg' => $avg,
+            //'avg' => $avg,
             'dataservice' => Services::all(),
             'datalawyers' => User::all(),
             'dataclients' => ClientsModel::all(),
