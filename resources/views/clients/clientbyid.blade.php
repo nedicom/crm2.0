@@ -36,8 +36,10 @@
                 @endif
                 <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer) {{$data->tgid}} @else скрыто @endif</p>
                 <p class="my-3 text-muted">описание: {{$data->description}}</p>
+                @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales')
+                <p class="my-3 text-muted">договор: @foreach($dogovors as $dogovor)<a href="/{{$dogovor->url}}">{{$dogovor->name}}</a></br>@endforeach</p>
+                @endif
                 <p class="mb-0 text-muted">тип: {{$data->casettype}}</p>
-
                 @if ($data->url)
                 <div class="d-flex justify-content-center">
                     <div class="my-3">

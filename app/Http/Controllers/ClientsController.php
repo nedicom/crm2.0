@@ -11,6 +11,7 @@ use App\Models\Tasks;
 use App\Models\Leads;
 use App\Models\Source;
 use App\Models\Services;
+use App\Models\Dogovor;
 use App\Models\Enums\Leads\Status;
 use App\Repository\ClientRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -66,6 +67,7 @@ class ClientsController extends Controller
     public function show(int $id)
     {
         $client =  $this->repository->findById($id);
+        
 
         return view('clients/clientbyid', [
             'data' => $client,
@@ -73,6 +75,7 @@ class ClientsController extends Controller
             'datalawyers' => User::active()->get(),
             'datasource' => Source::all(),
             'currentuser' => Auth::user(),
+            'dogovors' =>  Dogovor::where('client_id', $id)->get(['url', 'name']),
         ]);
     }
 

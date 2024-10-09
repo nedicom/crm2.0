@@ -23,12 +23,12 @@ class DogovorController extends Controller
 
     public function index()
     {
-        $avg = Dogovor::avg('allstoimost');
+        //$avg = Dogovor::avg('allstoimost');
 
         return view('dogovor/dogovor', [
             'data' => Dogovor::orderByDesc('created_at')
             ->where( 'created_at', '>', Carbon::now()->subDays(365))
-            ->get()
+            ->get(['lawyer_id','name', 'allstoimost', 'created_at', 'url', 'client_id', 'subject'])
         ], [
             //'avg' => $avg,
             'dataservice' => Services::all(),
