@@ -11,5 +11,7 @@ enum Type: string
     case Home = 'Жилищный';
     case Auto = 'Автоюрист';
     case Energy = 'Крымэнерго';
+    case Migration = 'Миграционный';
+    case Customers = 'Потребительский';
     case Dontknow = 'Другой';
 }
