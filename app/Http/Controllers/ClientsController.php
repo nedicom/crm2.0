@@ -12,6 +12,7 @@ use App\Models\Leads;
 use App\Models\Source;
 use App\Models\Services;
 use App\Models\Dogovor;
+use App\Models\Cities;
 use App\Models\Enums\Leads\Status;
 use App\Repository\ClientRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,6 +50,7 @@ class ClientsController extends Controller
                 'dataservices' => Services::all(),
                 'datatasks' => Tasks::all(),
                 'datasource' => Source::all(),
+                'cities'  => Cities::all(),
             ]);
         } else {
             return view('clients/clients', [
@@ -60,14 +62,14 @@ class ClientsController extends Controller
                 'datalawyers' => User::active()->get(),
                 'dataservices' => Services::all(),
                 'datasource' => Source::all(),
+                'cities'  => Cities::all(),
             ]);
         }
     }
 
     public function show(int $id)
     {
-        $client =  $this->repository->findById($id);
-        
+        $client =  $this->repository->findById($id);       
 
         return view('clients/clientbyid', [
             'data' => $client,
@@ -76,13 +78,13 @@ class ClientsController extends Controller
             'datasource' => Source::all(),
             'currentuser' => Auth::user(),
             'dogovors' =>  Dogovor::where('client_id', $id)->get(['url', 'name']),
+            'cities'  => Cities::all(),
         ]);
     }
 
     public function store(ClientsRequest $request)
 
     {
-
         $client = ClientsModel::new($request);
 
         //возвращаем без создания клиента, если номер телефона уже существует 
@@ -111,15 +113,14 @@ class ClientsController extends Controller
                 $lead->phone = $client->phone;
                 $lead->lawyer = $client->lawyer;
                 $lead->responsible = $client->lawyer;
+                $lead->city_id = $client->city_id;
                 $lead->service = 11;
                 $lead->status = 'конвертирован';        
                 $lead->save();
 
                 ClientsModel::where('id', $client->id)->update(['lead_id' => $lead->id]);
                 return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен, лид создан');
-            }
-
-            
+            }            
         }
 
         return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен');
@@ -127,11 +128,12 @@ class ClientsController extends Controller
 
     public function update(int $id, ClientsRequest $request)
     {
-        $client = ClientsModel::find($id);
+        $client = ClientsModel::find($id);        
         $client->edit($request);
         if (!$request->status) {
             $client->status = null;
         };
+        
         $client->save();
 
         return redirect()->route('showClientById', $id)->with('success', 'Все в порядке, клиент обновлен');

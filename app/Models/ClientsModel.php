@@ -36,7 +36,7 @@ class ClientsModel extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer', 'status', 'url', 'casettype'
+        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer', 'status', 'url', 'casettype', 'city_id'
     ];
 
     /**
@@ -108,6 +108,11 @@ class ClientsModel extends Model
     public function paymentsFunc()
     {
         return $this->hasMany(Payments::class, 'clientid' , 'id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(Cities::class, 'id' , 'city_id');
     }
 
     /**

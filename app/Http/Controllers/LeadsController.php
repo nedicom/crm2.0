@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\LeadsRequest;
 use App\Models\Enums\Leads\Status;
 use App\Models\ClientsModel;
+use App\Models\Cities;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
@@ -25,6 +26,7 @@ class LeadsController extends Controller
         $lead->lawyer = $req->input('lawyer');
         $lead->responsible = $req->input('responsible');
         $lead->casettype = $req->input('casettype');
+        $lead->city_id = $req->input('city');
         $lead->service = 11;
         $lead->status = 'поступил';
 
@@ -68,11 +70,13 @@ class LeadsController extends Controller
                 ->get(),
 
             'defeatleads' => Leads::where('status', '=', 'удален')->orderBy('id', 'desc')
-                ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->get(),
+                ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')
+                ->get(),
             'winleads' => Leads::where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->get(),
             'datasource'   => Source::all(),
             'dataservices' => Services::all(), 'datasources' =>  Source::all('name'),
             'datalawyers'  => User::active()->get(),
+            'cities'  => Cities::all(),
         ],
         );  
     }
@@ -119,7 +123,8 @@ class LeadsController extends Controller
             'responsibleFunc' , 'servicesFunc')->find($id)], [
                 'datalawyers' => User::active()->get(),
                 'dataservices' => Services::all(),
-                'datasource' => Source::all()
+                'datasource' => Source::all(),
+                'cities'  => Cities::all(),
             ]
         );
     }
@@ -134,6 +139,7 @@ class LeadsController extends Controller
         $lead -> lawyer = $req -> input('lawyer');
         $lead -> responsible = $req -> input('responsible');
         $lead->casettype = $req->input('casettype');
+        $lead->city_id = $req->input('city');
         $lead->service = 11;
         $lead->status = Status::Lazy->value;
         $lead -> save();

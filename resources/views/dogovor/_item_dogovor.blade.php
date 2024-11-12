@@ -1,4 +1,4 @@
- <div class="col-12 col-md-4 my-3">
+<div class="col-12 col-md-4 my-3">
      <div class="card shadow">
          <div class="card-header d-flex align-items-center">
              <span>
@@ -37,8 +37,20 @@
                          @endif
                      </div>
                  </div>
+
+                 <div class="px-2 d-flex flex-column">
+                    <div class="text-truncate text-right text-muted"><small>
+                            город</small>
+                    </div>
+            
+                    <div class="text-truncate text-right">
+                        @if ($el->city)
+                            {{ $el->city->city }}
+                        @endif
+                    </div>
+                </div>
              </div>
-             <div class="d-flex align-items-center">
+             <div class="d-flex justify-content-between">
                  <span class="px-2 text-truncate text-center">
                      @if ($el->clientFunc)
                          <a href="/clients/{{ $el->clientFunc->id }}" target="_blank">{{ $el->clientFunc->name }}</a>

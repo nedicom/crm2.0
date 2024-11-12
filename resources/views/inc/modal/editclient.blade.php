@@ -69,6 +69,19 @@
                                 @endforeach
                             </select>
                         </div>
+
+
+                        <div class="col">
+                            <label for="city_id">город</label>
+                            <select class="form-select" name="city_id" id="city_id" class="form-control">
+                                <option value=null>не выбрано</option>
+                                @foreach ($cities as $el)
+                                    <option value="{{ $el->id }}" @if ($data->city_id == $el->id) selected @endif>{{ $el->city }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
                         <div class="col">
                             {!! \App\Helpers\ClientHelper::typeList($data->casettype) !!}
                         </div>

@@ -34,6 +34,9 @@
                 @if($data->userFunc)
                 <p class="mb-0 text-muted">закреплен за: </br>{{$data->userFunc->name}}</p>
                 @endif
+                @if($data->city)
+                <p class="mb-0 text-muted">город: </br><strong>{{$data->city->city}}</strong></p>
+                @endif
                 <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer) {{$data->tgid}} @else скрыто @endif</p>
                 <p class="my-3 text-muted">описание: {{$data->description}}</p>
                 @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales')

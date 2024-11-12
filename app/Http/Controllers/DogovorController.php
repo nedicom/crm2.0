@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\ClientsModel;
 use App\Models\Services;
+use App\Models\Cities;
 use Illuminate\Support\Facades\File;
 use App\Services\ContractsService;
 use Illuminate\Support\Facades\Auth;
@@ -29,23 +30,26 @@ class DogovorController extends Controller
             'data' => Dogovor::orderByDesc('created_at')
             ->where( 'created_at', '>', Carbon::now()->subDays(365))
             ->with('userFunc')
-            ->with('clientFunc')  
-            ->get(['lawyer_id','name', 'allstoimost', 'created_at', 'url', 'client_id', 'subject'])
+            ->with('clientFunc')
+            ->with('city')   
+            ->get(['lawyer_id','name', 'allstoimost', 'created_at', 'url', 'client_id', 'subject', 'city_id',])
         ], [
             //'avg' => $avg,
             'dataservice' => Services::all(),
             'datalawyers' => User::all(),
             'dataclients' => ClientsModel::all(),
             'currentuser' => Auth::user(),
+            'cities'  => Cities::all(),
         ]);
     }
 
     public function showdogovorById($id)
     {
         return view('dogovor/showdogovorById', [
-            'data' => Dogovor::with('userFunc', 'clientFunc')->find($id)
+            'data' => Dogovor::with('userFunc', 'clientFunc', 'city')->find($id)
         ], [
             'datalawyers' => User::all(),
+            'cities'  => Cities::all(),
         ]);
     }
 

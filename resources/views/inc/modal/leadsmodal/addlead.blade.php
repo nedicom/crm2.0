@@ -5,7 +5,7 @@
                 <h2>Добавить лид</h2>
             </div>
             <div class ="modal-body d-flex justify-content-center">
-                <div class ="col-10">
+                <div class ="px-2">
                     <form action="{{route('addlead')}}" class='' autocomplete="off" method="post">
                         @csrf
 
@@ -39,6 +39,16 @@
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col">
+                                <label for="city">город</label>
+                                <select class="form-select" name="city" id="city" class="form-control">
+                                    <option value=null>не выбрано</option>
+                                    @foreach($cities as $el)
+                                        <option value="{{$el->id}}">{{$el->city}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                     <!--
                         <div class="form-group mb-3">
                             <label for="service">Что можно предложить</label>
@@ -61,7 +71,7 @@
                             </div>
 
                             <div class="col">
-                                <label for="responsible">ответсвенный</label>
+                                <label for="responsible">ответственный</label>
                                 <select class="form-select" name="responsible" id="responsible" class="form-control">
                                     @foreach($datalawyers as $el)
                                         <option value="{{$el->id}}">{{$el->name}}</option>

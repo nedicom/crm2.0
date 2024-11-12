@@ -39,6 +39,7 @@ class Dogovor extends Model
      */
     public static function new(Request $request, $date, string $filePath): self
     {
+        
         $contract = new self();
         $contract->fill($request->except(['_token', 'clientidinput', 'adress', 'client', 'phone', 'name']));
         $contract->client_id = $request->input('clientidinput');
@@ -66,5 +67,10 @@ class Dogovor extends Model
     public function clientFunc()
     {
         return $this->belongsTo(ClientsModel::class, 'client_id', 'id');
+    }
+
+    public function city()
+    {
+        return $this->hasOne(Cities::class, 'id' , 'city_id');
     }
 }
