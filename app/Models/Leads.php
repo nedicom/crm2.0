@@ -52,8 +52,8 @@ class Leads extends Model
        $lead->description = ($valueObject->getAnswered() === 0) ? 'Звонок не отвечен' : '';
        $lead->source = $source;
        $lead->service = 2; // ID услуги
-       $lead->lawyer = 89; // ID юриста
-       $lead->responsible = 89;
+       $lead->lawyer = 41; // ID юриста
+       $lead->responsible = 41;
        $lead->status = Status::Generated->value;
        $lead->ring_recording_url = $valueObject->getRecordingUrl();
 
