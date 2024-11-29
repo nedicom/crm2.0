@@ -33,8 +33,15 @@ class Leads extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'phone', 'description', 'source',
-        'service', 'lawyer', 'responsible', 'status', 'client_id'
+        'name',
+        'phone',
+        'description',
+        'source',
+        'service',
+        'lawyer',
+        'responsible',
+        'status',
+        'client_id'
     ];
 
     /**
@@ -46,18 +53,18 @@ class Leads extends Model
      */
     public static function newFromServiceMyCalls(RingDTO $valueObject, string $clientName, string $source): self
     {
-       $lead = new self();
-       $lead->name = $clientName;
-       $lead->phone = $valueObject->getClientPhone();
-       $lead->description = ($valueObject->getAnswered() === 0) ? 'Звонок не отвечен' : '';
-       $lead->source = $source;
-       $lead->service = 2; // ID услуги
-       $lead->lawyer = 41; // ID юриста
-       $lead->responsible = 41;
-       $lead->status = Status::Generated->value;
-       $lead->ring_recording_url = $valueObject->getRecordingUrl();
+        $lead = new self();
+        $lead->name = $clientName;
+        $lead->phone = $valueObject->getClientPhone();
+        $lead->description = ($valueObject->getAnswered() === 0) ? 'Звонок не отвечен' : '';
+        $lead->source = $source;
+        $lead->service = 2; // ID услуги
+        $lead->lawyer = 41; // ID юриста
+        $lead->responsible = 41;
+        $lead->status = Status::Generated->value;
+        $lead->ring_recording_url = $valueObject->getRecordingUrl();
 
-       return $lead;
+        return $lead;
     }
 
     public function userFunc()
@@ -78,5 +85,31 @@ class Leads extends Model
     public function tasks()
     {
         return $this->hasMany(Tasks::class, 'lead_id', 'id');
+    }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['findNumber'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('phone', 'like', '%' . $search . '%');
+            });
+        });
+        $query->when($filters['findName'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%');
+            });
+        });
+
+        $query->when($filters['lawyer'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('lawyer', intval($search));
+            });
+        });
+
+        $query->when($filters['responsible'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('responsible', intval($search));
+            });
+        });
     }
 }

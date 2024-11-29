@@ -16,7 +16,14 @@
     </div>
 
     <div class="card-body text-center">
+      <div class="row">
 
+        @if($el->name)
+        <p class="mb-0 text-muted col" style="display: -webkit-box;  -webkit-line-clamp: 1;  -webkit-box-orient: vertical;  overflow: hidden;">
+          {{$el -> name}}
+        </p>
+        @endif
+      </div>
 
       <div class="row">
         <p class="mb-0 text-muted col" style="display: -webkit-box;  -webkit-line-clamp: 1;  -webkit-box-orient: vertical;  overflow: hidden;">
@@ -25,7 +32,6 @@
         @if($el->ring_recording_url)
         <p class="mb-0 text-muted col" style="display: -webkit-box;  -webkit-line-clamp: 1;  -webkit-box-orient: vertical;  overflow: hidden;">
           <a href="{{ $el->ring_recording_url }}"><i class="bi bi-headset"></i></a>
-
         </p>
         @endif
       </div>
