@@ -92,6 +92,18 @@
                         id="calendarurl">
                 </div>
             </div>
+
+            <div class="pt-2">
+            <h5>Отправить лиды в Яндекс</h5>
+            <form action="{{ route('leads') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-4">
+                        <input type="submit" value="отправить" class="btn btn-secondary">
+                    </div>
+                </div>
+            </form>
+            </div>
         </div>
     </div>
 

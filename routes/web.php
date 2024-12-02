@@ -15,6 +15,7 @@ use App\Http\Controllers\TaskAJAXController;
 use App\Http\Controllers\BotController;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use App\Http\Controllers\CsvController;
 
 Auth::routes();
 
@@ -126,3 +127,5 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
 
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');
+
+Route::post('/metrika', [CsvController::class, 'leads'])->name('leads');
