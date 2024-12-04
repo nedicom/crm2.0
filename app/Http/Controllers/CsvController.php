@@ -2,111 +2,91 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Leads;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 
-/** Класс генерации .doc файлов */
 class CsvController extends Controller
 {
     /**
-     * Генерация документа для яндекс метрики оффлайн конверсии
+     * отправка данных из crm в метрику
      * @param Leads $leads
      */
 
-    public function leads()
+    private function getInfoYa($url, $token, $data, $boundary)
     {
-        $headers = [
-            'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
-            'Content-type'        => 'text/csv',
-            'Content-Disposition' => 'attachment; filename=leads.csv',
-            'Expires'             => '0',
-            'Pragma'              => 'public'
-        ];
 
-        $list = Leads::latest()->take(15)->get(['created_at as create_date_time', 'phone as phones', 'status as order_status', 'service as revenue']);
-        $list->map(function ($list) {
-            //dd($list->create_date_time);
-            $list->create_date_time =  date_create_from_format("Y-m-d H:i:s", $list->create_date_time)->format('d.m.Y H:i');
-            return $list;
-        });
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
 
-        $list = $list->toArray();
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 
-        # add headers for each column in the CSV download
-        array_unshift($list, array_keys($list[0]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Host:api-metrika.yandex.net', 'Authorization: OAuth ' . $token, "Content-Type: multipart/form-data; boundary=------------------------$boundary", "Content-Length: " . strlen($data)));
 
-        $callback = function () use ($list) {
+        $response = [];
+        $response['html']     = curl_exec($ch);
+        $response['err']      = curl_errno($ch);
+        $response['errmsg']   = curl_error($ch);
+        $response['header']   = curl_getinfo($ch);
 
-            $FH = fopen('php://output', 'w');
-            foreach ($list as $row) {
-                fputcsv($FH, $row);
-            }
+        curl_close($ch);
 
-            /*$response = Http::withoutVerifying()
-                ->withOptions(["verify" => false])->post('https://webhook.site/26dc0d32-c3fa-45a0-b0ca-aa82a5595607', [
-                    'name' => 'Steve',
-                    'role' => 'Network Administrator',
-                ]);
-                
-
-            $curl = curl_init("https://webhook.site/26dc0d32-c3fa-45a0-b0ca-aa82a5595607");
-
-            curl_setopt($curl, CURLOPT_FILE, $FH);
-            curl_setopt($curl, CURLOPT_HEADER, 0);
-
-            
-            curl_setopt($curl, CURLOPT_POST, true);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, array('file' => curl_file_create(realpath('data.csv'))));
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/csv"));
-            //curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/csv", "Authorization: OAuth $token"));
-            
-
-            $result = curl_exec($curl);
-            
-            echo $result;
-
-            curl_close($curl);*/
-
-            fclose($FH);
-        };
-
-        $callback();
-
-        //return response()->stream($callback, 200, $headers);
-
-
-
-        $counter = "24900584";            // номер счетчика
-        $token = "y0_AgAAAAAPGhtRAAzhMQAAAAEaxRB_AAAEQ_XYWPNHy5srO2Eq0mSoTaVgPA";              // OAuth-токен (https://oauth.yandex.ru/client/5e1219b00d32468b9f8e960d6ec0f6ca)
-
-        //$curl = curl_init("https://api-metrika.yandex.net/cdp/api/v1/counter/$counter/data/simple_orders?merge_mode=SAVE&delimiter_type=COMMA");
-
-
-
-
-        //return response()->stream($callback, 200, $headers);
-
-
-        /*public function certificateCompletion(LeadsModel $client)
-    {
-        try {
-            $templateFile = storage_path("app/public/dogovor/template_certificate_completion.docx");
-            // Генерация документа
-            $generateFile = ($this->service)($templateFile, $client);
-
-            return response()->download($generateFile,"client_{$client->id}_certificate_completion.docx", [
-                'Content-Type' => 'application/docx',
-            ]);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
-    }*/
+        return $response;
     }
 
+    public function leads()
+    {
+        $token = "y0_AgAAAAAPGhtRAAzhMQAAAAEaxRB_AAAEQ_XYWPNHy5srO2Eq0mSoTaVgPA";
+        $counterId = 24900584;
+        $url = "https://api-metrika.yandex.net/cdp/api/v1/counter/" . $counterId . "/data/simple_orders?merge_mode=SAVE&delimiter_type=COMMA";
+        $boundary = "7zDUQOAIAE9hEWoV";
+        $filename = 'data.csv';
+
+        $list = Leads::latest()
+            ->where('created_at', '>', Carbon::now()->subDays(21))
+            ->where('phone', '!=', '')
+            ->get(['id', 'created_at', 'phone', 'status', 'service'])->map(function ($list) {
+                if ($list->status == "конвертирован") {
+                    $list->status = "PAID";
+                    $list->service = "5000";
+                } elseif ($list->status == "удален") {
+                    $list->status = "CANCELLED";
+                    $list->service = "";
+                } else {
+                    $list->status = "IN_PROGRESS";
+                    $list->service = "100";
+                };                
+                $list->new_date =  date_create_from_format("Y-m-d H:i:s", $list->created_at)->format('d.m.Y H:i');
+                $list->phone = preg_replace("/[^0-9]/", '', $list->phone);
+                substr($list->phone, 0, 1) == "8" ? $list->phone = "7" . ltrim($list->phone, '8') : null;
+                substr($list->phone, 0, 1) != "7" ? $list->phone = "7" . ltrim($list->phone, '8') : null;                    
+                return $list;
+            })->filter(function ($item) {
+                if(strlen($item->phone) == 11){return $item;};
+            })->toArray();
+        $orders = "id,create_date_time,client_uniq_id,client_ids,emails,phones,order_status,revenue,cost,goals,currency" . PHP_EOL;
+        foreach ($list as $lead) {
+            $orders .= $lead['id'] . "," . $lead['new_date'] . ",,,," . $lead['phone'] . "," . $lead['status'] . ",," . $lead['service'] . ",,RUB" . PHP_EOL;
+        }
+
+        $data = "--------------------------$boundary\x0D\x0A";
+        $data .= "Content-Disposition: form-data; name=\"file\"; filename=\"$filename\"\x0D\x0A";
+        $data .= "Content-Type: text/csv\x0D\x0A\x0D\x0A";
+        $data .= $orders;
+        //$data .= $orders . "\x0A\x0D\x0A";
+        $data .= "--------------------------$boundary--";
+        //dd($data);
+        $yaInfo = $this->getInfoYa($url, $token, $data, $boundary);
+        print_r(json_decode($yaInfo["html"], true));
+    }
+
+    /**
+     * скачать лиды в csv
+     * @param Leads $leads
+     */
     public function downloadleads()
     {
         $headers = [

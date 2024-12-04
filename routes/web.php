@@ -128,4 +128,4 @@ Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('
 
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');
 
-Route::post('/metrika', [CsvController::class, 'metrikaleads'])->name('metrikaleads');
+Route::post('/metrika', [CsvController::class, 'leads'])->name('metrikaleads');
