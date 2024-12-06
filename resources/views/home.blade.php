@@ -104,6 +104,18 @@
                 </div>
             </form>
             </div>
+
+            <div class="pt-2">
+                <h5>Скачать xls для Яндекс карт</h5>
+                <form action="{{ route('yandexmap') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-4">
+                            <input type="submit" value="скачать" class="btn btn-secondary">
+                        </div>
+                    </div>
+                </form>
+                </div>
         </div>
     </div>
 

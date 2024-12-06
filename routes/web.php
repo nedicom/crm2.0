@@ -16,6 +16,7 @@ use App\Http\Controllers\BotController;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use App\Http\Controllers\CsvController;
+use App\Http\Controllers\YandexmapController;
 
 Auth::routes();
 
@@ -129,3 +130,5 @@ Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');
 
 Route::post('/metrika', [CsvController::class, 'leads'])->name('metrikaleads');
+
+Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
