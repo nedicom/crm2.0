@@ -46,6 +46,8 @@ Route::post('/mycalls/action/call-finished', [\App\Http\Controllers\ServicesApi\
 Route::post('/mycalls/download-log', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'downloadLogFile'])->name('mycalls.download_log');
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
+    
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
     });
@@ -130,5 +132,3 @@ Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');
 
 Route::post('/metrika', [CsvController::class, 'leads'])->name('metrikaleads');
-
-Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
