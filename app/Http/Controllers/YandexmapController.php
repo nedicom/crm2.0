@@ -97,7 +97,6 @@ class YandexmapController extends Controller
             };
         };
 
-        dd($list);
         $callback = function () use ($list) {
             $FH = fopen('php://output', 'w');
             foreach ($list as $row) {
