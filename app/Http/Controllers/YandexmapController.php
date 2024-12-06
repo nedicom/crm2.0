@@ -130,7 +130,7 @@ class Summary
         $this->summary = $sum . $category . ", " . $city . ". Цена указана за консультацию. Уточняйте возможность получить юридическую консультацию перед началом работы онлайн или бесплатно.";
         $this->description = $sum . $category . ", " . $city . ". Цена указана за консультацию. Уточняйте возможность получить юридическую консультацию перед началом работы онлайн или бесплатно.";
         $name = $name ? $name . ' - ' . $category : $category;
-        $arr = [$category, $name, $id, $this->summary, $this->description, $price, $img, $popular, 'да', 1, 'шт.'];
+        $arr = [$category, $name, $id, $this->summary, $this->description, $price, $img, $popular, 'да', 1, 'шт'];
         return ($arr);
     }
 }
