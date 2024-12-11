@@ -16,6 +16,7 @@ use App\Http\Controllers\BotController;
 use Illuminate\Support\Facades\Auth;
 use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use App\Http\Controllers\CsvController;
+use App\Http\Controllers\YandexmapController;
 
 Auth::routes();
 
@@ -45,6 +46,8 @@ Route::post('/mycalls/action/call-finished', [\App\Http\Controllers\ServicesApi\
 Route::post('/mycalls/download-log', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'downloadLogFile'])->name('mycalls.download_log');
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
+    
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
     });

@@ -104,6 +104,26 @@
                 </div>
             </form>
             </div>
+
+            <div class="pt-2">
+                <h5>xls для Яндекс карт</h5>
+                <form enctype="multipart/form-data" action="{{ route('yandexmap') }}" method="POST">
+                    @csrf
+                    <div class="row">
+                        <div class="col-6">
+                            <input class="form-control" type="file" id="yandexcsv" name="yandexcsv"
+                           accept=".csv" required>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" type="text" id="city" name="city" placeholder="Город"
+                           required>
+                        </div>
+                        <div class="col-3">
+                            <input type="submit" value="конвертировать" class="btn btn-secondary">
+                        </div>
+                    </div>
+                </form>
+                </div>
         </div>
     </div>
 
