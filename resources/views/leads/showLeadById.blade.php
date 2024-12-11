@@ -10,7 +10,10 @@
     <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleadtoclient">В клиента</a>
 </li>
 <li class="nav-item text-center p-3">
-    <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleaddelete">Удалить</a>
+    <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleaddelete">В брак/спам</a>
+</li>
+<li class="nav-item text-center p-3">
+    <a class="text-white text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#modalleadfail">В проваленные</a>
 </li>
 @endsection
 
@@ -127,11 +130,15 @@
             <div class="mt-3 row d-flex justify-content-center">
                 <div class="mt-3 row d-flex justify-content-center">
 
-
+                    <div class="col-2 mb-3">
+                        <a class="btn btn-light w-100 @if ($data -> status == 'конвертирован') disabled @endif" href="#" data-toggle="tooltip" data-placement="top" title="Брак(спам)" data-bs-toggle="modal" data-bs-target="#modalleaddelete">
+                            <i class="bi-trash"></i>
+                        </a>
+                    </div>
 
                     <div class="col-2 mb-3">
-                        <a class="btn btn-light w-100 @if ($data -> status == 'конвертирован') disabled @endif" href="#" data-toggle="tooltip" data-placement="top" title="Брак" data-bs-toggle="modal" data-bs-target="#modalleaddelete">
-                            <i class="bi-trash"></i>
+                        <a class="btn btn-light w-100 @if ($data -> status == 'конвертирован') disabled @endif" href="#" data-toggle="tooltip" data-placement="top" title="Провален" data-bs-toggle="modal" data-bs-target="#modalleadfail">
+                            <i class="bi-bag-x"></i>
                         </a>
                     </div>
 
@@ -171,6 +178,7 @@
 @include('inc/modal/leadsmodal/leadtowork')
 @include('inc/modal/leadsmodal/leadtoclient')
 @include('inc/modal/leadsmodal/leaddelete')
+@include('inc/modal/leadsmodal/modalleadfail')
 @include('inc.modal.leadsmodal.add_task_ring')
 @include('inc.modal.leadsmodal.add_task_cons')
 @endsection

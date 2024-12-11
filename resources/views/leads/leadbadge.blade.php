@@ -1,32 +1,53 @@
-<div class='col-md-4 my-3'>
+<div class='col-md-12 my-2 leadcard'>
   <div class='card border-1 shadow'>
 
-    <div class="card-header bg-transparent border-secondary">
-      <div class="d-flex justify-content-between align-items-center m-1">
-        <span class=" badge d-flex align-items-center p-1 pe-2 text-dark-emphasis text-dark bg-light-subtle border border-dark-subtle rounded-pill">
-          <img class="rounded-circle me-1" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> userFunc -> avatar }}" alt="">
-          <span class="text-truncate" style="width: 4rem;">{{$el -> userFunc -> name}}</span>
+    <div class="d-flex justify-content-left align-items-center m-1">
+
+      <a class="btn btn-primary col-md-1" href="{{ route ('showLeadById', $el->id) }}" style="font-size: 0.7rem;">
+        {{$el->status}}</a>
+      @if ($countTasks = $el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count() > 0)
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        {{$el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count()}}
+      </span>
+      @endif
+
+      <span class="col-md-1 d-flex align-items-center px-1">
+        <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
+          data-toggle="tooltip" data-placement="top" title="{{$el -> userFunc -> name}}">
+          <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> userFunc -> avatar }}" alt="">
         </span>
-
-        <span class="badge d-flex align-items-center p-1 pe-2 text-dark-emphasis text-dark bg-light-subtle border border-dark-subtle rounded-pill">
-          <img class="rounded-circle me-1" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> responsibleFunc -> avatar }}" alt="">
-          <span class="text-truncate" style="width: 4rem;">{{$el -> responsibleFunc -> name}}</span>
+        <span class="ps-1"
+          data-toggle="tooltip" data-placement="top" title="Поступил">
+          {{$el -> created_at->format('d.m.Y H:i')}}
         </span>
-      </div>
-    </div>
+      </span>
 
-    <div class="card-body text-center">
-      <div class="row">
+      @if($el->name)
+      <span class="text-truncate col-md-1 text-center" data-toggle="tooltip" data-placement="top" title="{{$el -> name}}">
+        {{$el -> name}}
+      </span>
+      @endif
 
-        @if($el->name)
-        <p class="mb-0 text-muted col" style="display: -webkit-box;  -webkit-line-clamp: 1;  -webkit-box-orient: vertical;  overflow: hidden;">
-          {{$el -> name}}
-        </p>
+
+      <span class="col-md-1 d-flex align-items-center px-1">
+        <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
+          data-toggle="tooltip" data-placement="top" title="{{$el -> responsibleFunc -> name}}">
+          <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> responsibleFunc -> avatar }}" alt="">
+        </span>
+        @if ($el->updated_at !== null)
+        <span class="ps-1"
+          data-toggle="tooltip" data-placement="top" title="Поступил">
+          {{$el -> updated_at->format('d.m.Y H:i')}}
+        </span>
+        @else
+        <span class="ps-1">
+          ждет
+        </span>
         @endif
-      </div>
+      </span>
 
-      <div class="row">
-        <p class="mb-0 text-muted col" style="display: -webkit-box;  -webkit-line-clamp: 1;  -webkit-box-orient: vertical;  overflow: hidden;">
+      <div class="row col-md-1">
+        <p class="mb-0 text-muted" style="font-size: 0.9rem;">
           {{$el -> phone}}
         </p>
         @if($el->ring_recording_url)
@@ -36,33 +57,65 @@
         @endif
       </div>
 
-
-      <hr class="bg-dark-lighten my-3">
-      <p class="mt-3 fw-lighter lh-sm" style="height: 3rem; display: -webkit-box;  -webkit-line-clamp: 3;  -webkit-box-orient: vertical;  overflow: hidden;">
+      <span class="text-truncate col-md-3"
+        data-toggle="tooltip" data-placement="top" title="{{$el -> description}}">
         {{$el -> description}}
-      </p>
-      <p class="text-muted">Поступил: <strong>{{$el -> created_at->format('d.m.Y в H:i')}}</strong> </p>
-      @if ($el->updated_at !== null)
-      <p class="text-muted">Обработан: <strong>{{$el -> updated_at->format('d.m.Y в H:i')}}</strong> </p>
+      </span>
+
+      @if($el->city)
+      <span class="text-truncate col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="город">
+        {{$el -> city -> city}}
+      </span>
       @else
-      <p class="text-muted">не обработан</p>
+      <span class="col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="город">
+        -
+      </span>
+      @endif
+
+      @if($el->casettype)
+      <span class="text-truncate col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="тип дела">
+        {{$el -> casettype}}
+      </span>
+      @else
+      <span class="col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="тип дела">
+        -
+      </span>
+      @endif
+
+      @if($el->source)
+      <span class="text-truncate col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="источник">
+        {{$el -> source}}
+      </span>
+      @else
+      <span class="col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="источник">
+        -
+      </span>
+      @endif
+
+      @if($el->state)
+      <span class="text-truncate col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="онлайн/офлайн">
+        {{$el -> state}}
+      </span>
+      @else
+      <span class="col-md-1 text-center"
+        data-toggle="tooltip" data-placement="top" title="онлайн/офлайн">
+        -
+      </span>
       @endif
 
     </div>
-    <div class="card-footer bg-transparent border-secondary">
-      <div class="row d-flex justify-content-center">
-        <div class="my-1 mx-3">
-          <a class="btn btn-primary w-100" href="{{ route ('showLeadById', $el->id) }}">
-            обработать</a>
-          @if ($countTasks = $el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count() > 0)
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            {{$el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count()}}
-          </span>
-          @endif
-        </div>
-      </div>
-
-    </div>
-
   </div>
 </div>
+
+<style>
+  .leadcard {
+    font-size: 0.75rem;
+  }
+</style>

@@ -69,12 +69,12 @@ class Leads extends Model
 
     public function userFunc()
     {
-        return $this->belongsTo(User::class, 'lawyer');
+        return $this->belongsTo(User::class, 'lawyer')->select(['id','name', 'avatar']);
     }
 
     public function responsibleFunc()
     {
-        return $this->belongsTo(User::class, 'responsible');
+        return $this->belongsTo(User::class, 'responsible')->select(['id','name', 'avatar']);
     }
 
     public function servicesFunc()
@@ -85,6 +85,11 @@ class Leads extends Model
     public function tasks()
     {
         return $this->hasMany(Tasks::class, 'lead_id', 'id');
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(Cities::class);
     }
 
     public function scopeFilter($query, array $filters)

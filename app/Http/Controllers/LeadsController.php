@@ -27,6 +27,7 @@ class LeadsController extends Controller
         $lead->responsible = $req->input('responsible');
         $lead->casettype = $req->input('casettype');
         $lead->city_id = $req->input('city');
+        $lead->state = $req->input('state');
         $lead->service = 11;
         $lead->status = 'поступил';
 
@@ -45,12 +46,14 @@ class LeadsController extends Controller
             'responsible' => null,
         ]);
 
+        $query = Leads::query();
         $newquery = Leads::query();
         $phonequery = Leads::query();
         $consquery = Leads::query();
         $defeatquery = Leads::query();
         $withoutcasequery = Leads::query();
         $winquery = Leads::query();
+        $failleadsquery = Leads::query();
 
 
         if ($req->findNumber ||  $req->findName ||  $req->lawyer ||  $req->responsible) {
@@ -60,38 +63,44 @@ class LeadsController extends Controller
                 'lawyer' => $req->lawyer,
                 'responsible' => $req->responsible,
             ]);
+            $query = Leads::filter($req->all());
             $newquery = Leads::filter($req->all());
             $phonequery = Leads::filter($req->all());
             $consquery = Leads::filter($req->all());
             $defeatquery = Leads::filter($req->all());
             $withoutcasequery = Leads::filter($req->all());
             $winquery = Leads::filter($req->all());
+            $failleadsquery = Leads::filter($req->all());
         }
 
         return view(
             'leads/leads',
             [
+                'allleads' => $query->orderBy('id', 'desc')
+                ->with('userFunc')->with('responsibleFunc')->with('city')
+                ->take(10)->get(),
+
                 'newleads' => $newquery->where('status', '=', 'поступил')->orWhere('status', '=', 'сгенерирован')->orderBy('id', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')
-                    ->get(),
+                    ->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->take(10)->get(),
 
                 'phoneleads' => $phonequery->whereHas('tasks', function ($q) {
                     $q->where('type', \App\Models\Enums\Tasks\Type::Ring->value)->where('status', '!=', 'выполнена');
                 })
                     ->orderBy('id', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')
-                    ->get(),
+                    ->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->take(10)->get(),
 
                 'consleads' => $consquery->whereHas('tasks', function ($q) {
                     $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('status', '!=', 'выполнена');
                 })
                     ->orderBy('id', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')
-                    ->get(),
+                    ->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->take(10)->get(),
 
                 'defeatleads' =>  $defeatquery->where('status', '=', 'удален')->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')
-                    ->get(),
+                    ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->take(10)->get(),
 
                 'withoutcaseleads' => $withoutcasequery->whereDoesntHave('tasks', function (Builder $query) {
                     $query->where('status', '!=', 'выполнена');
@@ -99,11 +108,15 @@ class LeadsController extends Controller
                     ->whereNotIn('status', [Status::Entered->value, Status::Converted->value, Status::Deleted->value, Status::Generated->value])
                     ->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)
-                    ->with('userFunc')->with('responsibleFunc')
-                    ->get(),
+                    ->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->take(10)->get(),
 
-                'winleads' => $winquery->where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')
-                    ->get(),
+                'winleads' => $winquery->where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+                ->take(10)->get(),
+                
+                'failleads' => $failleadsquery->where('status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+                ->take(10)->get(),
+
                 'datasource'   => Source::all(),
                 'dataservices' => Services::all(),
                 'datasources' =>  Source::all('name'),
@@ -191,8 +204,9 @@ class LeadsController extends Controller
         $lead->responsible = $req->input('responsible');
         $lead->casettype = $req->input('casettype');
         $lead->city_id = $req->input('city');
+        $lead->state = $req->input('state');
         $lead->service = 11;
-        $lead->status = Status::Lazy->value;
+        $lead->status == Status::Entered->value ? $lead->status = Status::Lazy->value : null;
         $lead->save();
 
         return redirect()->route('showLeadById', $id)->with('success', 'Все в порядке, лид обновлен');
@@ -238,5 +252,15 @@ class LeadsController extends Controller
         $lead->save();
 
         return redirect()->route('leads')->with('success', 'Все в порядке, лид удален');
+    }
+
+    public function leadFail($id, Request $req)
+    {
+        $lead = Leads::find($id);
+        $lead->status = 'провален';
+        $lead->description = $lead->description . ' Причина провала - ' . $req->input('defeatreason');
+        $lead->save();
+
+        return redirect()->route('leads')->with('success', 'Лид перемещен в проваленные. Его можно будет обработать потом.');
     }
 }

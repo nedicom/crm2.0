@@ -68,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');
         Route::post('/leads/{id}/delete', 'leadDelete')->name('leadDelete');
+        Route::post('/leads/{id}/fail', 'leadFail')->name('lead.fail');
         Route::post('/leads/{id}/towork', 'leadToWork')->name('leadToWork');
         Route::post('/leads/{id}/toclient', 'leadToClient')->name('leadToClient');
     });

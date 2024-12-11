@@ -1,27 +1,27 @@
 <div class="modal fade" id="leadsModal">
     <div class="modal-dialog  modal-lg">
         <div class="modal-content">
-            <div class ="modal-header">
+            <div class="modal-header">
                 <h2>Добавить лид</h2>
             </div>
-            <div class ="modal-body d-flex justify-content-center">
-                <div class ="px-2">
+            <div class="modal-body d-flex justify-content-center">
+                <div class="px-2">
                     <form action="{{route('addlead')}}" class='' autocomplete="off" method="post">
                         @csrf
 
                         <div class="row g-3 mb-1">
                             <div class="col">
                                 <label for="name">ФИО <span class="text-danger">*</span></label>
-                                <input type = "text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
-                             </div>
+                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+                            </div>
                             <div class="col">
                                 <label for="phone">Введите телефон <span class="text-danger">*</span></label>
-                                <input type = "phone" name="phone" placeholder="+7" id="phone" value="{{ old('phone') }}" class="form-control" required>
-                            </div>                            
+                                <input type="phone" name="phone" placeholder="+7" id="phone" value="{{ old('phone') }}" class="form-control" required>
+                            </div>
                         </div>
 
 
-                        <div class="form-floating my-3">                            
+                        <div class="form-floating my-3">
                             <textarea rows="3" name="description" placeholder="Не увольняют военнослужащего" id="description" class="form-control" required>{{ old('description') }}</textarea>
                             <label for="description">Описание проблемы</label>
                         </div>
@@ -35,7 +35,7 @@
                                 <label for="source">источник</label>
                                 <select class="form-select" name="source" id="source" class="form-control">
                                     @foreach($datasource as $el)
-                                        <option value="{{$el->name}}">{{$el->name}}</option>
+                                    <option value="{{$el->name}}">{{$el->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -45,11 +45,11 @@
                                 <select class="form-select" name="city" id="city" class="form-control">
                                     <option value=null>не выбрано</option>
                                     @foreach($cities as $el)
-                                        <option value="{{$el->id}}">{{$el->city}}</option>
+                                    <option value="{{$el->id}}">{{$el->city}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                    <!--
+                            <!--
                         <div class="form-group mb-3">
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
@@ -61,11 +61,11 @@
 
                             <div class="col">
                                 <label for="lawyer">привлек</label>
-                                <select class="form-select" name="lawyer" id="lawyer" class="form-control">                                     
-                                    @foreach($datalawyers as $el)                                           
-                                        <option value="{{$el->id}}">
-                                            {{$el->name}}                                            
-                                        </option>
+                                <select class="form-select" name="lawyer" id="lawyer" class="form-control">
+                                    @foreach($datalawyers as $el)
+                                    <option value="{{$el->id}}">
+                                        {{$el->name}}
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -74,11 +74,22 @@
                                 <label for="responsible">ответственный</label>
                                 <select class="form-select" name="responsible" id="responsible" class="form-control">
                                     @foreach($datalawyers as $el)
-                                        <option value="{{$el->id}}">{{$el->name}}</option>
+                                    <option value="{{$el->id}}">{{$el->name}}</option>
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col">
+                                <label for="state">состояние</label>
+                                <select class="form-select" name="state" id="state" class="form-control">
+                                    <option value="офлайн">офлайн</option>
+                                    <option value="онлайн">онлайн</option>
+                                </select>
+                            </div>
                         </div>
+
+
+
                         <!--
                         <div class="form-group mb-3">
                             <label for="status">Укажите статус</label>
@@ -88,9 +99,9 @@
                             </select>
                         </div>
                         -->
-                    <div class="row  g-3 float-end">
-                        <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
-                    </div>
+                        <div class="row  g-3 float-end">
+                            <button type="submit" id='submit' class="btn btn-primary">Сохранить</button>
+                        </div>
                     </form>
                 </div>
             </div>

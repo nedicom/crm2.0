@@ -10,4 +10,5 @@ enum Status: string
     case Deleted    = 'удален';
     case Generated  = 'сгенерирован';
     case Lazy  = 'бездельник';
+    case Defeat  = 'провален';
 }
