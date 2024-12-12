@@ -12,10 +12,12 @@
       @endif
 
       <span class="col-md-1 d-flex align-items-center px-1">
+        @if($el->userFunc)
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
           data-toggle="tooltip" data-placement="top" title="{{$el -> userFunc -> name}}">
           <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> userFunc -> avatar }}" alt="">
         </span>
+        @endif
         <span class="ps-1"
           data-toggle="tooltip" data-placement="top" title="Поступил">
           {{$el -> created_at->format('d.m.Y H:i')}}
@@ -28,12 +30,14 @@
       </span>
       @endif
 
-      @if($el->responsibleFunc)
+
       <span class="col-md-1 d-flex align-items-center px-1">
+        @if($el->responsibleFunc)
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
           data-toggle="tooltip" data-placement="top" title="{{$el -> responsibleFunc -> name}}">
           <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> responsibleFunc -> avatar }}" alt="">
         </span>
+        @endif
         @if ($el->updated_at !== null)
         <span class="ps-1"
           data-toggle="tooltip" data-placement="top" title="обработан">
@@ -45,7 +49,7 @@
         </span>
         @endif
       </span>
-      @endif
+
 
       <div class="row col-md-1">
         <p class="text-truncate mb-0 text-muted" style="font-size: 0.9rem;" data-toggle="tooltip" data-placement="top" title="{{$el -> phone}}">
@@ -116,9 +120,9 @@
       <span class="d-flex col-md-1 text-center">
         @foreach ($el->resptasks as $avatar)
         <span class="badge d-flex align-items-center p-1 border @if($avatar -> type == 'звонок') border-success @else border-info @endif rounded-pill"
-            data-toggle="tooltip" data-placement="top" title="{{$avatar -> name}} - {{$avatar -> type}}">
-            <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru{{ $avatar->avatar }}">
-          </span>      
+          data-toggle="tooltip" data-placement="top" title="{{$avatar -> name}} - {{$avatar -> type}}">
+          <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru{{ $avatar->avatar }}">
+        </span>
         @endforeach
       </span>
       @endif
