@@ -111,7 +111,7 @@ class LeadsController extends Controller
                     ->get(),
 
                 'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'datasource'   => Source::all(),
                 'dataservices' => Services::all(),
