@@ -78,40 +78,47 @@ class LeadsController extends Controller
             [
                 'allleads' => $query->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)->get(),
+                    ->take(100)->get(),
 
                 'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)->get(),
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
                 'phoneleads' => $phonequery->has('lazyphone')
                     ->orderBy('id', 'desc')
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)->get(),
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
                 'consleads' => $consquery->has('lazycons')
                     ->orderBy('id', 'desc')
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
-                    ->take(10)->get(),
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)->get(),
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
                 'withoutcaseleads' => $withoutcasequery
                     ->where('status', Status::Lazy->value)
                     ->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)->get(),
+                    ->get(),
 
                 'winleads' => $winquery->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
-                    ->take(10)->get(),
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
-                'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
-                    ->take(10)->get(),
+                'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)
+                    ->with('userFunc')->with('city')
+                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state'])
+                    ->get(),
 
                 'datasource'   => Source::all(),
                 'dataservices' => Services::all(),
