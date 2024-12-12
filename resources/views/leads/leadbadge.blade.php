@@ -28,6 +28,7 @@
       </span>
       @endif
 
+      @if($el->responsibleFunc)
       <span class="col-md-1 d-flex align-items-center px-1">
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
           data-toggle="tooltip" data-placement="top" title="{{$el -> responsibleFunc -> name}}">
@@ -44,6 +45,7 @@
         </span>
         @endif
       </span>
+      @endif
 
       <div class="row col-md-1">
         <p class="text-truncate mb-0 text-muted" style="font-size: 0.9rem;" data-toggle="tooltip" data-placement="top" title="{{$el -> phone}}">
