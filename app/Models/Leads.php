@@ -9,6 +9,8 @@ use App\Models\Tasks;
 use Illuminate\Http\Client\Request;
 use App\Models\ValueObject\SimpleLeadDTO;
 use App\Models\Enums\Leads\Status;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\hasMany;
 
 /**
  * @property int $id
@@ -69,12 +71,12 @@ class Leads extends Model
 
     public function userFunc()
     {
-        return $this->belongsTo(User::class, 'lawyer')->select(['id','name', 'avatar']);
+        return $this->belongsTo(User::class, 'lawyer')->select(['id', 'name', 'avatar']);
     }
 
     public function responsibleFunc()
     {
-        return $this->belongsTo(User::class, 'responsible')->select(['id','name', 'avatar']);
+        return $this->belongsTo(User::class, 'responsible')->select(['id', 'name', 'avatar']);
     }
 
     public function servicesFunc()
@@ -82,9 +84,21 @@ class Leads extends Model
         return $this->belongsTo(Services::class, 'service');
     }
 
-    public function tasks()
+    public function tasks(): hasMany
     {
-        return $this->hasMany(Tasks::class, 'lead_id', 'id');
+            return $this->hasMany(Tasks::class, 'lead_id', 'id')->select(['id']);
+    }
+
+    public function resptasks(): HasManyThrough
+    {
+         return $this->HasManyThrough(
+            User::class,
+            Tasks::class,
+            'lead_id', // Внешний ключ в таблице `Tasks` ...
+            'id', // Внешний ключ в таблице `User` ...
+            'id', // Локальный ключ в таблице `User` ...
+            'lawyer' // Локальный ключ в таблице `Tasks` ...);
+            )->select(['email']);
     }
 
     public function city()

@@ -3,7 +3,7 @@
 
     <div class="d-flex justify-content-left align-items-center m-1">
 
-      <a class="btn btn-primary col-md-1" href="{{ route ('showLeadById', $el->id) }}" style="font-size: 0.7rem;">
+      <a class="btn btn-primary col-md-1 text-truncate" href="{{ route ('showLeadById', $el->id) }}" style="font-size: 0.7rem;">
         {{$el->status}}</a>
       @if ($countTasks = $el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count() > 0)
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -28,6 +28,10 @@
       </span>
       @endif
 
+
+      @if($el->resptasks)
+      {{$el->resptasks}}
+      @endif
 
       <span class="col-md-1 d-flex align-items-center px-1">
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"

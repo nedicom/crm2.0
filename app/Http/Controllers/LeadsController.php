@@ -80,30 +80,30 @@ class LeadsController extends Controller
                 ->with('userFunc')->with('responsibleFunc')->with('city')
                 ->take(10)->get(),
 
-                'newleads' => $newquery->where('status', '=', 'поступил')->orWhere('status', '=', 'сгенерирован')->orderBy('id', 'desc')
+                'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->take(10)->get(),
 
                 'phoneleads' => $phonequery->whereHas('tasks', function ($q) {
-                    $q->where('type', \App\Models\Enums\Tasks\Type::Ring->value)->where('status', '!=', 'выполнена');
+                    $q->where('type', \App\Models\Enums\Tasks\Type::Ring->value)->where('leads.status', '!=', 'выполнена');
                 })
                     ->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->take(10)->get(),
 
                 'consleads' => $consquery->whereHas('tasks', function ($q) {
-                    $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('status', '!=', 'выполнена');
+                    $q->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)->where('leads.status', '!=', 'выполнена');
                 })
                     ->orderBy('id', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
                     ->take(10)->get(),
 
-                'defeatleads' =>  $defeatquery->where('status', '=', 'удален')->orderBy('id', 'desc')
+                'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->with('city')
                     ->take(10)->get(),
 
                 'withoutcaseleads' => $withoutcasequery->whereDoesntHave('tasks', function (Builder $query) {
-                    $query->where('status', '!=', 'выполнена');
+                    $query->where('leads.status', '!=', 'выполнена');
                 })
                     ->whereNotIn('status', [Status::Entered->value, Status::Converted->value, Status::Deleted->value, Status::Generated->value])
                     ->orderBy('id', 'desc')
@@ -111,10 +111,10 @@ class LeadsController extends Controller
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->take(10)->get(),
 
-                'winleads' => $winquery->where('status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+                'winleads' => $winquery->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
                 ->take(10)->get(),
                 
-                'failleads' => $failleadsquery->where('status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+                'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
                 ->take(10)->get(),
 
                 'datasource'   => Source::all(),
