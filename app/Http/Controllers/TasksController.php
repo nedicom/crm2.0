@@ -159,8 +159,36 @@ class TasksController extends Controller
         // Events
         TaskDeleted::dispatch($task);
         $task->delete();
+        if ($task->lead_id) {
+            $lead = Leads::with('lazytasks')->find($task->lead_id);
+            if (!$lead->lazytasks->count()) {
+                $lead->status = Status::Lazy->value;
+                $lead->save();
+            } 
+        } 
 
         return redirect()->route('home')->with('success', 'Все в порядке, задача удалена');
+    }
+
+    /**
+     * Задача провалена
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function fail(int $id)
+    {
+        $task = Tasks::find($id);
+        // Events
+        $task->status = $task::STATUS_FAIL;
+        $task->save();
+        if ($task->lead_id) {
+            $lead = Leads::with('lazytasks')->find($task->lead_id);
+            if (!$lead->lazytasks->count()) {
+                $lead->status = Status::Lazy->value;
+                $lead->save();
+            } 
+        }       
+        return redirect()->back()->with('success', 'Задача провалена');
     }
 
     public function complete(int $id)
@@ -169,12 +197,14 @@ class TasksController extends Controller
         // Events
         $task->donetime = Carbon::now();
         $task->status = $task::STATUS_COMPLETE;
-            if ($task->lead_id) {
-                $lead = Leads::find($task->lead_id);
+        $task->save();
+        if ($task->lead_id) {
+            $lead = Leads::with('lazytasks')->find($task->lead_id);
+            if (!$lead->lazytasks->count()) {
                 $lead->status = Status::Lazy->value;
                 $lead->save();
-            }
-        $task->save();
+            } 
+        } 
         // Events
         TaskCompleted::dispatch($task);
 

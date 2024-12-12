@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/tasks/{id}', 'showTaskById')->name('showTaskById');
         Route::post('/tasks/{id}/edit', 'editTaskById')->name('editTaskById');
         Route::get('/tasks/{id}/delete', 'delete')->name('TaskDelete');
+        Route::get('/tasks/{id}/fail', 'fail')->name('TaskFail');
         Route::get('/tasks/{id}/complete', 'complete')->name('TaskComplete');
         Route::post('/tasks/get-deals', 'getDealsByClient')->name('task.get.deals');
         Route::post('/tasks/list/ajax', 'getAjaxList')->name('tasks.list.ajax');

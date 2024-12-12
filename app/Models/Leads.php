@@ -86,19 +86,63 @@ class Leads extends Model
 
     public function tasks(): hasMany
     {
-            return $this->hasMany(Tasks::class, 'lead_id', 'id')->select(['id']);
+        return $this->hasMany(Tasks::class, 'lead_id', 'id');
+    }
+
+
+    public function lazytasks(): hasMany
+    {
+        return $this->hasMany(Tasks::class, 'lead_id', 'id')
+            ->where('status', Tasks::STATUS_WAITING)
+            ->orWhere('status', Tasks::STATUS_OVERDUE)
+            ->orWhere('status', Tasks::STATUS_IN_WORK)
+        ;
+    }
+
+    public function lazyphone(): hasMany
+    {
+        return $this->hasMany(Tasks::class, 'lead_id', 'id')
+            ->where('type', \App\Models\Enums\Tasks\Type::Ring->value)
+            ->where(
+                function ($query) {
+                    return $query
+                        ->where('status', Tasks::STATUS_WAITING)
+                        ->orWhere('status', Tasks::STATUS_OVERDUE)
+                        ->orWhere('status', Tasks::STATUS_IN_WORK);
+                }
+            )
+            ->select(['id'])
+        ;
+    }
+
+    public function lazycons(): hasMany
+    {
+        return $this->hasMany(Tasks::class, 'lead_id', 'id')
+            ->where('type', \App\Models\Enums\Tasks\Type::Consultation->value)
+            ->where(
+                function ($query) {
+                    return $query
+                        ->where('status', Tasks::STATUS_WAITING)
+                        ->orWhere('status', Tasks::STATUS_OVERDUE)
+                        ->orWhere('status', Tasks::STATUS_IN_WORK);
+                }
+            )
+            ->select(['id'])
+        ;
     }
 
     public function resptasks(): HasManyThrough
     {
-         return $this->HasManyThrough(
+        return $this->HasManyThrough(
             User::class,
             Tasks::class,
             'lead_id', // Внешний ключ в таблице `Tasks` ...
             'id', // Внешний ключ в таблице `User` ...
             'id', // Локальный ключ в таблице `User` ...
             'lawyer' // Локальный ключ в таблице `Tasks` ...);
-            )->select(['email']);
+        )
+            ->select(['avatar', 'users.name', 'type'])
+        ;
     }
 
     public function city()

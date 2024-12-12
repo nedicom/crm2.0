@@ -3,7 +3,7 @@
 
     <div class="d-flex justify-content-left align-items-center m-1">
 
-      <a class="btn btn-primary col-md-1 text-truncate" href="{{ route ('showLeadById', $el->id) }}" style="font-size: 0.7rem;">
+      <a class="btn btn-primary col-md-1 text-truncate" href="{{ route ('showLeadById', $el->id) }}" style="font-size: 0.7rem;" target="_blank">
         {{$el->status}}</a>
       @if ($countTasks = $el->tasks()->where('status', '!=', \App\Models\Tasks::STATUS_COMPLETE)->count() > 0)
       <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -28,11 +28,6 @@
       </span>
       @endif
 
-
-      @if($el->resptasks)
-      {{$el->resptasks}}
-      @endif
-
       <span class="col-md-1 d-flex align-items-center px-1">
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
           data-toggle="tooltip" data-placement="top" title="{{$el -> responsibleFunc -> name}}">
@@ -40,7 +35,7 @@
         </span>
         @if ($el->updated_at !== null)
         <span class="ps-1"
-          data-toggle="tooltip" data-placement="top" title="Поступил">
+          data-toggle="tooltip" data-placement="top" title="обработан">
           {{$el -> updated_at->format('d.m.Y H:i')}}
         </span>
         @else
@@ -51,7 +46,7 @@
       </span>
 
       <div class="row col-md-1">
-        <p class="mb-0 text-muted" style="font-size: 0.9rem;">
+        <p class="text-truncate mb-0 text-muted" style="font-size: 0.9rem;" data-toggle="tooltip" data-placement="top" title="{{$el -> phone}}">
           {{$el -> phone}}
         </p>
         @if($el->ring_recording_url)
@@ -61,7 +56,7 @@
         @endif
       </div>
 
-      <span class="text-truncate col-md-3"
+      <span class="text-truncate col-md-2"
         data-toggle="tooltip" data-placement="top" title="{{$el -> description}}">
         {{$el -> description}}
       </span>
@@ -111,6 +106,18 @@
       <span class="col-md-1 text-center"
         data-toggle="tooltip" data-placement="top" title="онлайн/офлайн">
         -
+      </span>
+      @endif
+
+
+      @if($el->resptasks)
+      <span class="d-flex col-md-1 text-center">
+        @foreach ($el->resptasks as $avatar)
+        <span class="badge d-flex align-items-center p-1 border @if($avatar -> type == 'звонок') border-success @else border-info @endif rounded-pill"
+            data-toggle="tooltip" data-placement="top" title="{{$avatar -> name}} - {{$avatar -> type}}">
+            <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru{{ $avatar->avatar }}">
+          </span>      
+        @endforeach
       </span>
       @endif
 

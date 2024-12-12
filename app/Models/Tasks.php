@@ -46,6 +46,7 @@ class Tasks extends Model
     const STATUS_OVERDUE = 'просрочена';
     const STATUS_IN_WORK = 'в работе';
     const STATUS_COMPLETE = 'выполнена';
+    const STATUS_FAIL = 'провалена';
 
     const STATE_NEW = 1;
     const STATE_OLD = 0;
