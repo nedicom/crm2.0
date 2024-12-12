@@ -78,37 +78,37 @@ class LeadsController extends Controller
             [
                 'allleads' => $query->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'phoneleads' => $phonequery->has('lazyphone')
                     ->orderBy('id', 'desc')
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'consleads' => $consquery->has('lazycons')
                     ->orderBy('id', 'desc')
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'withoutcaseleads' => $withoutcasequery
                     ->where('status', Status::Lazy->value)
                     ->orderBy('id', 'desc')
                     ->whereDate('created_at', '>=', $today_date)
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'winleads' => $winquery->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
-                    ->get(),
+                    ->take(10)->get(),
 
                 'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
                     ->take(10)->get(),
