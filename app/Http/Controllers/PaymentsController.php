@@ -90,7 +90,7 @@ class PaymentsController extends Controller
                     'months' => $months,
                     'month' => $month,
                     'datalawyers' => User::active()->get(),
-                    'dataservices' => Services::all(),
+                    'dataservices' => Services::all()->sortBy('name'),
                     'dataclients' => ClientsModel::all(),
                 ]);
         } else { // для остальных ролей
@@ -100,7 +100,7 @@ class PaymentsController extends Controller
                     'months' => $months,
                     'month' => $month,
                     'datalawyers' => User::active()->get(),
-                    'dataservices' => Services::all(),
+                    'dataservices' => Services::all()->sortBy('name'),
                     'dataclients' => ClientsModel::all(),
                 ]);
         }
@@ -124,7 +124,7 @@ class PaymentsController extends Controller
         ],[
             'creator' => $creator,
             'datalawyers' => User::active()->get(),
-            'dataservices' => Services::all(),
+            'dataservices' => Services::all()->sortBy('name'),
             'dataclients' => ClientsModel::all()
         ]);
     }
