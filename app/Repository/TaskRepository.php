@@ -33,7 +33,6 @@ class TaskRepository
         if ($request->input('checkedlawyer')) $query->where('lawyer', '=', $request->input('checkedlawyer'));
         if ($request->input('type')) $query->where('type', '=', $request->input('type'));
         $query->orderBy('date');
-
         return $query;
     }
 

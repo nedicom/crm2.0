@@ -120,7 +120,7 @@
 <div class="tab-content" id="pills-tabContent">
 
     <div class="tab-pane fade" id="pills-allleads" role="tabpanel" aria-labelledby="pills-allleads-tab">
-        <p class="row font-weight-light p-3">Последние 100 лидов по хронологии для обозримости</p>
+        <p class="row font-weight-light p-3">Последние 200 лидов по хронологии для обозримости</p>
         <div class="row">
             @foreach ($allleads as $el)
             @include('leads/leadbadge')
