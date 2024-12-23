@@ -7,6 +7,7 @@ use App\Services\MyCalls\ValueObject\RingDTO;
 use Illuminate\Support\Facades\DB;
 use App\Models\Leads;
 use App\Models\ClientsModel;
+use App\Models\Tasks;
 
 class LeadService
 {
@@ -20,12 +21,22 @@ class LeadService
     {
         $clientName = (!empty($valueObject->getClientName())) ? $valueObject->getClientName() : 'Имя не указано';
 
-        if (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(),static::CLIENTS_TABLE_NAME)) !== null) {
+        if (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::CLIENTS_TABLE_NAME)) !== null) {
             /** @var ClientsModel $client */
             $client = ClientsModel::find($id);
             $clientName = $client->name;
             $source = 'существующий клиент';
-        } elseif ($this->checkExistsPhone($valueObject->getFormatClientPhone(),static::LEAD_TABLE_NAME)) {
+        } elseif (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::LEAD_TABLE_NAME)) !== null) {
+            $task = new Tasks;
+            $task->name = "входящий звонок";
+            $task->lawyer = 41;
+            $task->status = "ожидает";
+            $task->duration = 10;
+            $task->description = "звонок существующего лида";
+            $task->type = "звонок";
+            $task->lead_id = $id;
+            $task->saveOrFail();
+            
             $source = 'Повторный лид';
         } else {
             // Если поиск по телефону не дал результатов
@@ -47,7 +58,7 @@ class LeadService
     private function checkExistsPhone(string $currentPhone, string $tableName): ?int
     {
         if (DB::table($tableName)->exists()) {
-            $clientsPhones = DB::table($tableName)->orderBy('id','DESC')->pluck('phone', 'id')->toArray();
+            $clientsPhones = DB::table($tableName)->orderBy('id', 'DESC')->pluck('phone', 'id')->toArray();
             $processPhones = UserHelper::formatPhone($clientsPhones);
 
             foreach ($processPhones as $id => $phone)

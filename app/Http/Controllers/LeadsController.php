@@ -46,11 +46,11 @@ class LeadsController extends Controller
 
     public function showleads(Request $req)
     {       
-        //$today_date = Carbon::now()->subMonths(12)->toDateTimeString();
-        //$trash_date = Carbon::now()->subMonths(3)->toDateTimeString();
+        $today_date = Carbon::now()->subMonths(12)->toDateTimeString();
+        $trash_date = Carbon::now()->subMonths(3)->toDateTimeString();
 
-        $today_date = Carbon::now()->subDays(12)->toDateTimeString();
-        $trash_date = Carbon::now()->subDays(3)->toDateTimeString();
+        //$today_date = Carbon::now()->subDays(12)->toDateTimeString();
+        //$trash_date = Carbon::now()->subDays(3)->toDateTimeString();
         session([
             'number' => null,
             'name' => null,
@@ -92,13 +92,12 @@ class LeadsController extends Controller
             [
                 'allleads' => $query->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(10)
+                    ->take(200)
                     ->get(),
 
                 'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(10)
                     ->get(),
 
                 'phoneleads' => $phonequery->has('lazyphone')
@@ -106,7 +105,7 @@ class LeadsController extends Controller
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(10)
+                    //->take(10)
                     ->get(),
 
                 'consleads' => $consquery->has('lazycons')
@@ -114,7 +113,7 @@ class LeadsController extends Controller
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(10)
+                    //->take(10)
                     ->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
