@@ -160,6 +160,11 @@
             </select>
         </div>
 
+        <div class="col-md-2 col-12">
+            <label for="button"><small>Уведомления telegram:</small></label>
+            <a type="button" href="https://t.me/nedicomlead" class="btn btn-light form-control" target="_blank">В группу</a>
+        </div>
+
     </div>
 </form>
 
