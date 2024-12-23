@@ -90,26 +90,26 @@ class LeadsController extends Controller
         return view(
             'leads/leads',
             [
-                'allleads' => $query->orderBy('id', 'desc')
+                'allleads' => $query->orderBy('created_at', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->take(200)
                     ->get(),
 
-                'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
+                'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('created_at', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
                     ->get(),
 
                 'phoneleads' => $phonequery->has('lazyphone')
-                    ->orderBy('id', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(100)
+                    //->take(100)
                     ->get(),
 
                 'consleads' => $consquery->has('lazycons')
-                    ->orderBy('id', 'desc')
+                    ->orderBy('created_at', 'desc')
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
