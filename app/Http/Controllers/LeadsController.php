@@ -46,8 +46,8 @@ class LeadsController extends Controller
 
     public function showleads(Request $req)
     {       
-        $today_date = Carbon::now()->subMonths(12)->toDateTimeString();
-        $trash_date = Carbon::now()->subMonths(3)->toDateTimeString();
+        $today_date = Carbon::now()->subMonths(3)->toDateTimeString();
+        $trash_date = Carbon::now()->subMonths(1)->toDateTimeString();
 
         //$today_date = Carbon::now()->subDays(12)->toDateTimeString();
         //$trash_date = Carbon::now()->subDays(3)->toDateTimeString();
@@ -102,6 +102,7 @@ class LeadsController extends Controller
 
                 'phoneleads' => $phonequery->has('lazyphone')
                     ->orderBy('id', 'desc')
+                    ->whereDate('created_at', '>=', $today_date)
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
@@ -110,10 +111,10 @@ class LeadsController extends Controller
 
                 'consleads' => $consquery->has('lazycons')
                     ->orderBy('id', 'desc')
+                    ->whereDate('created_at', '>=', $today_date)
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    //->take(10)
                     ->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
