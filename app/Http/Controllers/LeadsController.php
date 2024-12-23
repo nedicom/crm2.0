@@ -102,19 +102,18 @@ class LeadsController extends Controller
 
                 'phoneleads' => $phonequery->has('lazyphone')
                     ->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $today_date)
                     ->with('lazyphone')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    //->take(10)
+                    ->take(100)
                     ->get(),
 
                 'consleads' => $consquery->has('lazycons')
                     ->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $today_date)
                     ->with('lazycons')
                     ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                    ->take(100)
                     ->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
