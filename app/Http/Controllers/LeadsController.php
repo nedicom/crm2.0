@@ -14,6 +14,8 @@ use App\Models\Cities;
 use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
+use App\Services\TG\LeadTg;
+
 class LeadsController extends Controller
 {
     public function addlead(LeadsRequest $req)
@@ -32,18 +34,25 @@ class LeadsController extends Controller
         $lead->status = 'поступил';
 
         $lead->save();
+        
+        $city = !isset($lead->city_id) ? Cities::find($lead->city_id)->city : 'не определен';
+        $responsible = !isset($lead->responsible) ? User::find($lead->responsible)->name : 'не определен';
+
+        LeadTg::SendleadTg( "Новый лид\nГород - " . $city . "\nТип дела - " . $lead->casettype . 
+        "\nОтветсвенный - " . $responsible . "\Источник - " . $lead->source . "\n" . $lead->description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id);
 
         return redirect()->route('leads')->with('success', 'Все в порядке, лид добавлен');
     }
 
     public function showleads(Request $req)
-    {
+    {       
         $today_date = Carbon::now()->subMonths(1)->toDateTimeString();
         session([
             'number' => null,
             'name' => null,
             'lawyer' => null,
             'responsible' => null,
+            'casettype' => null,
         ]);
 
         $query = Leads::query();
@@ -56,12 +65,13 @@ class LeadsController extends Controller
         $failleadsquery = Leads::query();
 
 
-        if ($req->findNumber ||  $req->findName ||  $req->lawyer ||  $req->responsible) {
+        if ($req->findNumber ||  $req->findName ||  $req->lawyer ||  $req->responsible ||  $req->casettype ||  $req->startdate ||  $req->enddate ||  $req->city) {
             session([
                 'number' => $req->findNumber,
                 'name' => $req->findName,
                 'lawyer' => $req->lawyer,
                 'responsible' => $req->responsible,
+                'casettype' => $req->casettype,
             ]);
             $query = Leads::filter($req->all());
             $newquery = Leads::filter($req->all());
@@ -78,7 +88,7 @@ class LeadsController extends Controller
             [
                 'allleads' => $query->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(200)->get(),
+                    ->take(10)->get(),
 
                 'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('id', 'desc')
                     ->with('userFunc')->with('responsibleFunc')->with('city')

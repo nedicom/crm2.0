@@ -10,6 +10,19 @@
 
 @section('footerscript')
 <script src="/resources/datetimepicker/jquery.datetimepicker.full.js"></script>
+<script>
+    jQuery('#datetimepicker3').datetimepicker({
+        format: 'Y-m-d',
+        timepicker: false,
+        lang: 'ru',
+    });
+    jQuery('#datetimepicker4').datetimepicker({
+        format: 'Y-m-d',
+        timepicker: false,
+        lang: 'ru'
+    });
+</script>
+
 @endsection
 
 @section('title')
@@ -31,7 +44,7 @@
 <ul class="nav nav-pills justify-content-center mb-3 shadow p-1" id="pills-tab" role="tablist">
     <li class="nav-item" role="presentation">
         <button class="nav-link" id="pills-allleads-tab" data-bs-toggle="pill" data-bs-target="#pills-allleads"
-            type="button" role="tab" aria-controls="pills-allleads" aria-selected="true">Все <span
+            type="button" role="tab" aria-controls="pills-allleads" aria-selected="true">Все<span
                 class="badge @if($allleads->count() == 0) text-bg-danger @else text-bg-secondary @endif">{{ $allleads->count() }}</span></button>
     </li>
     <li class="nav-item" role="presentation">
@@ -72,48 +85,81 @@
     </li>
 </ul>
 
-<form class="row my-2" action="{{ route('leads') }}" method="get">
+<form class="row my-2" action="{{ route('leads') }}" method="get" autocomplete="off">
+
     @csrf
-    <div class="col-md-2 col-12">
-        <label for="findNumber"><small>поиск по номеру</small></label>
-        <input type="text" class="form-control" value="{{ session('number') }}" name="findNumber" id="findNumber" placeholder="телефон">
-    </div>
-    <div class="col-md-2 col-12">
-        <label for="findName"><small>поиск по имени</small></label>
-        <input type="text" class="form-control" value="{{ session('name') }}" name="findName" id="findName" placeholder="ФИО (часть)">
+
+    <div class="row">
+        <div class="col-md-2 col-12">
+            <label for="findNumber"><small>поиск по номеру</small></label>
+            <input type="text" class="form-control" value="{{ session('number') }}" name="findNumber" id="findNumber" placeholder="телефон">
+        </div>
+        <div class="col-md-2 col-12">
+            <label for="findName"><small>поиск по имени</small></label>
+            <input type="text" class="form-control" value="{{ session('name') }}" name="findName" id="findName" placeholder="ФИО (часть)">
+        </div>
+
+        <div class="col-md-2 col-12">
+            <label for="datetimepicker3">начало:</label>
+            <input type="text" id="datetimepicker3" class="form-control" name="startdate" value="{{ request()->input('startdate') }}">
+        </div>
+
+        <div class="col-md-2 col-12">
+            <label for="datetimepicker4">конец:</label>
+            <input id="datetimepicker4" class="form-control" name="enddate" type="text" value="{{ request()->input('enddate') }}">
+        </div>
+
+        <div class="col-md-2 col-12">
+            <label for="submit"></label>
+            <button type="submit" class="btn btn-primary form-control">найти</button>
+        </div>
+        <div class="col-md-2 col-12">
+            <label for="reset"></label>
+            <a type="reset" href="{{ route('leads') }}" class="btn btn-secondary form-control">сбросить</a>
+        </div>
     </div>
 
-    <div class="col-md-2 col-12">
-        <label for="lawyer"><small>кто привлек</small></label>
-        <select class="form-select" name="lawyer" id="lawyer">
-            <option value="">не выбрано</option>
-            @foreach($datalawyers as $el)
-            <option value={{$el->id}} @if ($el->id == session('lawyer')) selected @endif>
-                {{$el->name}}
-            </option>
-            @endforeach
-        </select>
-    </div>
+    <div class="row">
+        <div class="col-md-2 col-12">
+            <label for="lawyer"><small>кто привлек</small></label>
+            <select class="form-select" name="lawyer" id="lawyer">
+                <option value="">не выбрано</option>
+                @foreach($datalawyers as $el)
+                <option value={{$el->id}} @if ($el->id == session('lawyer')) selected @endif>
+                    {{$el->name}}
+                </option>
+                @endforeach
+            </select>
+        </div>
 
-    <div class="col-md-2 col-12">
-        <label for="responsible"><small>кто ответственный</small></label>
-        <select class="form-select" name="responsible" id="responsible">
-            <option value="">не выбрано</option>
-            @foreach($datalawyers as $el)
-            <option value={{$el->id}} @if (($el->id) == request()->input('responsible'))) selected @endif>
-                {{$el->name}}
-            </option>
-            @endforeach
-        </select>
-    </div>
+        <div class="col-md-2 col-12">
+            <label for="responsible"><small>кто ответственный</small></label>
+            <select class="form-select" name="responsible" id="responsible">
+                <option value="">не выбрано</option>
+                @foreach($datalawyers as $el)
+                <option value={{$el->id}} @if (($el->id) == request()->input('responsible'))) selected @endif>
+                    {{$el->name}}
+                </option>
+                @endforeach
+            </select>
+        </div>
 
-    <div class="col-md-2 col-12">
-        <label for="submit"></label>
-        <button type="submit" class="btn btn-primary form-control">найти</button>
-    </div>
-    <div class="col-md-2 col-12">
-        <label for="reset"></label>
-        <a type="reset" href="{{ route('leads') }}" class="btn btn-secondary form-control">сбросить</a>
+        <div class="col-md-2 col-12">
+            {!! \App\Helpers\ClientHelper::typeList(request()->input('casettype')) !!}
+        </div>
+
+        <div class="col-md-2 col-12">
+            <label for="lawyer"><small>город</small></label>
+            <select class="form-select" name="city" id="city">
+                <option value="">не выбрано</option>
+                @foreach($cities as $el)
+                <option value={{$el->id}} @if ($el->id == request()->input('city')) selected @endif>
+                    {{$el->city}}
+                </option>
+                @endforeach
+            </select>
+        </div>
+
     </div>
 </form>
 
@@ -182,7 +228,7 @@
     </div>
 
     <div class="tab-pane fade" id="pills-winleads" role="tabpanel" aria-labelledby="pills-winleads-tab">
-        <p class="row font-weight-light p-3">Тут результат работы отдела продаж за последние 2 месяца
+        <p class="row font-weight-light p-3">Тут результат работы отдела продаж
         </p>
         <div class="row">
             @foreach ($winleads as $el)

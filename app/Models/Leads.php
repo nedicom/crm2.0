@@ -176,9 +176,33 @@ class Leads extends Model
             });
         });
 
+        $query->when($filters['casettype'] ?? null, function ($query, $search) {            
+            $query->where(function ($query) use ($search) {
+                $query->where('casettype', $search);
+            });
+        });
+
         $query->when($filters['responsible'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('responsible', intval($search));
+            });
+        });
+
+        $query->when($filters['city'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('city_id', intval($search));
+            });
+        });
+
+        $query->when($filters['startdate'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereDate('created_at', '>=', date($search));
+            });
+        });
+
+        $query->when($filters['enddate'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereDate('created_at', '<=', date($search));
             });
         });
     }
