@@ -100,12 +100,12 @@
         </div>
 
         <div class="col-md-2 col-12">
-            <label for="datetimepicker3">начало:</label>
+            <label for="datetimepicker3"><small>начало:</small></label>
             <input type="text" id="datetimepicker3" class="form-control" name="startdate" value="{{ request()->input('startdate') }}">
         </div>
 
         <div class="col-md-2 col-12">
-            <label for="datetimepicker4">конец:</label>
+            <label for="datetimepicker4"><small>конец:</small></label>
             <input id="datetimepicker4" class="form-control" name="enddate" type="text" value="{{ request()->input('enddate') }}">
         </div>
 
@@ -206,7 +206,7 @@
 
     <div class="tab-pane fade" id="pills-defeatleads" role="tabpanel" aria-labelledby="pills-defeatleads-tab">
         <p class="row font-weight-light p-3">Тут мусорные лиды - дубли, спам звонки, ошиблись номером и
-            так далее за последние 2 месяца</p>
+            так далее за последние 3 месяца</p>
         <div class="row">
             @foreach ($defeatleads as $el)
             @include('leads/leadbadge')

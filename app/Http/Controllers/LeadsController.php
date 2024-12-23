@@ -47,6 +47,7 @@ class LeadsController extends Controller
     public function showleads(Request $req)
     {       
         $today_date = Carbon::now()->subMonths(12)->toDateTimeString();
+        $trash_date = Carbon::now()->subMonths(3)->toDateTimeString();
         session([
             'number' => null,
             'name' => null,
@@ -111,7 +112,7 @@ class LeadsController extends Controller
                     ->get(),
 
                 'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('responsibleFunc')->with('city')
+                    ->whereDate('created_at', '>=', $trash_date)->with('userFunc')->with('responsibleFunc')->with('city')
                     ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
                     ->get(),
 
