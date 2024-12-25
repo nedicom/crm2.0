@@ -9,6 +9,8 @@ use App\Models\Leads;
 use App\Models\ClientsModel;
 use App\Models\Tasks;
 
+use App\Services\TG\LeadTg;
+
 class LeadService
 {
     const CLIENTS_TABLE_NAME = 'clients_models';
@@ -26,9 +28,15 @@ class LeadService
             $client = ClientsModel::find($id);
             $clientName = $client->name;
             $source = 'существующий клиент';
+
+            $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
+            $lead->save();
+            LeadTg::SendleadTg($lead);
+
         } elseif (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::LEAD_TABLE_NAME)) !== null) {
             $task = new Tasks;
             $task->name = "входящий звонок";
+            $task->date = $task->created_at;
             $task->lawyer = 41;
             $task->status = "ожидает";
             $task->duration = 10;
@@ -36,17 +44,15 @@ class LeadService
             $task->type = "звонок";
             $task->lead_id = $id;
             $task->saveOrFail();
-            
-            $source = 'Повторный лид';
         } else {
             // Если поиск по телефону не дал результатов
             $source = ($valueObject->getOwnerPhone() == '+79788838978' || $valueObject->getOwnerPhone() == '+79784731847')
                 ? $valueObject->getOwnerPhone()
                 : 'не знаю источник';
+            $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
+            $lead->save();
+            LeadTg::SendleadTg($lead);
         }
-
-        $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
-        $lead->save();
     }
 
     /**
