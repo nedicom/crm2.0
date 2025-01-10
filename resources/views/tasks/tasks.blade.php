@@ -139,8 +139,9 @@
                 </div>
                 <div class="col-md-3 columncard text-center" id="finished">
                     <h5 class="page-title" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Каждый день в 00.00 выполненные задачи будут пропадать из списка">выполнена</h5>
+                    
                     @foreach ($data as $el)
-                        @if (($el->status == "выполнена") && ($el->donetime > Carbon\Carbon::today()))
+                        @if ($el->status == "выполнена")
                             @include('tasks.taskcard')
                         @endif
                     @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tasks;
+use App\Helpers\LeadStatus\LeadStatus;
 use Carbon\Carbon;
 
 class TaskAjaxController extends Controller
@@ -20,12 +21,14 @@ class TaskAjaxController extends Controller
             elseif($status=='inwork'){$statuscard='в работе';}
             elseif($status=='finished'){
                 $statuscard='выполнена';
-                $task -> donetime = Carbon::now();
+                $task -> donetime = Carbon::now();                
             }
             else {$statuscard='код не сработал';}
-
-            $task->status = $statuscard;
+            $task->status = $statuscard;            
             $task->save();
+
+            if ($task->lead_id) { LeadStatus::ChangeLeadStatus($task);} 
+            
             return ($statuscard);
         }
 
@@ -81,6 +84,9 @@ class TaskAjaxController extends Controller
             $task->donetime = Carbon::now();
             $task->new = 0;
             $task->save();
+
+            if ($task->lead_id) { LeadStatus::ChangeLeadStatus($task);} 
+            
             $checkedvipolnena = $request->get('checkedvipolnena');
             return ($checkedvipolnena);
         }
@@ -90,6 +96,9 @@ class TaskAjaxController extends Controller
             $task = Tasks::find($id);
             $task->status = 'ожидает';
             $task->save();
+
+            if ($task->lead_id) { LeadStatus::ChangeLeadStatus($task);} 
+
             $checkedvipolnena = $request->get('checkedvipolnena');
             return ($checkedvipolnena);
         }

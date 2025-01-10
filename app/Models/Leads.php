@@ -11,6 +11,7 @@ use App\Models\ValueObject\SimpleLeadDTO;
 use App\Models\Enums\Leads\Status;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\hasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -93,9 +94,15 @@ class Leads extends Model
     public function lazytasks(): hasMany
     {
         return $this->hasMany(Tasks::class, 'lead_id', 'id')
-            ->where('status', Tasks::STATUS_WAITING)
-            ->orWhere('status', Tasks::STATUS_OVERDUE)
-            ->orWhere('status', Tasks::STATUS_IN_WORK)
+        ->where(
+            function ($query) {
+                return $query
+                    ->where('status', Tasks::STATUS_WAITING)
+                    ->orWhere('status', Tasks::STATUS_OVERDUE)
+                    ->orWhere('status', Tasks::STATUS_IN_WORK);
+            }
+        )
+        ->select(['id', 'status', 'lead_id'])
         ;
     }
 
@@ -111,7 +118,7 @@ class Leads extends Model
                         ->orWhere('status', Tasks::STATUS_IN_WORK);
                 }
             )
-            ->select(['id'])
+            ->select(['id', 'status', 'lead_id'])
         ;
     }
 
@@ -127,7 +134,7 @@ class Leads extends Model
                         ->orWhere('status', Tasks::STATUS_IN_WORK);
                 }
             )
-            ->select(['id'])
+            ->select(['id', 'status', 'lead_id'])
         ;
     }
 
@@ -145,7 +152,7 @@ class Leads extends Model
         ;
     }
 
-    public function city()
+    public function city(): BelongsTo
     {
         return $this->belongsTo(Cities::class);
     }
@@ -169,9 +176,33 @@ class Leads extends Model
             });
         });
 
+        $query->when($filters['casettype'] ?? null, function ($query, $search) {            
+            $query->where(function ($query) use ($search) {
+                $query->where('casettype', $search);
+            });
+        });
+
         $query->when($filters['responsible'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('responsible', intval($search));
+            });
+        });
+
+        $query->when($filters['city'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('city_id', intval($search));
+            });
+        });
+
+        $query->when($filters['startdate'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereDate('created_at', '>=', date($search));
+            });
+        });
+
+        $query->when($filters['enddate'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->whereDate('created_at', '<=', date($search));
             });
         });
     }

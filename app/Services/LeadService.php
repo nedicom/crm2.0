@@ -7,6 +7,9 @@ use App\Services\MyCalls\ValueObject\RingDTO;
 use Illuminate\Support\Facades\DB;
 use App\Models\Leads;
 use App\Models\ClientsModel;
+use App\Models\Tasks;
+
+use App\Services\TG\LeadTg;
 
 class LeadService
 {
@@ -20,22 +23,36 @@ class LeadService
     {
         $clientName = (!empty($valueObject->getClientName())) ? $valueObject->getClientName() : 'Имя не указано';
 
-        if (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(),static::CLIENTS_TABLE_NAME)) !== null) {
+        if (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::CLIENTS_TABLE_NAME)) !== null) {
             /** @var ClientsModel $client */
             $client = ClientsModel::find($id);
             $clientName = $client->name;
             $source = 'существующий клиент';
-        } elseif ($this->checkExistsPhone($valueObject->getFormatClientPhone(),static::LEAD_TABLE_NAME)) {
-            $source = 'Повторный лид';
+
+            $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
+            $lead->save();
+            LeadTg::SendleadTg($lead);
+
+        } elseif (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::LEAD_TABLE_NAME)) !== null) {
+            $task = new Tasks;
+            $task->name = "входящий звонок";
+            $task->date = $task->created_at;
+            $task->lawyer = 41;
+            $task->status = "ожидает";
+            $task->duration = 10;
+            $task->description = "звонок существующего лида";
+            $task->type = "звонок";
+            $task->lead_id = $id;
+            $task->saveOrFail();
         } else {
             // Если поиск по телефону не дал результатов
             $source = ($valueObject->getOwnerPhone() == '+79788838978' || $valueObject->getOwnerPhone() == '+79784731847')
                 ? $valueObject->getOwnerPhone()
                 : 'не знаю источник';
+            $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
+            $lead->save();
+            LeadTg::SendleadTg($lead);
         }
-
-        $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
-        $lead->save();
     }
 
     /**
@@ -47,7 +64,7 @@ class LeadService
     private function checkExistsPhone(string $currentPhone, string $tableName): ?int
     {
         if (DB::table($tableName)->exists()) {
-            $clientsPhones = DB::table($tableName)->orderBy('id','DESC')->pluck('phone', 'id')->toArray();
+            $clientsPhones = DB::table($tableName)->orderBy('id', 'DESC')->pluck('phone', 'id')->toArray();
             $processPhones = UserHelper::formatPhone($clientsPhones);
 
             foreach ($processPhones as $id => $phone)

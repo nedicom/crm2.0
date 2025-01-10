@@ -9,9 +9,9 @@ class ClientHelper
 {
     public static function typeList($data): string
     {
-        $html  = "<label for='casettype'>Тип дела</label>";
+        $html  = "<label for='casettype'><small>Тип дела</small></label>";
         $html   .= "<select class='form-select' name='casettype' id='casettype'>";
-        $html .= "<option disabled value=''>тип</option>";
+        $html .= "<option value=''>тип дела</option>";
         foreach (Type::cases() as $case) {
             $selected = ($data == $case->value) ? 'selected' : '';
             $html .= "<option value='{$case->value}' $selected>{$case->value}</option>";

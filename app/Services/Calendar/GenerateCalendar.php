@@ -31,9 +31,11 @@ final class GenerateCalendar
         /** @var Tasks $element */
         // Записываем предыдущие задачи
         if ($tasks) {
-            foreach ($tasks as $element) {
+            foreach ($tasks as $element) {                
                 if ($element->id !== $task->id) {
+                    //if($task->date['value'] == true){
                     $events[] = $this->createEvent($element);
+                    //}
                 }
             }
         }
@@ -69,7 +71,7 @@ final class GenerateCalendar
         // Обновляем calendar_uid
         if ($updateUid) $task->update(['calendar_uid' => $eventUid]);
         $description = (!empty($task->description)) ? $task->description : 'Описание отсувствует';
-
+        //dd(new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  (string) $task->date['value']), true));
         // Создаем сущность домена события
         $dateStart = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  (string) $task->date['value']), false);
         $dateEnd = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  $task->date['rawValue']->addMinutes($task->duration)->format('Y-m-d H:i')), false);
