@@ -11,7 +11,7 @@ class ClientHelper
     {
         $html  = "<label for='casettype'><small>Тип дела</small></label>";
         $html   .= "<select class='form-select' name='casettype' id='casettype'>";
-        $html .= "<option value=''>тип дела</option>";
+        $html .= "<option disabled>тип дела</option>";
         foreach (Type::cases() as $case) {
             $selected = ($data == $case->value) ? 'selected' : '';
             $html .= "<option value='{$case->value}' $selected>{$case->value}</option>";
