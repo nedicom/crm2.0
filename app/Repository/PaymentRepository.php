@@ -45,7 +45,7 @@ class PaymentRepository
     private function queryParams(\Illuminate\Database\Eloquent\Builder $query, Request $request)
     {
         if (empty($request->month)) $query->whereMonth('created_at', 1);
-        if (empty($request->year)) $query->whereYear('created_at', 2024);
+        if (empty($request->year)) $query->whereYear('created_at', 2025);
         if (!empty($request->nameOfAttractioner)) $query->where('nameOfAttractioner', $request->nameOfAttractioner);
         if (!empty($request->nameOfSeller)) $query->where('nameOfSeller', $request->nameOfSeller);
         if (!empty($request->directionDevelopment)) $query->where('directionDevelopment', $request->directionDevelopment);
