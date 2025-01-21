@@ -64,7 +64,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(LeadsController::class)->group(function () {
-        Route::get('/filterleads/{leadfilter}', 'leadsfilter(x)')->name('leads.filter');
+        Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter');
         Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
         Route::post('/leads/add', 'addlead')->name('addlead');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
