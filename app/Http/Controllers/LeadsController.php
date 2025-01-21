@@ -33,39 +33,19 @@ class LeadsController extends Controller
         $lead->service = 11;
         $lead->status = 'поступил';
 
-        $lead->save();     
+        $lead->save();
 
         LeadTg::SendleadTg($lead);
 
         return redirect()->route('leads')->with('success', 'Все в порядке, лид добавлен');
     }
 
-    public function showleads(Request $req)
+    public function leadsfilter($leadpath, Request $req)
     {
         $today_date = Carbon::now()->subMonths(3)->toDateTimeString();
         $trash_date = Carbon::now()->subMonths(1)->toDateTimeString();
 
-        //$today_date = Carbon::now()->subDays(12)->toDateTimeString();
-        //$trash_date = Carbon::now()->subDays(3)->toDateTimeString();
-        session([
-            'number' => null,
-            'name' => null,
-            'lawyer' => null,
-            'responsible' => null,
-            'casettype' => null,
-        ]);
-
-        $query = Leads::query();
-        $newquery = Leads::query();
-        $phonequery = Leads::query();
-        $consquery = Leads::query();
-        $defeatquery = Leads::query();
-        $withoutcasequery = Leads::query();
-        $winquery = Leads::query();
-        $failleadsquery = Leads::query();
-
-
-        if ($req->findNumber ||  $req->findName ||  $req->lawyer ||  $req->responsible ||  $req->casettype ||  $req->startdate ||  $req->enddate ||  $req->city) {
+        if ($leadpath) {
             session([
                 'number' => $req->findNumber,
                 'name' => $req->findName,
@@ -73,70 +53,129 @@ class LeadsController extends Controller
                 'responsible' => $req->responsible,
                 'casettype' => $req->casettype,
             ]);
-            $query = Leads::filter($req->all());
-            $newquery = Leads::filter($req->all());
-            $phonequery = Leads::filter($req->all());
-            $consquery = Leads::filter($req->all());
-            $defeatquery = Leads::filter($req->all());
-            $withoutcasequery = Leads::filter($req->all());
-            $winquery = Leads::filter($req->all());
-            $failleadsquery = Leads::filter($req->all());
+
+            switch ($leadpath) {
+                case 'all':
+                    $leads = Leads::filter($req->all())->orderBy('created_at', 'desc')
+                        ->with('userFunc')->with('responsibleFunc')->with('city')
+                        ->simplePaginate(100);
+                    break;
+
+                case 'new':
+                    $leads = Leads::filter($req->all())->where(function ($q) {
+                        $q
+                            ->Where('leads.status', '=', 'поступил')
+                            ->orWhere('leads.status', '=', 'сгенерирован');
+                    })
+                        ->orderBy('created_at', 'desc')
+                        ->with('userFunc')->with('responsibleFunc')->with('city')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+
+                case 'phone':
+                    $leads = Leads::filter($req->all())->has('lazyphone')
+                        ->orderBy('created_at', 'desc')
+                        ->with('lazyphone')->with('userFunc')->with('responsibleFunc')->with('city')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+
+                case 'consleads':
+                    $leads = Leads::filter($req->all())->has('lazycons')
+                        ->orderBy('created_at', 'desc')
+                        ->with('lazycons')
+                        ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+
+                case 'defeatleads':
+                    $leads =  Leads::filter($req->all())->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
+                        ->with('userFunc')->with('responsibleFunc')->with('city')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+
+                case 'withoutcaseleads':
+                    $leads =  Leads::filter($req->all())->where('status', Status::Lazy->value)
+                        ->orderBy('id', 'desc')
+                        ->whereDate('created_at', '>=', $today_date)
+                        ->with('userFunc')->with('responsibleFunc')->with('city')
+                        ->simplePaginate(100);
+                    break;
+
+                case 'winleads':
+                    $leads =  Leads::filter($req->all())->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+
+                case 'failleads':
+                    $leads =  Leads::filter($req->all())->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)
+                        ->with('userFunc')->with('city')
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->simplePaginate(100);
+                    break;
+            }
         }
 
+        $allleadscount = Leads::filter($req->all())->count();
+
+        $newleadscount = Leads::filter($req->all())->where(function ($q) {
+            $q
+                ->Where('leads.status', '=', 'поступил')
+                ->orWhere('leads.status', '=', 'сгенерирован');
+        })->count();
+
+        $phoneleads = Leads::filter($req->all())->has('lazyphone')
+            ->orderBy('created_at', 'desc')
+            ->with('lazyphone')->with('userFunc')->with('responsibleFunc')->with('city')
+            ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+            ->count();
+
+        $consleads = Leads::filter($req->all())->has('lazycons')
+            ->orderBy('created_at', 'desc')
+            ->with('lazycons')
+            ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
+            ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+            ->count();
+
+        $defeatleads = Leads::filter($req->all())->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
+            ->with('userFunc')->with('responsibleFunc')->with('city')
+            ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+            ->count();
+
+        $withoutcaseleads = Leads::filter($req->all())->where('status', Status::Lazy->value)
+            ->orderBy('id', 'desc')
+            ->whereDate('created_at', '>=', $today_date)
+            ->with('userFunc')->with('responsibleFunc')->with('city')
+            ->count();
+
+        $winleads = Leads::filter($req->all())->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
+            ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+            ->count();
+
+        $failleads = Leads::filter($req->all())->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)
+            ->with('userFunc')->with('city')
+            ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+            ->count();
+
         return view(
-            'leads/leads',
+            'leads/leadfilter',
             [
-                'allleads' => $query->orderBy('created_at', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(200)
-                    ->get(),
+                'allleadscount' => $allleadscount,
+                'newleadscount' => $newleadscount,
+                'phoneleads' => $phoneleads,
+                'consleads' => $consleads,
+                'defeatleads' => $defeatleads,
+                'withoutcaseleads' => $withoutcaseleads,
+                'winleads' => $winleads,
+                'failleads' => $failleads,
 
-                'newleads' => $newquery->where('leads.status', '=', 'поступил')->orWhere('leads.status', '=', 'сгенерирован')->orderBy('created_at', 'desc')
-                    ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    //->take(25)
-                    ->get(),
+                'leads' => $leads,
 
-                'phoneleads' => $phonequery->has('lazyphone')
-                    ->orderBy('created_at', 'desc')
-                    ->with('lazyphone')
-                    ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    //->take(50)
-                    ->get(),
-
-                'consleads' => $consquery->has('lazycons')
-                    ->orderBy('created_at', 'desc')
-                    ->with('lazycons')
-                    ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    //->take(5)
-                    ->get(),
-
-                'defeatleads' =>  $defeatquery->where('leads.status', '=', 'удален')->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $trash_date)->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(100)
-                    ->get(),
-
-                'withoutcaseleads' => $withoutcasequery
-                    ->where('status', Status::Lazy->value)
-                    ->orderBy('id', 'desc')
-                    ->whereDate('created_at', '>=', $today_date)
-                    ->with('userFunc')->with('responsibleFunc')->with('city')
-                    ->take(100)
-                    ->get(),
-
-                'winleads' => $winquery->where('leads.status', '=', 'конвертирован')->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)->with('userFunc')->with('city')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(100)
-                    ->get(),
-
-                'failleads' => $failleadsquery->where('leads.status', Status::Defeat->value)->orderBy('id', 'desc')->whereDate('created_at', '>=', $today_date)
-                    ->with('userFunc')->with('city')
-                    ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
-                    ->take(100)
-                    ->get(),
+                'route' => $leadpath,
 
                 'datasource'   => Source::all(),
                 'dataservices' => Services::all(),
@@ -168,25 +207,6 @@ class LeadsController extends Controller
         if (!empty($req->checkedresponsible)) {
             $responsible = 'responsible';
         }
-
-        return view(
-            'leads/oldleads',
-            ['data' => Leads::where($lawyer, $req->checkedlawyer)
-                ->when($status, function ($query, $status) {
-                    $query->where('status', $status);
-                })
-                ->where('status', '!=', $deleting)
-                ->where($source, $req->checkedsources)
-                ->where($responsible, $req->checkedresponsible)
-                ->orderBy('created_at', 'desc')
-                ->get()],
-            [
-                'datalawyers'  => User::active()->get(),
-                'dataservices' => Services::all(),
-                'datasources' =>  Source::all('name'),
-                'datasource'   => Source::all(),
-            ]
-        );
     }
 
     public function leadanalitics()

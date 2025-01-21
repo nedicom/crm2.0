@@ -18,8 +18,7 @@
                     </a>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{route('leads')}}">Лиды</a></li>
-                        <li><a class="dropdown-item" href="{{route('oldleads')}}">Старая версия</a></li>
+                        <li><a class="dropdown-item" href="{{route('leads.filter', 'new')}}">Лиды</a></li>
                         <li><a class="dropdown-item" href="{{route('leadanalitics')}}">Аналитика</a></li>
                     </ul>
                 </li>
