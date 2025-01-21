@@ -13,7 +13,7 @@
             <ul class="navbar-nav flex-row flex-wrap me-auto my-2 my-lg-0 px-3">            
 
                 <li class="nav-item dropdown col-6 col-md-auto">
-                    <a href="{{route('leads')}}" data-bs-toggle="dropdown" role="button" aria-expanded="false"
+                    <a href="{{route('leads.filter', 'new')}}" data-bs-toggle="dropdown" role="button" aria-expanded="false"
                         class="nav-link dropdown-toggle {{ (request()->is('leads*')) ? 'active' : '' }}">Лиды
                     </a>
 
