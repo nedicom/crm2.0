@@ -12,7 +12,7 @@
       @endif
 
       <span class="col-md-1 d-flex align-items-center px-1">
-        @if($el -> userFunc -> name)
+        @if($el -> userFunc)
         <span class="badge d-flex align-items-center p-1 border border-dark-subtle rounded-pill"
           data-toggle="tooltip" data-placement="top" title="привлек - {{$el -> userFunc -> name}}">
           <img class="rounded-circle" width="24" height="24" src="https://crm.nedicom.ru/{{ $el -> userFunc -> avatar }}" alt="">
