@@ -26,21 +26,15 @@ class LeadsController extends Controller
         }
         
         $lead = new Leads();
-        $lead->name = (!empty($req->name)) ? $req->name : 'Имя не указано';
-        
+        $lead->name = (!empty($req->name)) ? $req->name : 'Имя не указано';        
         $lead->source = (!empty($req->source)) ? $req->source : 'Источник не указан';
-        $lead->description = $req->description;
-        $lead->phone = $req->phone;
-
+        $lead->description = (!empty($req->description)) ? $req->description : 'Описание отсутствует';
+        $lead->phone = (!empty($req->phone)) ? $req->phone : 'Телефон не указан';
         $lead->lawyer = (!empty($req->lawyer)) ? $req->lawyer : 41;
         $lead->responsible = (!empty($req->responsible)) ? $req->responsible : 41;
-        
-        $lead->service = $req->service;
+        $lead->service = (!empty($req->service)) ? $req->service : 11;
         $lead->status = 'поступил';
-
-
-        
-
+ 
         LeadTg::SendleadTg($lead);
 
         $lead->save();     
