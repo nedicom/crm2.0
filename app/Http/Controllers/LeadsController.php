@@ -21,7 +21,7 @@ class LeadsController extends Controller
     public function addleadFromRequest(Request $req)
     {        
 
-        dd($req);
+        //dd($req);
         return response($req, 200)
         ->header('Content-Type', 'text/plain');  
 
