@@ -32,12 +32,12 @@ class LeadsController extends Controller
         $lead->service = 11;
         $lead->status = 'поступил';
 
+        return response('lead', 200)
+                  ->header('Content-Type', 'text/plain');    
+
         $lead->save();
 
-        LeadTg::SendleadTg($lead);
-
-        return response('Hello World', 200)
-                  ->header('Content-Type', 'text/plain');        
+        LeadTg::SendleadTg($lead);  
     }
 
     public function addlead( $req)
