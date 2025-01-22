@@ -25,25 +25,21 @@ class LeadsController extends Controller
             ->header('Content-Type', 'text/plain');  
         }
         
-        //dd($req);
-        return response('its', 200)
-        ->header('Content-Type', 'text/plain');  
-
         $lead = new Leads();
-        $lead->name = 'test';
-        $lead->source = 'test';
-        $lead->description = 'test';
-        $lead->phone = 79788838978;
-        $lead->lawyer = 18;
-        $lead->responsible = 18;
-        $lead->service = 11;
+        $lead->name = $req->name;
+        $lead->source = $req->source;
+        $lead->description = $req->description;
+        $lead->phone = $req->phone;
+        $lead->lawyer = $req->lawyer;
+        $lead->responsible = $req->responsible;
+        $lead->service = $req->service;
         $lead->status = 'поступил';
 
         //$lead->save();        
 
         LeadTg::SendleadTg($lead);
 
-        return response('lead', 200)
+        return response('ok', 200)
         ->header('Content-Type', 'text/plain');  
     }
 
