@@ -14,7 +14,7 @@ class LeadTg
     public static function SendleadTg($lead)
     {
         //чекаем сущестование полей. Внимание, laravel выдает string "null", is_null не сработает
-        $lawyer = (User::findOrFail($lead->lawyer)) ? User::findOrFail($lead->lawyer)->name : 'Авдокатский кабинет';
+        $lawyer = (!is_null(User::findOrFail($lead->lawyer))) ? User::findOrFail($lead->lawyer)->name : 'Авдокатский кабинет';
         $casettype = ($lead->casettype === "null" || !$lead->casettype) ? 'Не выбрано' : $lead->casettype;
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
