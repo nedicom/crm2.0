@@ -34,12 +34,12 @@ class LeadsController extends Controller
 
          
 
-        $lead->save();
+        $lead->save();        
+
+        LeadTg::SendleadTg($lead);  
 
         return response('lead', 200)
                   ->header('Content-Type', 'text/plain');   
-                  
-        LeadTg::SendleadTg($lead);  
     }
 
     public function addlead( $req)
