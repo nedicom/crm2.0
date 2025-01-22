@@ -17,5 +17,10 @@ class VerifyCsrfToken extends Middleware
         '/services/edit/*',
         '/calendar/*',
         '/mycalls/*',
+        'https://reqbin.com/',
+        'https://gibdd.nedicom.ru/',
+        'https://nedicom.ru/',
+        'https://mil.nedicom.ru/',
+        'https://pfr.nedicom.ru/'        
     ];
 }
