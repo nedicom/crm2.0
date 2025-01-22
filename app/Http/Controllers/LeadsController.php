@@ -32,19 +32,7 @@ class LeadsController extends Controller
 
         $lead->save();        
 
-        $casettype = ($lead->casettype === "null" || !$lead->casettype) ? 'Не выбрано' : $lead->casettype;
-        $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
-        $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
-
-        $value = "Новый лид\nТип дела - " . $casettype . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
-            $text = urlencode($value);
-
-        $token = env('TG_NEWLEAD_TOKEN');
-        $group_name = env('TG_NEWLEAD_GROUP');
-
-         
-        //запускаем
-        file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$group_name&text=$text");
+        LeadTg::SendleadTg($lead);
 
         return response('lead', 200)
         ->header('Content-Type', 'text/plain');  
