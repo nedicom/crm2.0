@@ -45,7 +45,8 @@ Route::post('/mycalls/action/call-start', [\App\Http\Controllers\ServicesApi\MyC
 Route::post('/mycalls/action/call-finished', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'actionCallFinished'])->name('mycalls.action.call_finished');
 Route::post('/mycalls/download-log', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'downloadLogFile'])->name('mycalls.download_log');
 
-Route::post('/leads/addfromreq', 'addleadFromRequest')->name('addfromreq');
+// Создание лида
+Route::post('/leads/addfromreq', [LeadsController::class, 'addleadFromRequest'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class])->name('addfromreq');
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
