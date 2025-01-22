@@ -33,8 +33,8 @@ class LeadsController extends Controller
 
         $lead->save();        
 
-        $city = $lead->city_id === "null" ? 'не определен' : Cities::find($lead->city_id)->city;
-        $responsible = $lead->responsible === "null" ? 'не определен' : User::find($lead->responsible)->name;
+        $city = '123';
+        $responsible = '123';
         $casettype = $lead->casettype === "null" ? 'Не выбрано' : $lead->casettype;
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
@@ -44,6 +44,7 @@ class LeadsController extends Controller
 
         $token = env('TG_NEWLEAD_TOKEN');
         $group_name = env('TG_NEWLEAD_GROUP');
+
         return response('lead', 200)
         ->header('Content-Type', 'text/plain');   
         //запускаем
