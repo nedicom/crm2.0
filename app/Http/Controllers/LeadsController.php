@@ -32,7 +32,7 @@ class LeadsController extends Controller
 
         $lead->save();        
 
-        $casettype = $lead->casettype === "null" ? 'Не выбрано' : $lead->casettype;
+        $casettype = ($lead->casettype === "null" || !$lead->casettype) ? 'Не выбрано' : $lead->casettype;
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
 
