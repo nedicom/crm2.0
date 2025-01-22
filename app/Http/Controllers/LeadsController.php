@@ -20,9 +20,13 @@ class LeadsController extends Controller
 
     public function addleadFromRequest(Request $req)
     {        
-        $token = env('NEDICOM_CRM_TOKEN');
+        if($req->token != env('NEDICOM_CRM_TOKEN')){
+            return response('forbidden', 403 )
+            ->header('Content-Type', 'text/plain');  
+        }
+        
         //dd($req);
-        return response($token, 200)
+        return response('its', 200)
         ->header('Content-Type', 'text/plain');  
 
         $lead = new Leads();
