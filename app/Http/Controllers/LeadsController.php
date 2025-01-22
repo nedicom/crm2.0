@@ -62,7 +62,7 @@ class LeadsController extends Controller
 
         LeadTg::SendleadTg($lead);
 
-        return redirect()->route('leads')->with('success', 'Все в порядке, лид добавлен');
+        return redirect()->route('leads.filter')->with('success', 'Все в порядке, лид добавлен');
     }
 
     public function leadsfilter($leadpath, Request $req)
@@ -316,7 +316,7 @@ class LeadsController extends Controller
         $lead->failurereason = $req->input('failurereason');
         $lead->save();
 
-        return redirect()->route('leads')->with('success', 'Все в порядке, лид удален');
+        return redirect()->route('leads.filter')->with('success', 'Все в порядке, лид удален');
     }
 
     public function leadFail($id, Request $req)
@@ -326,6 +326,6 @@ class LeadsController extends Controller
         $lead->description = $lead->description . ' Причина провала - ' . $req->input('defeatreason');
         $lead->save();
 
-        return redirect()->route('leads')->with('success', 'Лид перемещен в проваленные. Его можно будет обработать потом.');
+        return redirect()->route('leads.filter')->with('success', 'Лид перемещен в проваленные. Его можно будет обработать потом.');
     }
 }
