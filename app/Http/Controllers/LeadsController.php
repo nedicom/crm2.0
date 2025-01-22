@@ -19,8 +19,7 @@ class LeadsController extends Controller
 {
 
     public function addleadFromRequest()
-    {
-        
+    {        
         $lead = new Leads();
         $lead->name = 'test';
         $lead->source = 'test';
@@ -33,13 +32,11 @@ class LeadsController extends Controller
 
         $lead->save();        
 
-        $city = '123';
-        $responsible = '123';
         $casettype = $lead->casettype === "null" ? 'Не выбрано' : $lead->casettype;
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
 
-        $value = "Новый лид\nГород - " . $city . "\nТип дела - " . $casettype . "\nОтветсвенный - " . $responsible . "\Источник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
+        $value = "Новый лид\nТип дела - " . $casettype . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
             $text = urlencode($value);
 
         $token = env('TG_NEWLEAD_TOKEN');
