@@ -44,12 +44,12 @@ class LeadsController extends Controller
 
         $token = env('TG_NEWLEAD_TOKEN');
         $group_name = env('TG_NEWLEAD_GROUP');
-
+        return response('lead', 200)
+        ->header('Content-Type', 'text/plain');   
         //запускаем
         file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$group_name&text=$text");
 
-        return response('lead', 200)
-                  ->header('Content-Type', 'text/plain');   
+        
     }
 
     public function addlead( $req)
