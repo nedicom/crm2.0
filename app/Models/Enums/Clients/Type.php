@@ -6,6 +6,7 @@ enum Type: string
     case Notchoose = 'Не выбрано';
     case Earth = 'Земельный';
     case Inheritance = 'Наследственный';
+    case WorldWide = 'Международный';
     case Tax = 'Налоговый';
     case War = 'Военный';
     case Pension = 'Пенсионный';

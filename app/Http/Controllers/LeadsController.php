@@ -43,7 +43,7 @@ class LeadsController extends Controller
         ->header('Content-Type', 'text/plain');  
     }
 
-    public function addlead( $req)
+    public function addlead(Request $req)
     {
         $lead = new Leads();
         $lead->name = $req->input('name');
