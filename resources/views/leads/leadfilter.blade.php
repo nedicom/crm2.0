@@ -48,22 +48,22 @@
     <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'new') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/new">Новые<span
             class="badge m-1 @if($newleadscount == '0') text-bg-danger @else text-bg-secondary @endif">{{ $newleadscount }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'phone') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/phone">Дозвон<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'phone') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/phone">Дозвон<span
             class="badge m-1 @if($phoneleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $phoneleads }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'consleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/consleads">Консультация<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'consleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/consleads">Консультация<span
             class="badge m-1 @if($consleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $consleads }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'defeatleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/defeatleads">Мусорные<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'defeatleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/defeatleads">Мусорные<span
             class="badge m-1 @if($defeatleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $defeatleads }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'withoutcaseleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/withoutcaseleads">Бездельники<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'withoutcaseleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/withoutcaseleads">Бездельники<span
             class="badge m-1 @if($withoutcaseleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $withoutcaseleads }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'winleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/winleads">Выигранные<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'winleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/winleads">Выигранные<span
             class="badge m-1 @if($winleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $winleads }}</span></a>
 
-            <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'failleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/failleads">Проваленные<span
+    <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'failleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/failleads">Проваленные<span
             class="badge m-1 @if($failleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $failleads }}</span></a>
 </ul>
 
@@ -97,7 +97,7 @@
         </div>
         <div class="col-md-2 col-12">
             <label for="reset"></label>
-            <a type="reset" href="{{ route('leads.filter', ['leadfilter' => $route]) }}"  class="btn btn-secondary form-control">сбросить</a>
+            <a type="reset" href="{{ route('leads.filter', ['leadfilter' => $route]) }}" class="btn btn-secondary form-control">сбросить</a>
         </div>
     </div>
 
@@ -127,7 +127,17 @@
         </div>
 
         <div class="col-md-2 col-12">
-            {!! \App\Helpers\ClientHelper::typeList(request()->input('casettype')) !!}
+            <label for='casettype'><small>Тип дела</small></label>
+            <select class="form-select" name="casettype" id="casettype">
+                <option value="">не выбрано</option>
+                @foreach(App\Models\Enums\Clients\Type::cases() as $case)
+                <option value={{$case->value}} @if (($case->value) == request()->input('casettype'))) selected @endif>
+                    {{$case->value}}
+                </option>
+                @endforeach
+            </select>
+
+
         </div>
 
         <div class="col-md-2 col-12">
@@ -152,12 +162,12 @@
 
 <div>
 
-        <div class="row">
-            @foreach ($leads as $el)
-            @include('leads/leadbadge')
-            @endforeach
-        </div>
-        <div class="my-5 d-flex justify-content-center">
+    <div class="row">
+        @foreach ($leads as $el)
+        @include('leads/leadbadge')
+        @endforeach
+    </div>
+    <div class="my-5 d-flex justify-content-center">
         {{ $leads->links() }}
     </div>
 </div>
