@@ -15,11 +15,12 @@ class LeadTg
     {
         //чекаем сущестование полей. Внимание, laravel выдает string "null", is_null не сработает
         $lawyer = (!is_null(User::find($lead->lawyer))) ? User::find($lead->lawyer)->name : 'Авдокатский кабинет';
+        $responsible = (!is_null(User::find($lead->responsible))) ? User::find($lead->responsible)->name : 'Авдокатский кабинет';
         $casettype = ($lead->casettype === "null" || !$lead->casettype) ? 'Не выбрано' : $lead->casettype;
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
 
-        $value = "Новый лид\nТип дела - " . $casettype . "\nОтветственный - " . $lawyer . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
+        $value = "Новый лид\nТип дела - " . $casettype . "\Привлек - " . $lawyer .  "\nОтветственный - " . $responsible . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
         $text = urlencode($value);
 
         //идентификаторы

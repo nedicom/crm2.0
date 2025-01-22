@@ -35,7 +35,7 @@ class LeadsController extends Controller
         $lead->service = (!empty($req->service)) ? $req->service : 11;
         $lead->status = 'поступил';       
 
-        $lead->save(); 
+        //$lead->save(); 
         
         LeadTg::SendleadTg($lead);
 
