@@ -20,7 +20,7 @@ class LeadTg
         $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
         $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
 
-        $value = "Новый лид\nТип дела - " . $casettype . "\Привлек - " . $lawyer .  "\nОтветственный - " . $responsible . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
+        $value = "Новый лид\nТип дела - " . $casettype . "\nПривлек - " . $lawyer .  "\nОтветственный - " . $responsible . "\nИсточник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
         $text = urlencode($value);
 
         //идентификаторы
