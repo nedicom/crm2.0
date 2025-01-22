@@ -67,6 +67,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter');
         Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
         Route::post('/leads/add', 'addlead')->name('addlead');
+        Route::post('/leads/addfromreq', 'addleadFromRequest')->name('addfromreq');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');
         Route::post('/leads/{id}/delete', 'leadDelete')->name('leadDelete');

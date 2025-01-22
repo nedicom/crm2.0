@@ -18,6 +18,26 @@ use App\Services\TG\LeadTg;
 
 class LeadsController extends Controller
 {
+
+    public function addleadFromRequest(LeadsRequest $req)
+    {
+        $lead = new Leads();
+        $lead->name = 'test';
+        $lead->source = 'test';
+        $lead->description = 'test';
+        $lead->phone = 79788838978;
+        $lead->lawyer = 18;
+        $lead->responsible = 18;
+        $lead->service = 11;
+        $lead->status = 'поступил';
+
+        $lead->save();
+
+        LeadTg::SendleadTg($lead);
+
+        return 'its ok';
+    }
+
     public function addlead(LeadsRequest $req)
     {
         $lead = new Leads();
@@ -43,7 +63,6 @@ class LeadsController extends Controller
     public function leadsfilter($leadpath, Request $req)
     {
         $today_date = Carbon::now()->subMonths(3)->toDateTimeString();
-        $trash_date = Carbon::now()->subMonths(1)->toDateTimeString();
 
         if ($leadpath) {
             session([
