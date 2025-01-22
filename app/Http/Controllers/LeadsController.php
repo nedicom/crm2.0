@@ -21,9 +21,7 @@ class LeadsController extends Controller
 
     public function addleadFromRequest()
     {
-        return response('Hello World', 200)
-                  ->header('Content-Type', 'text/plain');
-
+        
         $lead = new Leads();
         $lead->name = 'test';
         $lead->source = 'test';
@@ -38,7 +36,8 @@ class LeadsController extends Controller
 
         LeadTg::SendleadTg($lead);
 
-        
+        return response('Hello World', 200)
+                  ->header('Content-Type', 'text/plain');        
     }
 
     public function addlead( $req)
