@@ -33,11 +33,11 @@ class LeadsController extends Controller
         $lead->lawyer = (!empty($req->lawyer)) ? $req->lawyer : 41;
         $lead->responsible = (!empty($req->responsible)) ? $req->responsible : 41;
         $lead->service = (!empty($req->service)) ? $req->service : 11;
-        $lead->status = 'поступил';
- 
-        LeadTg::SendleadTg($lead);
+        $lead->status = 'поступил';       
 
-        $lead->save();     
+        $lead->save(); 
+        
+        LeadTg::SendleadTg($lead);
 
         return response('ok', 200)
         ->header('Content-Type', 'text/plain');  
