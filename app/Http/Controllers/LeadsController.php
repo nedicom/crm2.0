@@ -21,6 +21,8 @@ class LeadsController extends Controller
 
     public function addleadFromRequest(LeadsRequest $req)
     {
+        return 'its ok';
+        
         $lead = new Leads();
         $lead->name = 'test';
         $lead->source = 'test';
@@ -35,7 +37,7 @@ class LeadsController extends Controller
 
         LeadTg::SendleadTg($lead);
 
-        return 'its ok';
+        
     }
 
     public function addlead(LeadsRequest $req)

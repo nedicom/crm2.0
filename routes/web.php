@@ -45,6 +45,8 @@ Route::post('/mycalls/action/call-start', [\App\Http\Controllers\ServicesApi\MyC
 Route::post('/mycalls/action/call-finished', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'actionCallFinished'])->name('mycalls.action.call_finished');
 Route::post('/mycalls/download-log', [\App\Http\Controllers\ServicesApi\MyCallsController::class, 'downloadLogFile'])->name('mycalls.download_log');
 
+Route::post('/leads/addfromreq', 'addleadFromRequest')->name('addfromreq');
+
 Route::middleware(['auth'])->group(function () {
     Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
     
@@ -67,7 +69,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter');
         Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
         Route::post('/leads/add', 'addlead')->name('addlead');
-        Route::post('/leads/addfromreq', 'addleadFromRequest')->name('addfromreq');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');
         Route::post('/leads/{id}/delete', 'leadDelete')->name('leadDelete');
