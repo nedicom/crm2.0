@@ -18,8 +18,13 @@ use App\Services\TG\LeadTg;
 class LeadsController extends Controller
 {
 
-    public function addleadFromRequest()
+    public function addleadFromRequest(Request $req)
     {        
+
+        dd($req);
+        return response($req, 200)
+        ->header('Content-Type', 'text/plain');  
+
         $lead = new Leads();
         $lead->name = 'test';
         $lead->source = 'test';
@@ -30,7 +35,7 @@ class LeadsController extends Controller
         $lead->service = 11;
         $lead->status = 'поступил';
 
-        $lead->save();        
+        //$lead->save();        
 
         LeadTg::SendleadTg($lead);
 
