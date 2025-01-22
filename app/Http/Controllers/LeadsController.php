@@ -19,7 +19,7 @@ use App\Services\TG\LeadTg;
 class LeadsController extends Controller
 {
 
-    public function addleadFromRequest(LeadsRequest $req)
+    public function addleadFromRequest()
     {
         return response('Hello World', 200)
                   ->header('Content-Type', 'text/plain');
@@ -41,7 +41,7 @@ class LeadsController extends Controller
         
     }
 
-    public function addlead(LeadsRequest $req)
+    public function addlead( $req)
     {
         $lead = new Leads();
         $lead->name = $req->input('name');
