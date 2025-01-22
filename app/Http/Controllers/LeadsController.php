@@ -11,7 +11,6 @@ use App\Http\Requests\LeadsRequest;
 use App\Models\Enums\Leads\Status;
 use App\Models\ClientsModel;
 use App\Models\Cities;
-use Illuminate\Database\Eloquent\Builder;
 use Carbon\Carbon;
 
 use App\Services\TG\LeadTg;
@@ -32,11 +31,22 @@ class LeadsController extends Controller
         $lead->service = 11;
         $lead->status = 'поступил';
 
-         
-
         $lead->save();        
 
-        LeadTg::SendleadTg($lead);  
+        $city = $lead->city_id === "null" ? 'не определен' : Cities::find($lead->city_id)->city;
+        $responsible = $lead->responsible === "null" ? 'не определен' : User::find($lead->responsible)->name;
+        $casettype = $lead->casettype === "null" ? 'Не выбрано' : $lead->casettype;
+        $source = $lead->source === "null" ? 'не знаю источник' : $lead->source;
+        $description = $lead->description === "null" ? 'Описание отсутствует' : $lead->description;
+
+        $value = "Новый лид\nГород - " . $city . "\nТип дела - " . $casettype . "\nОтветсвенный - " . $responsible . "\Источник - " . $source . "\n" . $description . "\nhttps://crm.nedicom.ru/leads/" . $lead->id;
+            $text = urlencode($value);
+
+        $token = env('TG_NEWLEAD_TOKEN');
+        $group_name = env('TG_NEWLEAD_GROUP');
+
+        //запускаем
+        file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$group_name&text=$text");
 
         return response('lead', 200)
                   ->header('Content-Type', 'text/plain');   

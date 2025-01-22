@@ -4,7 +4,6 @@ namespace App\Services\TG;
 
 use App\Models\Cities;
 use App\Models\User;
-use App\Models\Tasks;
 
 class LeadTg
 {
