@@ -50,10 +50,10 @@
             
             <div class="px-2 text-truncate text-center" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" title="имя" data-bs-content="{{ $el->name }}">
                 @if ($el->lead_id)
-                <a href="/leads/$el->lead_id" target="_blank">{{ $el->name }}</a>
+                <a href="/leads/{{$el->lead_id}}" target="_blank">{{ $el->name }}</a>
                 @endif
                 @if ($el->clientid)
-                <a href="/clients/$el->clientid" target="_blank">{{ $el->client }}</a>
+                <a href="/clients/{{$el->clientid}}" target="_blank">{{ $el->client }}</a>
                 @else
                 <div class="px-2 text-truncate text-center">{{ $el->client }}</div>
                 @endif
