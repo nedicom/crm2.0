@@ -104,7 +104,6 @@
             </div>
             </div>
         </form>
-    
 
     <div class="row" id="taskarea">
         @php

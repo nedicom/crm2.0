@@ -38,6 +38,7 @@ class User extends Authenticatable
     public const ROLE_USER_SERVICE_CLIENTS = 'user_service_clients'; // Юрист по работе с клиентами
     public const ROLE_HEAD_LAWYER = 'head_lawyer'; // Начальник юр. отдела
     public const ROLE_HEAD_SALES = 'head_sales'; // Начальник отдела продаж
+    public const ROLE_LEAD_HANDLER = 'lead_handler'; // Лидменеджер
 
     protected $fillable = [
         'name', 'email', 'password', 'avatar', 'tg_id', 'status', 'role',
@@ -69,6 +70,7 @@ class User extends Authenticatable
             self::ROLE_USER_SERVICE_CLIENTS => 'Юрист по работе с клиентами',
             self::ROLE_HEAD_LAWYER => 'Начальник юридического отдела',
             self::ROLE_HEAD_SALES => 'Начальник отдела продаж',
+            self::ROLE_LEAD_HANDLER => 'Лидменеджер',
         ];
     }
 

@@ -51,6 +51,7 @@
     <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'phone') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/phone">Дозвон<span
             class="badge m-1 @if($phoneleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $phoneleads }}</span></a>
 
+    @if (auth()->user()->role != 'lead_handler')
     <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'consleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/consleads">Консультация<span
             class="badge m-1 @if($consleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $consleads }}</span></a>
 
@@ -65,6 +66,7 @@
 
     <a class="link-offset-2 link-underline link-opacity-75-hover  @if($route == 'failleads') link-underline-opacity-100 @else  link-underline-opacity-0 @endif" href="/filterleads/failleads">Проваленные<span
             class="badge m-1 @if($failleads == '0') text-bg-danger @else text-bg-secondary @endif">{{ $failleads }}</span></a>
+    @endif
 </ul>
 
 <form class="row my-2" action="{{ route('leads.filter', ['leadfilter' => $route]) }}" method="get" autocomplete="off">

@@ -29,6 +29,8 @@
                                 </select>
                             </div>  
                         </div>
+                        <input type="hidden" name="casettype" value="{{$data->casettype}}" id="casettype">
+                        <input type="hidden" name="leadname" value="{{$data->name}}" id="leadname">
                         <input type="hidden" name="nameoftask" value="консультация" id="nameoftask">
                         <input type="hidden" name="type" value="консультация" id="tasktype">
                         <input type="hidden" name="lead_id" id="lead_id" value="{{ $data->id }}">

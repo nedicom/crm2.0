@@ -63,7 +63,7 @@ class Tasks extends Model
         $weekMap = [1 => 'Понедельник', 2 => 'Вторник', 3 => 'Среда', 4 => 'Четерг', 5 => 'Пятница', 6 => 'Суббота', 7 => 'Воскресенье'];
 
         return Attribute::make(
-            get: fn ($value) => [
+            get: fn($value) => [
                 'value' => Carbon::parse($value)->format('Y-m-d H:i'),
                 'rawValue' => Carbon::parse($value),
                 'day' => $weekMap[Carbon::parse($value)->dayOfWeekIso],
@@ -84,7 +84,7 @@ class Tasks extends Model
      */
     public static function new(TasksRequest $request): self
     {
-        
+
         $task = new self();
         $task->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', '_token']));
         $task->name = $request->nameoftask;
@@ -107,9 +107,12 @@ class Tasks extends Model
      */
     public static function newFromLead(TasksRequest $request): self
     {
+        //dd($request);
         $task = new self();
-        $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token']));
-        $task->name = $request->type.' - '. $request->lead_phone;
+        $task->fill($request->except(['nameoftask', 'lead_id', 'lead_phone', '_token', 'casettype', 'leadname', 'client']));
+        $task->description = $request->casettype . ': ' . $request->description;
+        $task->name = $request->leadname;
+        $task->client = $request->lead_phone;
         $task->soispolintel = 41;
         $task->lead_id = $request->lead_id;
         $task->type = $request->type;
@@ -121,10 +124,10 @@ class Tasks extends Model
         $task->setAgreed($request);
 
         $lead = Leads::find($request->lead_id);
-        if($request->type == \App\Models\Enums\Tasks\Type::Consultation->value){
+        if ($request->type == \App\Models\Enums\Tasks\Type::Consultation->value) {
             $lead->status = \App\Models\Enums\Tasks\Type::Consultation->value;
         }
-        if($request->type == \App\Models\Enums\Tasks\Type::Ring->value){
+        if ($request->type == \App\Models\Enums\Tasks\Type::Ring->value) {
             $lead->status = \App\Models\Enums\Tasks\Type::Ring->value;
         }
         $lead->saveOrFail();
@@ -222,7 +225,8 @@ class Tasks extends Model
     public function performer()
     {
         return $this->belongsTo(User::class, 'lawyer', 'id')->withDefault([
-            'name' => 'Пользователь удален', 'avatar' => 'https://crm.nedicom.ru/avatars/ahCEbgke0YxG2JYZYGb6usGJrbID6lMmIegaKZbq.jpg'
+            'name' => 'Пользователь удален',
+            'avatar' => 'https://crm.nedicom.ru/avatars/ahCEbgke0YxG2JYZYGb6usGJrbID6lMmIegaKZbq.jpg'
         ]);
     }
 }

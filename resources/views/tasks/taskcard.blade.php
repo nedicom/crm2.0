@@ -45,19 +45,21 @@
                             @endif
                         @endforeach
                     </span>
-                    <span>
-                        @foreach ($datalawyers as $ellawyer)
-                            @if ($ellawyer->id == $el->soispolintel)
-                                <img src="{{ $ellawyer->avatar }}" style="width: 30px;  height:30px" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="соисполнитель">
-                            @endif
-                        @endforeach
-                    </span>
                 </span>
             </div>
-
-            <div class="px-2 text-truncate text-center">{{ $el->client }}</div>
-            <div class="px-2 text-truncate text-center" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" title="{{ $el->name }}" data-bs-content="{{ $el->description }}">
-                <strong>{{ $el->name }}</strong>
+            
+            <div class="px-2 text-truncate text-center" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" title="имя" data-bs-content="{{ $el->name }}">
+                @if ($el->lead_id)
+                <a href="/leads/$el->lead_id" target="_blank">{{ $el->name }}</a>
+                @endif
+                @if ($el->clientid)
+                <a href="/clients/$el->clientid" target="_blank">{{ $el->client }}</a>
+                @else
+                <div class="px-2 text-truncate text-center">{{ $el->client }}</div>
+                @endif
+            </div>
+            <div class="px-2 text-truncate text-center" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" title="описание" data-bs-content="{{ $el->description }}">
+               {{ $el->description }}
             </div>
 
             <div class="mt-3 px-3 d-flex justify-content-center">
