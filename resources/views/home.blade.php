@@ -57,7 +57,7 @@
                 </div>
             </div>
         @endcan
-        
+        {{ config('app.bot_staff.link') }}
         <div class="col-md-6 col-12">
             <h5>Бот информер</h5>
             <div class="mb-2">
