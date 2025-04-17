@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
+        Route::get('/lawyertaskfetch/{id}', 'lawyertaskfetch')->name('lawyertaskfetch');
     });
 
     Route::controller(DogovorController::class)->group(function () {
@@ -67,6 +68,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::controller(LeadsController::class)->group(function () {
+        Route::post('/leads/change/{id}', 'changeStatus')->name('change.status');
         Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter');
         Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
         Route::post('/leads/add', 'addlead')->name('addlead');

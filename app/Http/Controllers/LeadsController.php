@@ -17,30 +17,36 @@ use App\Services\TG\LeadTg;
 
 class LeadsController extends Controller
 {
+    public function changeStatus(Request $req)
+    {
+        $lead = Leads::find($req->id);
+        $lead->leadconsstatus = $req->leadconsstatus;
+        $lead->save();
+    }
 
     public function addleadFromRequest(Request $req)
-    {        
-        if($req->token != env('NEDICOM_CRM_TOKEN')){
-            return response('forbidden', 403 )
-            ->header('Content-Type', 'text/plain');  
+    {
+        if ($req->token != env('NEDICOM_CRM_TOKEN')) {
+            return response('forbidden', 403)
+                ->header('Content-Type', 'text/plain');
         }
-        
+
         $lead = new Leads();
-        $lead->name = (!empty($req->name)) ? $req->name : 'Имя не указано';        
+        $lead->name = (!empty($req->name)) ? $req->name : 'Имя не указано';
         $lead->source = (!empty($req->source)) ? $req->source : 'Источник не указан';
         $lead->description = (!empty($req->description)) ? $req->description : 'Описание отсутствует';
         $lead->phone = (!empty($req->phone)) ? $req->phone : 'Телефон не указан';
         $lead->lawyer = (!empty($req->lawyer)) ? $req->lawyer : 41;
         $lead->responsible = (!empty($req->responsible)) ? $req->responsible : 41;
         $lead->service = (!empty($req->service)) ? $req->service : 11;
-        $lead->status = 'поступил';       
+        $lead->status = 'поступил';
 
-        $lead->save(); 
-        
+        $lead->save();
+
         LeadTg::SendleadTg($lead);
 
         return response('ok', 200)
-        ->header('Content-Type', 'text/plain');  
+            ->header('Content-Type', 'text/plain');
     }
 
     public function addlead(Request $req)
@@ -110,7 +116,7 @@ class LeadsController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->with('lazycons')
                         ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
-                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id'])
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id' ,'leadconsstatus'])
                         ->simplePaginate(100);
                     break;
 
@@ -242,6 +248,9 @@ class LeadsController extends Controller
 
     public function showLeadById($id)
     {
+        $now = Carbon::now();
+        $weekStartDate = $now->startOfWeek()->format('Y-m-d H:i');
+        $weekEndDate = $now->endOfWeek()->format('Y-m-d H:i');
         return view(
             'leads/showLeadById',
             ['data' => Leads::with(
@@ -254,6 +263,9 @@ class LeadsController extends Controller
                 'dataservices' => Services::all(),
                 'datasource' => Source::all(),
                 'cities'  => Cities::all(),
+                'today'  => Carbon::now()->format('d'),
+                'start'  => $now->startOfWeek()->format('d'),
+                
             ]
         );
     }
