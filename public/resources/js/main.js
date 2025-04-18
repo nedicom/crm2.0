@@ -6,6 +6,7 @@ $(document).ready(function() {
         document.getElementById("clientId").value = clientId;
     });
 
+    
     // При клике на кнопку 'Добавить задачу' из раздела 'Клиенты'
     // берем значения аттрибутов (имя клиента, id клиента) и подставляем по умолчанию в input text, input hidden
     $(".nameToForm").click(function(el) {
