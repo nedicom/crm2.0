@@ -39,7 +39,14 @@
             @if ($data->donetime) <p class="">выполнена: {{$data->donetime}}</p> @endif
             <p class="">{{$data->description}}</p>
 
-            <p class="text-truncate"><a href="/clients/{{$data->clientid}}">{{$data->client}}</a></p>
+            @if ($data->clientid)
+            <p class="text-truncate"><a href="/clients/{{$data->clientid}}" target="_blank">{{$data->client}}</a></p>
+            @endif
+
+            @if ($data->lead_id)
+            <p class="text-truncate"><a href="/leads/{{$data->lead_id}}" target="_blank">{{$data->client}}</a></p>
+            @endif
+
             <div class="mt-3 row d-flex justify-content-center">
                 <div class="col-6 row mb-3">
                     <div class="col-3 mb-3">
@@ -78,7 +85,6 @@
                             <i class="bi-check-circle"></i>
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>

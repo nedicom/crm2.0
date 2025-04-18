@@ -71,7 +71,7 @@
                         <input type="hidden" name="casettype" value="{{ $data->casettype }}" id="casettype">
                         <input type="hidden" name="leadname" value="{{ $data->name }}" id="leadname">
                         <input type="hidden" name="nameoftask" value="консультация" id="nameoftask">
-                        <input type="hidden" name="tasktype" value="консультация" id="tasktype">
+                        <input type="hidden" name="type" value="консультация" id="tasktype">
                         <input type="hidden" data-user-id="1" id="soispolintel">
 
                         <input type="hidden" name="type" value="консультация" id="type">
