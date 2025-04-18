@@ -5,7 +5,7 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^8.1.0",
+        "php": "^8.2.0",
         "defstudio/telegraph": "^1.28",
         "doctrine/dbal": "^3.6",
         "eluceo/ical": "^2.12",
