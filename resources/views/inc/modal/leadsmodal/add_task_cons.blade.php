@@ -94,7 +94,9 @@
         for (key in commits) {
             selector = "weekday" + commits[key].date.currentDay;
             let result = document.getElementById(selector);
-            result.innerHTML += "<div class='text-truncate-container'>" + commits[key].name + "</div> <div class='text-truncate-container' style='font-size: 0.8rem;'>" + commits[key].date.currentTime + "</div>";
+            if (result) {
+                result.innerHTML += "<div class='text-truncate-container'>" + commits[key].name + "</div> <div class='text-truncate-container' style='font-size: 0.8rem;'>" + commits[key].date.currentTime + "</div>";
+            }
         };
     };
 
