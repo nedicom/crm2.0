@@ -17,7 +17,9 @@ $(document).ready(function() {
 
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
-            document.getElementById('lead_id').value = leadIdValue;            
+//
+            document.getElementById('lead_id').value = leadIdValue; 
+
             //var TaskType = $(this).attr('data-type');
             //document.getElementById('tasktype').value = TaskType;
         }
