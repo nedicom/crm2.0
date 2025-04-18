@@ -208,6 +208,12 @@ class TasksController extends Controller
         // Events
         TaskCompleted::dispatch($task);
 
+        if($task->lead_id){
+            return redirect()->route('showLeadById', $task->lead_id)->with('success', 'Все в порядке, задача выполнена');
+        }
+        if($task->clientid){
+            return redirect()->route('showClientById', $task->clientid)->with('success', 'Все в порядке, задача выполнена');
+        }
         return redirect()->route('showTaskById', $id)->with('success', 'Все в порядке, задача выполнена');
     }
 
