@@ -16,7 +16,6 @@ $(document).ready(function() {
 
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
-            //alert(leadIdValue);
             document.getElementById('lead_id').value = leadIdValue;            
             //var TaskType = $(this).attr('data-type');
             //document.getElementById('tasktype').value = TaskType;
@@ -172,7 +171,6 @@ $(document).ready(function() {
     // Выбор платежа из выпадающего списка в форме Задачи
     $(document).on('click', '.paymentIndex', function() {
         var parent = $(this).parents($('.payment-input-block'));
-        //alert($(this).attr('data-payment-id'));
         parent.children('.payment-id').val($(this).attr('data-payment-id'));
         parent.children('input.payment-input').val($(this).find($('.name-client')).text());
         $(this).parents($('#paymentsTable')).children('tr:last').children('td.info-payment').text($(this).text());
