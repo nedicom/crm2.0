@@ -63,7 +63,6 @@ class ContractsService
             $content = fread($handle, filesize($psthxml));
             fclose($handle);
             $content = str_replace($requisitesContracts, $requisitesContractsVar, $content);
-            dd($content);
             $zip->deleteName('word/document.xml');
             $zip->addFromString('word/document.xml',$content);
             $zip->close();
