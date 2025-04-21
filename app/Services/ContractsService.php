@@ -71,7 +71,7 @@ class ContractsService
         $file = ($tmpFile);	// заменили содержимое файла на сервере
         copy($file, $contractUrl);  // копируем обработанный договор в общую папку, для виндовс смотрим запрещенные символы в названии файла
         session()->flash('url', $contractUrl);
-
+dd(1);
         if (!file_exists($file)) {
             throw new \DomainException('Ошибка загрузки файла');
         }
