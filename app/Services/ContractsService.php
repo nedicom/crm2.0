@@ -58,7 +58,8 @@ class ContractsService
 
         $zip = new ZipArchive; // пакуем в архив наши переменные
 
-        if ($zip->open($tmpFile) === true) {              
+        if ($zip->open($tmpFile) === true) {  
+            dd($tmpFile);            
             $handle = fopen($psthxml, "r");
             $content = fread($handle, filesize($psthxml));
             fclose($handle);
