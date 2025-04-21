@@ -60,7 +60,6 @@ class ContractsService
 
         if ($zip->open($tmpFile) === true) {              
             $handle = fopen($psthxml, "r");
-            dd($handle);
             $content = fread($handle, filesize($psthxml));
             fclose($handle);
             $content = str_replace($requisitesContracts, $requisitesContractsVar, $content);
