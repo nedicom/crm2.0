@@ -48,6 +48,7 @@ class ContractsService
             'field_calendar', 'field_ispolnitel', 'field_adresispolnitelya', 'field_kontaktyispolnitelya', 'field_fio',
             'field_addres', 'field_phone', 'field_uslugi', 'field_allstoimost', 'field_preduslugi', 'field_predoplata',
         ];
+
         $requisitesContractsVar = [
             $today, $performer, $addressPerformer, $phonePerformer,
         ];
@@ -71,7 +72,7 @@ class ContractsService
         $file = ($tmpFile);	// заменили содержимое файла на сервере
         copy($file, $contractUrl);  // копируем обработанный договор в общую папку, для виндовс смотрим запрещенные символы в названии файла
         session()->flash('url', $contractUrl);
-dd(1);
+
         if (!file_exists($file)) {
             throw new \DomainException('Ошибка загрузки файла');
         }
