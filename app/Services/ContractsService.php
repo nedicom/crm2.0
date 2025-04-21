@@ -65,6 +65,7 @@ class ContractsService
             $content = str_replace($requisitesContracts, $requisitesContractsVar, $content);
             $zip->deleteName('word/document.xml');
             $zip->addFromString('word/document.xml',$content);
+            dd(__DIR__);
             $zip->close();
         }
 
