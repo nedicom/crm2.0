@@ -65,7 +65,7 @@ class ContractsService
             $content = str_replace($requisitesContracts, $requisitesContractsVar, $content);
             $zip->deleteName('word/document.xml');
             $zip->addFromString('word/document.xml',$content);
-            $zip->close();
+            //$zip->close();
         }
 
         $file = ($tmpFile);	// заменили содержимое файла на сервере
