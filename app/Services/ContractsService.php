@@ -48,6 +48,7 @@ class ContractsService
             'field_calendar', 'field_ispolnitel', 'field_adresispolnitelya', 'field_kontaktyispolnitelya', 'field_fio',
             'field_addres', 'field_phone', 'field_uslugi', 'field_allstoimost', 'field_preduslugi', 'field_predoplata',
         ];
+
         $requisitesContractsVar = [
             $today, $performer, $addressPerformer, $phonePerformer,
         ];
@@ -58,7 +59,7 @@ class ContractsService
 
         $zip = new ZipArchive; // пакуем в архив наши переменные
 
-        if ($zip->open($tmpFile) === true) {  
+        if ($zip->open($tmpFile) === true) {           
             $handle = fopen($psthxml, "r");
             $content = fread($handle, filesize($psthxml));
             fclose($handle);
