@@ -134,24 +134,22 @@ class TasksController extends Controller
             $lead->status = Status::In_Working->value;
             $lead->save();
         }
-
+//dd($request->status);
         // Events
-        if($request->status == $task::STATUS_COMPLETE){
-            if ($task->status != $task::STATUS_COMPLETE) {
+        if($request->status != $task->status){
+            if ($request->status == $task::STATUS_COMPLETE) {
+                $task->status = $task::STATUS_COMPLETE;
                 $task->donetime = Carbon::now();
-                $task->save();
-                // Events
-                TaskCompleted::dispatch($task);
-            }            
-        }
-        
-        
-        if ($task->status === $task::STATUS_COMPLETE) {
-            $task->donetime = Carbon::now();
+            }  
+            else{
+                $task->status = $request->status;
+            }   
+   
             $task->save();
             // Events
-            TaskCompleted::dispatch($task);
+            TaskCompleted::dispatch($task);   
         }
+        
         //Events
         TaskUpdated::dispatch($task);
 
