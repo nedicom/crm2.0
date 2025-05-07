@@ -95,7 +95,7 @@ class TasksController extends Controller
     public function showTaskById($request)
     {
         /** @var Tasks $task */
-        $task = Tasks::find($request);
+        $task = Tasks::where('id', $request)->with('payments')->first();
 
         if ($task->lawyer == Auth::user()->id) {
             $task->new = $task::STATE_OLD;
@@ -103,7 +103,7 @@ class TasksController extends Controller
         }
 
         return view('tasks/taskById', [
-            'data' => Tasks::find($request)
+            'data' => $task
         ], [
             'datalawyers' => User::active()->get(),
         ]);
@@ -136,6 +136,16 @@ class TasksController extends Controller
         }
 
         // Events
+        if($request->status == $task::STATUS_COMPLETE){
+            if ($task->status != $task::STATUS_COMPLETE) {
+                $task->donetime = Carbon::now();
+                $task->save();
+                // Events
+                TaskCompleted::dispatch($task);
+            }            
+        }
+        
+        
         if ($task->status === $task::STATUS_COMPLETE) {
             $task->donetime = Carbon::now();
             $task->save();

@@ -36,6 +36,11 @@
             </h6>
             <p class="text-truncate">начало: {{$data['date']['value'] }}</p>
             <p class="text-truncate">статус: {{$data->status}}</p>
+            <p class="">количество часов: <strong>{{$data->duration/60}}</strong></p>
+            <p class="">платеж: <strong> @if (!$data->payments->isEmpty()) есть @else нет @endif</strong></p>
+            @can('manage-users')
+            @if (!$data->payments->isEmpty())<p class="">сумма - <a href="http://crm.nedicom.ru/payments/{{$data->payments[0]->id}}" >{{$data->payments[0]->summ}}</a></p>@endif
+            @endcan
             @if ($data->donetime) <p class="">выполнена: {{$data->donetime}}</p> @endif
             <p class="">{{$data->description}}</p>
 
