@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use DefStudio\Telegraph\Controllers\BotController;
+use App\Http\Controllers\AvitoBotController;
 //use App\Http\Controllers\BotController;
 
 
@@ -19,4 +20,10 @@ use DefStudio\Telegraph\Controllers\BotController;
 |
 */
 Route::get('/bot', [BotController::class, 'handle'])->name('bot.api');
+
+//avito integration
+Route::post('/avito/postmessage', [AvitoBotController::class, 'postmessage']);
+
+//avito integration
+Route::post('/avito/registerwebhook', [AvitoBotController::class, 'registerWebhook']);
 

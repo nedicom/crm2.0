@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Auth;
 use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use App\Http\Controllers\CsvController;
 use App\Http\Controllers\YandexmapController;
+use App\Http\Controllers\AvitoBotController;
+
 
 Auth::routes();
 
@@ -32,7 +34,9 @@ Route::get('/', function () {
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home')->middleware('auth');
-Route::get('/contacts', function () {return view('contacts');})->middleware('auth');
+Route::get('/contacts', function () {
+    return view('contacts');
+})->middleware('auth');
 
 // iCalendar
 Route::get('/calendar/create', [\App\Http\Controllers\iCalendar\ManageController::class, 'create'])->name('calendar.create');
@@ -50,7 +54,7 @@ Route::post('/leads/addfromreq', [LeadsController::class, 'addleadFromRequest'])
 
 Route::middleware(['auth'])->group(function () {
     Route::post('/yandexmap', [YandexmapController::class, 'create'])->name('yandexmap');
-    
+
     Route::controller(LawyersController::class)->group(function () {
         Route::post('/avatar/add', 'addavatar')->name('add-avatar');
         Route::get('/lawyertaskfetch/{id}', 'lawyertaskfetch')->name('lawyertaskfetch');
@@ -132,6 +136,8 @@ Route::middleware(['auth'])->group(function () {
     // Генерация документов
     Route::post('generate/cert-completion/{client}', [\App\Http\Controllers\GenerateDocumentController::class, 'certificateCompletion'])->name('client.generate.document');
 });
+
+Route::get('/avito/chats', [AvitoBotController::class, 'showChats']);
 
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
 
