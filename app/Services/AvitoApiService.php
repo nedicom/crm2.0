@@ -50,7 +50,7 @@ class AvitoApiService
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$token}",
             'Accept' => 'application/json',
-        ])->get('https://api.avito.ru/messenger/v1/accounts/me/conversations');
+        ])->get('https://api.avito.ru/messenger/v2/accounts/{user_id}/chats');
 
         if (!$response->successful()) {
             throw new Exception('Ошибка при получении списка чатов: ' . $response->body());
@@ -58,22 +58,6 @@ class AvitoApiService
 
         // В ответе обычно есть поле с массивом чатов, например 'conversations' или 'data'
         return $response->json();
-    }
-
-    public function getToken(): ?string
-    {
-        $response = Http::asForm()->post('https://api.avito.ru/token/', [
-            'grant_type' => 'client_credentials',
-            'client_id' => config('services.avito.client_id'),
-            'client_secret' => config('services.avito.client_secret'),
-        ]);
-
-        if ($response->successful()) {
-            dd($response->json('access_token'));  
-            return $response->json('access_token');            
-        }
-
-        return null;
     }
 
     public function registerWebhook(string $webhookUrl): array
@@ -96,5 +80,21 @@ class AvitoApiService
         }
 
         return $response->json();
+    }
+
+    public function getToken(): ?string
+    {
+        $response = Http::asForm()->post('https://api.avito.ru/token/', [
+            'grant_type' => 'client_credentials',
+            'client_id' => config('services.avito.client_id'),
+            'client_secret' => config('services.avito.client_secret'),
+        ]);
+
+        if ($response->successful()) {
+            dd($response);
+            return $response->json('access_token');
+        }
+
+        return null;
     }
 }
