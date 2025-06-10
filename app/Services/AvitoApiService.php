@@ -91,7 +91,7 @@ class AvitoApiService
         ]);
 
         if ($response->successful()) {
-            dd($response->json);
+            dd($response->json());
             return $response->json('access_token');
         }
 
