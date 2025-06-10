@@ -13,7 +13,6 @@ class AvitoBotController extends Controller
 
     public function getmessage(Request $request)
     {
-        //dd($request->all());
         // Получаем все данные из запроса
         $data = $request->all();
 
@@ -25,14 +24,14 @@ class AvitoBotController extends Controller
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
-            $chatId = $data['chat_id'] ?? null;
-            $messageText = $data['message']['content']['text'] ?? null;
-            $authorId = $data['message']['author_id'] ?? null;
-            $createdTimestamp = $data['message']['created'] ?? null;
+            $chatId = $request->input('payload.value.chat_id');
+            $messageText = $data['payload']['value']['content']['text'] ?? null;
+            $authorId = $data['payload']['value']['author_id'] ?? null;
+            $createdTimestamp = $data['payload']['value']['created'] ?? null;
 
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
-                Log::error('Error saving Avito message: empty request');
+                Log::error('Error saving Avito message: empty request - ' .$chatId);
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Missing required fields: chat_id or message text.'
