@@ -2,6 +2,7 @@
 /public/build
 /public/hot
 /public/storage
+/public/dogovors
 /storage/*.key
 /app/Console/Commands/DailyTask.php
 .htaccess
