@@ -51,7 +51,7 @@ class AvitoApiService
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$token}",
             'Accept' => 'application/json',
-        ])->get('https://api.avito.ru/messenger/v2/accounts/'.config('services.avito.client_id').'/chats');
+        ])->get('https://api.avito.ru/messenger/v2/accounts/320878714/chats');
 
         if (!$response->successful()) {
             throw new Exception('Ошибка при получении списка чатов: ' . $response->body());
