@@ -23,7 +23,9 @@ Route::get('/bot', [BotController::class, 'handle'])->name('bot.api');
 
 //avito integration
 Route::post('/avito/postmessage', [AvitoBotController::class, 'postmessage']);
+Route::post('/avito/getmessage', [AvitoBotController::class, 'getmessage']);
 
-//avito integration
 Route::post('/avito/registerwebhook', [AvitoBotController::class, 'registerWebhook']);
+
+
 

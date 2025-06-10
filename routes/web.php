@@ -139,6 +139,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/avito', [AvitoBotController::class, 'showChats']);
 
+
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
 
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');

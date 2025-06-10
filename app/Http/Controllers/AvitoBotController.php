@@ -8,6 +8,28 @@ use App\Models\AvitoMessage;
 
 class AvitoBotController extends Controller
 {
+
+    public function getmessage(Request $request)
+    {
+        $data = $request->all();
+
+        // Пример извлечения данных из структуры webhook
+        $chatId = $data['chat_id'] ?? null;
+        $messageText = $data['message']['content']['text'] ?? null;
+        $authorId = $data['message']['author_id'] ?? null;
+        $createdAt = isset($data['message']['created']) ? date('Y-m-d H:i:s', $data['message']['created']) : null;
+
+        if ($chatId && $messageText) {
+            AvitoMessage::create([
+                'chat_id' => $chatId,
+                'message' => $messageText,
+                'author_id' => $authorId,
+                'created_at_message' => $createdAt,
+            ]);
+        }
+
+        return response('Webhook received', 200);
+    }
     public function postmessage(Request $request, AvitoApiService $avitoApiService)
     {
         $data = $request->all();
@@ -21,12 +43,12 @@ class AvitoBotController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function registerWebhook(string $webhookUrl)
+    public function registerWebhook()
     {
         $avitoService = app(\App\Services\AvitoApiService::class);
 
         try {
-            $result = $avitoService->registerWebhook('https://nedicom.ru/avito/webhook');
+            $result = $avitoService->registerWebhook('https://nedicom.ru/api/avito/getmessage');
             return response()->json($result);
             // Логика после успешной регистрации
         } catch (\Exception $e) {
