@@ -17,11 +17,11 @@ class AvitoBotController extends Controller
         // Получаем все данные из запроса
         $data = $request->all();
 
-    // Преобразуем массив в JSON для удобного хранения
-    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        // Преобразуем массив в JSON для удобного хранения
+        $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-    // Записываем JSON в файл в хранилище Laravel (например, в storage/app/request_log.json)
-    Storage::put('request_log.json', $json);
+        // Записываем JSON в файл в хранилище Laravel (например, в storage/app/request_log.json)
+        Storage::put('request_log.json', $json);
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
@@ -85,7 +85,7 @@ class AvitoBotController extends Controller
         $avitoService = app(\App\Services\AvitoApiService::class);
 
         try {
-            $result = $avitoService->registerWebhook('https://nedicom.ru/api/avito/getmessage');
+            $result = $avitoService->registerWebhook('https://crm.nedicom.ru/api/avito/getmessage');
             return response()->json($result);
             // Логика после успешной регистрации
         } catch (\Exception $e) {
