@@ -6,14 +6,22 @@ use Illuminate\Http\Request;
 use App\Services\AvitoApiService;
 use App\Models\AvitoMessage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AvitoBotController extends Controller
 {
 
     public function getmessage(Request $request)
     {
+        //dd($request->all());
         // Получаем все данные из запроса
         $data = $request->all();
+
+    // Преобразуем массив в JSON для удобного хранения
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+    // Записываем JSON в файл в хранилище Laravel (например, в storage/app/request_log.json)
+    Storage::put('request_log.json', $json);
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
