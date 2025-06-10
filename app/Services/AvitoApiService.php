@@ -58,7 +58,7 @@ class AvitoApiService
         }
 
         // В ответе обычно есть поле с массивом чатов, например 'conversations' или 'data'
-        return $response->json();
+       // return $response->json();
 
 
         $data = json_decode($response, true);
