@@ -21,7 +21,7 @@ class AvitoBotController extends Controller
             $messageText = $data['message']['content']['text'] ?? null;
             $authorId = $data['message']['author_id'] ?? null;
             $createdTimestamp = $data['message']['created'] ?? null;
-
+dd(1);
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
                 return response()->json([
