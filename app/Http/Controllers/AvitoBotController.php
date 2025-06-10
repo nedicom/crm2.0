@@ -25,9 +25,9 @@ class AvitoBotController extends Controller
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
-            $messageText = $data['payload']['value']['content']['text'] ?? null;
-            $authorId = $data['payload']['value']['author_id'] ?? null;
-            $createdTimestamp = $data['payload']['value']['created'] ?? null;
+            $messageText = $request->input('payload.value.content.text');
+            $authorId = $request->input('payload.value.author_id');
+            $createdTimestamp = $request->input('payload.value.created');
 
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
