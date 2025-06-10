@@ -32,6 +32,7 @@ class AvitoBotController extends Controller
 
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
+                Log::error('Error saving Avito message: empty request');
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Missing required fields: chat_id or message text.'
