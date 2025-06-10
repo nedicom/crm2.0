@@ -49,7 +49,11 @@ class AvitoBotController extends Controller
 
         try {
             $result = $avitoService->registerWebhook('https://nedicom.ru/api/avito/getmessage');
-            return response()->json($result);
+            if (isset($result['success']) && $result['success']) {
+                return response()->json(['message' => 'Webhook успешно зарегистрирован', 'data' => $result]);
+            } else {
+                return response()->json(['error' => 'Ошибка регистрации вебхука', 'details' => $result], 400);
+            }
             // Логика после успешной регистрации
         } catch (\Exception $e) {
             // Обработка ошибки
