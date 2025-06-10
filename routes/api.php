@@ -27,5 +27,7 @@ Route::post('/avito/getmessage', [AvitoBotController::class, 'getmessage']);
 
 Route::get('/avito/registerwebhook', [AvitoBotController::class, 'registerWebhook']);
 
+Route::get('/avito/getmessages', [AvitoBotController::class, 'showChats']);
+
 
 
