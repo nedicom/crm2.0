@@ -56,12 +56,10 @@ class AvitoBotController extends Controller
                 $array_conversation = AvitoMessage::where('chat_id', $chatId)
                     ->orderBy('sent_at', 'asc')
                     ->get();
-                
-                /*
-                $array_conversation = AvitoMessage::where('chat_id', $chatId)
-                    ->orderBy('sent_at', 'asc')
-                    ->get();
+
                 $answer = GptService::Answer($messageText, $array_conversation);
+                /*
+                
                 $postData = [
                     'chat_id' => $chatId,
                     'message' => $answer,
