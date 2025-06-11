@@ -52,14 +52,12 @@ class AvitoBotController extends Controller
             ]);
 
             // даем ответ
-            if ((string)$authorId == '320878714') {
+            if ((string)$authorId != '320878714') {
                 $array_conversation = AvitoMessage::where('chat_id', $chatId)
                     ->orderBy('sent_at', 'asc')
                     ->get();
 
                 $answer = GptService::Answer($array_conversation);
-                Storage::put('request_log.json', $answer);
-                /*
                 
                 $postData = [
                     'chat_id' => $chatId,
@@ -67,8 +65,7 @@ class AvitoBotController extends Controller
                 ];
 
                 $newRequest = new Request($postData);
-                $this->postmessage($newRequest);
-                */
+                $this->postmessage($newRequest);                
             }
 
             return response()->json([
