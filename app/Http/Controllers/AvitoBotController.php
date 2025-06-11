@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class AvitoBotController extends Controller
 {
 
-    public function getmessage(Request $request)
+    public function getmessage(Request $request, AvitoApiService $avitoApiService)
     {
         // Получаем все данные из запроса
         $data = $request->all();
