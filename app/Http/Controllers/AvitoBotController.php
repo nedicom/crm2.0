@@ -47,8 +47,8 @@ class AvitoBotController extends Controller
             AvitoMessage::create([
                 'chat_id' => $chatId,
                 'message' => $messageText,
-                'author_id' => $authorId,
-                'created_at_message' => $createdAt,
+                'sender_id' => $authorId,
+                'sent_at' => $createdAt,
             ]);
 
             // даем ответ
