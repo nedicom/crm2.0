@@ -1,7 +1,6 @@
 <?php
-
-
 namespace App\Services\Gpt;
+use Illuminate\Support\Facades\Storage;
 
 class GptService
 {
@@ -54,32 +53,21 @@ class GptService
         $mesquantity = count($array_conversation);
 
         if ($mesquantity > 1) {
-            foreach ($array_conversation as $val) {
-                if (array_key_first($val) == 'user_message') {
+            function convertMessagesForYandexGpt(array $messages): array
+            {
+                $data = [];
+                foreach ($messages as $msg) {
+                    $role = ($msg['sender_id'] == '320878714') ? 'assistant' : 'user';
                     $data['messages'][] =
                         [
-                            'role' => 'user',
-                            'text' => $val['user_message']
+                            'role' => $role,
+                            'text' => $msg['message'],
                         ];
                 }
-                if (array_key_first($val) == 'ai_message') {
-                    $data['messages'][] =
-                        [
-                            'role' => 'assistant',
-                            'text' => $val['ai_message']
-                        ];
-                }
+                return $data;
             }
         }
-
-        $data['messages'][] =
-            [
-                'role' => 'user',
-                'text' => $ask,
-            ];
-
-
-
+Storage::put('request_log.json', $data);
         $json_data = json_encode($data);
 
         $url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion';

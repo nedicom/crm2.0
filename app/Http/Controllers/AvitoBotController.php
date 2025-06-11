@@ -56,7 +56,7 @@ class AvitoBotController extends Controller
                 $array_conversation = AvitoMessage::where('chat_id', $chatId)
                     ->orderBy('sent_at', 'asc')
                     ->get();
-                Storage::put('request_log.json', $array_conversation);
+                
                 /*
                 $array_conversation = AvitoMessage::where('chat_id', $chatId)
                     ->orderBy('sent_at', 'asc')
