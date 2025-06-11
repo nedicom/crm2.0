@@ -15,9 +15,7 @@ class GptService
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            'yandexPassportOauthToken' => env('YANDEX_GPT_API_KEY')
-        ]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"yandexPassportOauthToken": "' . env('YANDEX_GPT_API_KEY') . '"}');
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
@@ -29,7 +27,7 @@ class GptService
             return 'Извините, я сейчас немного занят, но позже напишу Вам обязательно.';
         }
         curl_close($ch);
-
+return $result;
         $response_data = json_decode($result, true);
         if (empty($response_data['iamToken'])) {
             Log::error('Yandex IAM token not received');
