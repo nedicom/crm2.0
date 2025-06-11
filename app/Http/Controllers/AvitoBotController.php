@@ -58,7 +58,7 @@ class AvitoBotController extends Controller
                     ->get();
 
                 $answer = GptService::Answer($array_conversation);
-                Storage::put('request_log.json', $answer);
+                //Storage::put('request_log.json', $answer);
                 /*
                 
                 $postData = [
