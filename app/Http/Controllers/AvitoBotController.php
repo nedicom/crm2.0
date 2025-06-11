@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\AvitoApiService;
+use App\Services\Gpt\GptService;
 use App\Models\AvitoMessage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,7 @@ class AvitoBotController extends Controller
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         // Записываем JSON в файл в хранилище Laravel (например, в storage/app/request_log.json)
-        Storage::put('request_log.json', $json);
+        //Storage::put('request_log.json', $json);
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
@@ -51,14 +52,24 @@ class AvitoBotController extends Controller
             ]);
 
             // даем ответ
-            if ((string)$authorId !== '320878714') {
+            if ((string)$authorId == '320878714') {
+                $array_conversation = AvitoMessage::where('chat_id', $chatId)
+                    ->orderBy('sent_at', 'asc')
+                    ->get();
+                Storage::put('request_log.json', $array_conversation);
+                /*
+                $array_conversation = AvitoMessage::where('chat_id', $chatId)
+                    ->orderBy('sent_at', 'asc')
+                    ->get();
+                $answer = GptService::Answer($messageText, $array_conversation);
                 $postData = [
                     'chat_id' => $chatId,
-                    'message' => 'спасибо за сообщение',
+                    'message' => $answer,
                 ];
 
                 $newRequest = new Request($postData);
                 $this->postmessage($newRequest);
+                */
             }
 
             return response()->json([
