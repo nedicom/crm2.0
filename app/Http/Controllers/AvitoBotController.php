@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class AvitoBotController extends Controller
 {
 
-    public function getmessage(Request $request, AvitoApiService $avitoApiService)
+    public function getmessage(Request $request)
     {
         // Получаем все данные из запроса
         $data = $request->all();
@@ -57,7 +57,7 @@ class AvitoBotController extends Controller
             ];
 
             $newRequest = new Request($postData);
-            $this->postmessage($newRequest, $avitoApiService);
+            $this->postmessage($newRequest);
 
             return response()->json([
                 'status' => 'success',
@@ -75,7 +75,7 @@ class AvitoBotController extends Controller
         }
     }
 
-    public function postmessage(Request $request, AvitoApiService $avitoApiService)
+    public function postmessage(Request $request)
     {
         $data = $request->all();
         // Сохраняем сообщение
@@ -84,7 +84,7 @@ class AvitoBotController extends Controller
             'message' => $data['message'] ?? null,
         ]);
         // Пример ответа через сервис
-        $ok = $avitoApiService->sendMessage(320878714, $data['chat_id'], $data['message']);
+        $ok = app(AvitoApiService::class)->sendMessage(320878714, $data['chat_id'], $data['message']);
         return response()->json(['status' => $ok]);
     }
 
