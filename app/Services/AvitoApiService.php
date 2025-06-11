@@ -44,7 +44,7 @@ class AvitoApiService
         if ($result === false) {
             return 'error';
         }
-        return 'send';
+        return 'sended';
     }
 
     /**
