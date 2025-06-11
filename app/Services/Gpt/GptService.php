@@ -27,7 +27,7 @@ class GptService
             return 'Извините, я сейчас немного занят, но позже напишу Вам обязательно.';
         }
         curl_close($ch);
-return $result;
+
         $response_data = json_decode($result, true);
         if (empty($response_data['iamToken'])) {
             Log::error('Yandex IAM token not received');
