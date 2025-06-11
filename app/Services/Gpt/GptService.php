@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Services\Gpt;
 
 use Illuminate\Support\Facades\Log;
@@ -105,14 +106,14 @@ class GptService
         return 'Простите, я сейчас немного занят';
     }
 
-    private static function convertMessagesForYandexGpt(array $messages): array
+    private static function convertMessagesForYandexGpt($messages): array
     {
         $result = [];
         foreach ($messages as $msg) {
-            $role = ($msg['sender_id'] === '320878714') ? 'assistant' : 'user';
+            $role = ($msg->sender_id === '320878714') ? 'assistant' : 'user';
             $result[] = [
                 'role' => $role,
-                'text' => $msg['message'],
+                'text' => $msg->message,
             ];
         }
         return $result;
