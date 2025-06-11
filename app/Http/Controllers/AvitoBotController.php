@@ -22,7 +22,7 @@ class AvitoBotController extends Controller
         $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
         // Записываем JSON в файл в хранилище Laravel (например, в storage/app/request_log.json)
-        Storage::put('request_log.json', $json);
+        //Storage::put('request_log.json', $json);
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
@@ -57,7 +57,8 @@ class AvitoBotController extends Controller
                     ->orderBy('sent_at', 'asc')
                     ->get();
 
-                $answer = GptService::Answer($messageText, $array_conversation);
+                $answer = GptService::Answer($array_conversation);
+                Storage::put('request_log.json', $answer);
                 /*
                 
                 $postData = [

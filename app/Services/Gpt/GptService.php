@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Storage;
 
 class GptService
 {
-    public static function Answer($ask, $array_conversation)
+    public static function Answer($array_conversation)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://iam.api.cloud.yandex.net/iam/v1/tokens');
@@ -97,7 +97,7 @@ class GptService
         $generated_text = $response_data['result']['alternatives'][0]['message']['text'];
         curl_close($ch);
 
-        Storage::put('request_log.json', $generated_text);
+        
 
         if ($generated_text) {
             if (str_contains($generated_text, 'интеллект')) {
