@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Log;
 
 class GptService
 {
-    public static function Answer(array $array_conversation)
+    public static function Answer($array_conversation)
     {
         // Получаем IAM токен по OAuth токену из .env
         $ch = curl_init();
@@ -56,12 +56,13 @@ class GptService
         ];
 
         // Добавляем сообщения из истории, если есть
-        if (count($array_conversation) > 0) {
+        if ($array_conversation->count() > 0) {
             $data['messages'] = array_merge(
                 $data['messages'],
                 self::convertMessagesForYandexGpt($array_conversation)
             );
         }
+
 
         $json_data = json_encode($data);
 
