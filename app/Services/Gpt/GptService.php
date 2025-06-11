@@ -67,7 +67,7 @@ class GptService
                 return $data;
             }
         }
-Storage::put('request_log.json', $data);
+
         $json_data = json_encode($data);
 
         $url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion';
@@ -96,6 +96,8 @@ Storage::put('request_log.json', $data);
 
         $generated_text = $response_data['result']['alternatives'][0]['message']['text'];
         curl_close($ch);
+
+        Storage::put('request_log.json', $generated_text);
 
         if ($generated_text) {
             if (str_contains($generated_text, 'интеллект')) {
