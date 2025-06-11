@@ -51,13 +51,15 @@ class AvitoBotController extends Controller
             ]);
 
             // даем ответ
-            $postData = [
-                'chat_id' => $chatId,
-                'message' => 'спасибо за сообщение',
-            ];
+            if ((string)$authorId !== '320878714') {
+                $postData = [
+                    'chat_id' => $chatId,
+                    'message' => 'спасибо за сообщение',
+                ];
 
-            $newRequest = new Request($postData);
-            $this->postmessage($newRequest);
+                $newRequest = new Request($postData);
+                $this->postmessage($newRequest);
+            }
 
             return response()->json([
                 'status' => 'success',
