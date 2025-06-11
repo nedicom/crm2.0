@@ -84,7 +84,7 @@ class AvitoBotController extends Controller
             'message' => $data['message'] ?? null,
         ]);
         // Пример ответа через сервис
-        $ok = $avitoApiService->sendMessage(320878714, $data['chat_id'], 'Спасибо за сообщение!');
+        $ok = $avitoApiService->sendMessage(320878714, $data['chat_id'], $data['message']);
         return response()->json(['status' => $ok]);
     }
 

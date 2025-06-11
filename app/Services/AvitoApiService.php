@@ -23,20 +23,28 @@ class AvitoApiService
         $token = $this->getToken();
 
         $url = "https://api.avito.ru/messenger/v1/accounts/{$userId}/chats/{$chatId}/messages";
-        
+
+        $payload = [
+            'message' => [
+                'text' => $message,
+            ],
+            'type' => 'text',
+        ];
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Authorization: Bearer $token",
             "Content-Type: application/json"
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            'text' => $message,
-        ]));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $result = curl_exec($ch);
         curl_close($ch);
-        return $result;
+        if ($result === false) {
+            return 'error';
+        }
+        return 'send';
     }
 
     /**
@@ -60,7 +68,7 @@ class AvitoApiService
         }
 
         // В ответе обычно есть поле с массивом чатов, например 'conversations' или 'data'
-       // return $response->json();
+        // return $response->json();
 
 
         $data = json_decode($response, true);
