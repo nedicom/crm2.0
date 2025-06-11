@@ -17,18 +17,20 @@ class AvitoApiService
         $this->client_secret = config('services.avito.client_secret');
     }
 
-    public function sendMessage($chatId, $message)
+    public function sendMessage($userId, $chatId, $message)
     {
         // Пример отправки сообщения через cURL
         $token = $this->getToken();
-        $ch = curl_init('https://api.avito.ru/messenger/v1/accounts/me/messages');
+
+        $url = "https://api.avito.ru/messenger/v1/accounts/{$userId}/chats/{$chatId}/messages";
+        
+        $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             "Authorization: Bearer $token",
             "Content-Type: application/json"
         ]);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
-            'chat_id' => $chatId,
             'text' => $message,
         ]));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

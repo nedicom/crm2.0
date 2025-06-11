@@ -137,6 +137,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('generate/cert-completion/{client}', [\App\Http\Controllers\GenerateDocumentController::class, 'certificateCompletion'])->name('client.generate.document');
 });
 
+Route::controller(AvitoBotController::class)->group(function () {
+    Route::get('/avito/chats', 'avitoChats')->name('avito.chats');
+    Route::get('/avito/chat/{id}', 'avitoChat')->name('avito.chat');
+})->middleware('auth');
+
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
 
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');

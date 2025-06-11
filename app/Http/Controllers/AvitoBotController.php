@@ -7,6 +7,7 @@ use App\Services\AvitoApiService;
 use App\Models\AvitoMessage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class AvitoBotController extends Controller
 {
@@ -31,7 +32,7 @@ class AvitoBotController extends Controller
 
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
-                Log::error('Error saving Avito message: empty request - ' .$chatId);
+                Log::error('Error saving Avito message: empty request - ' . $chatId);
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Missing required fields: chat_id or message text.'
@@ -49,6 +50,15 @@ class AvitoBotController extends Controller
                 'created_at_message' => $createdAt,
             ]);
 
+            // даем ответ
+            $postData = [
+                'chat_id' => $chatId,
+                'message' => 'спасибо за сообщение',
+            ];
+
+            $newRequest = new Request($postData);
+            $this->postmessage($newRequest, $avitoApiService);
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Message saved successfully.'
@@ -65,7 +75,6 @@ class AvitoBotController extends Controller
         }
     }
 
-
     public function postmessage(Request $request, AvitoApiService $avitoApiService)
     {
         $data = $request->all();
@@ -75,8 +84,27 @@ class AvitoBotController extends Controller
             'message' => $data['message'] ?? null,
         ]);
         // Пример ответа через сервис
-        $avitoApiService->sendMessage($data['chat_id'], 'Спасибо за сообщение!');
+        $avitoApiService->sendMessage(320878714, $data['chat_id'], 'Спасибо за сообщение!');
         return response()->json(['status' => 'ok']);
+    }
+
+    public function avitoChats()
+    {
+        $chats = DB::table('avito_messages')
+            ->select('chat_id', DB::raw('MAX(sent_at) as last_message_at'))
+            ->groupBy('chat_id')
+            ->orderByDesc('last_message_at')
+            ->get();
+        return view('avito/avito_chats', compact('chats'));
+    }
+
+    public function avitoChat($chat_id)
+    {
+        $messages = AvitoMessage::where('chat_id', $chat_id)
+            ->orderBy('sent_at', 'asc')
+            ->get();
+
+        return view('avito/avito_chat', compact('messages', 'chat_id'));
     }
 
     public function registerWebhook()

@@ -14,7 +14,7 @@ class CreateAvitoMessagesTable extends Migration
             $table->text('message');
             $table->string('sender_id')->nullable();
             $table->timestamp('sent_at')->nullable();
-            // Если хотите использовать стандартные created_at и updated_at:
+            // стандартные created_at и updated_at:
             // $table->timestamps();
         });
     }
