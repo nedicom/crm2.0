@@ -53,7 +53,7 @@ Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, '
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
-                Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'time' => now()]);
+                Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
