@@ -73,7 +73,7 @@
         <script>
             $(document).ready(function() {
                 $('input[type=checkbox]').change(function() {
-                    var chatId = $(this).attr('id').split('-').pop(); // получить id из id чекбокса
+                    var chatId = $(this).attr('id'); // получить id из id чекбокса
                     var isActive = $(this).is(':checked') ? 1 : 0;
 alert(chatId)
 alert(isActive)
