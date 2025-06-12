@@ -54,7 +54,7 @@ class GptService
         ];
 
         // Добавляем сообщения из истории, если есть
-        if ($array_conversation->count() > 0) {
+        if (count($array_conversation) > 0) {
             $data['messages'] = array_merge(
                 $data['messages'],
                 self::convertMessagesForYandexGpt($array_conversation)
@@ -109,10 +109,10 @@ class GptService
     {
         $result = [];
         foreach ($messages as $msg) {
-            $role = ($msg->sender_id === '320878714') ? 'assistant' : 'user';
+            $role = ($msg['sender_id'] === '320878714') ? 'assistant' : 'user';
             $result[] = [
                 'role' => $role,
-                'text' => $msg->message,
+                'text' => $msg['content']['text'] ?? ''
             ];
         }
         return $result;
