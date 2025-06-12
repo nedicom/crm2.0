@@ -35,11 +35,14 @@ class AvitoBotController extends Controller
             ->where('chat_id', $chatId)
             ->value('is_gpt_active');
 
-        // даем ответ
-        if (
-            (string)$authorId != '320878714' &&
-            $isGptActive !== null && $isGptActive == 1 // Проверка, что GPT активен
-        ) {
+        // проверяем автора
+        if ($authorId === '320878714') {
+            return response()->json(['status' => 'ignored_self_message']);
+        }
+
+
+        if ($isGptActive == 1) // Проверка, что GPT активен
+        {
             $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
 
             // Преобразуем массив в JSON-строку
@@ -55,6 +58,7 @@ class AvitoBotController extends Controller
             ];
             $newRequest = new Request($postData);
             $this->postmessage($newRequest);
+            return response()->json(['status' => 'success']);
         }
     }
 
