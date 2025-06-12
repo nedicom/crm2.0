@@ -60,12 +60,21 @@ class AvitoApiService
             "Content-Type: application/json"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
         $result = curl_exec($ch);
-        curl_close($ch);
         if ($result === false) {
-            return 'error';
+            curl_close($ch);
+            return []; // Возвращаем пустой массив при ошибке
         }
-        return 'sended';
+        curl_close($ch);
+
+        $data = json_decode($result, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return []; // Ошибка парсинга JSON
+        }
+
+        // Предположим, что сообщения лежат в $data['messages']
+        return $data ?? [];
     }
 
     /**
