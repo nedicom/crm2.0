@@ -24,16 +24,41 @@
 
         <div class="list-group">
             @forelse ($chats as $chat)
-                <a href="{{ url('/avito/chat/' . $chat->chat_id) }}"
-                    class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    Чат: {{ $chat->chat_id }}
-                    <small
-                        class="text-muted">{{ \Carbon\Carbon::parse($chat->last_message_at)->format('d.m.Y H:i') }}</small>
-                </a>
-            @empty
-                <p>Чаты не найдены</p>
-            @endforelse
+                <div class="chat-item mb-3 p-3 border rounded">
+                    <h5>Чат ID: {{ $chat['id'] }}</h5>
 
+                    {{-- Информация о предмете (item) из context --}}
+                    <p><strong>Тема:</strong> {{ $chat['context']['value']['title'] ?? 'Без названия' }}</p>
+                    <p><strong>Цена:</strong> {!! nl2br(e($chat['context']['value']['price_string'] ?? 'Не указана')) !!}</p>
+                    <p><strong>Ссылка:</strong> <a href="{{ $chat['context']['value']['url'] ?? '#' }}"
+                            target="_blank">Перейти</a></p>
+
+                    {{-- Пользователи в чате --}}
+                    <p><strong>Участники:</strong>
+                        @foreach ($chat['users'] as $user)
+                            {{ $user['name'] }}@if (!$loop->last)
+                                ,
+                            @endif
+                        @endforeach
+                    </p>
+
+                    {{-- Последнее сообщение --}}
+                    @if (!empty($chat['last_message']))
+                        <div class="last-message mt-2 p-2 bg-light rounded">
+                            <p><strong>Последнее сообщение:</strong></p>
+                            <p>{{ $chat['last_message']['content']['text'] ?? '' }}</p>
+                            <small class="text-muted">
+                                От {{ $chat['last_message']['author_id'] }}
+                                —
+                                {{ \Carbon\Carbon::createFromTimestamp($chat['last_message']['created'])->format('d.m.Y H:i') }}
+                            </small>
+                        </div>
+                    @endif
+                </div>
+                @empty
+                    <p>Чаты не найдены</p>
+                @endforelse
+
+            </div>
         </div>
-    </div>
-@endsection
+    @endsection
