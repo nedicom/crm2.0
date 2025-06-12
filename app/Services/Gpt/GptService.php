@@ -110,6 +110,7 @@ class GptService
             isset($response_data['result']['alternatives'][0]['message']['text']) &&
             !empty($response_data['result']['alternatives'][0]['message']['text'])
         ) {
+            Storage::put('7.json', json_encode($response_data['result'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
             $generated_text = $response_data['result']['alternatives'][0]['message']['text'];
             if (mb_stripos($generated_text, 'интеллект') !== false) {
                 return 'Простите, но Ваш вопрос представляет сложность. Нужно немного больше времени.';
