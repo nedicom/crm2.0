@@ -47,6 +47,31 @@ class AvitoApiService
         return 'sended';
     }
 
+    public function getMessages($userId, $chatId)
+    {
+        // Пример отправки сообщения через cURL
+        $token = $this->getToken();
+
+        $url = "https://api.avito.ru/messenger/v3/accounts/{$userId}/chats/{$chatId}/messages";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer $token",
+            "Content-Type: application/json"
+        ]);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        //not for production    
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+        if ($result === false) {
+            return 'error';
+        }
+        return 'sended';
+    }
+
     /**
      * Получить список чатов (бесед) из мессенджера Авито
      */

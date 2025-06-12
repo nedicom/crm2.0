@@ -8,19 +8,17 @@ class CreateAvitoMessagesTable extends Migration
 {
     public function up()
     {
-        Schema::create('avito_messages', function (Blueprint $table) {
+        Schema::create('avito_chats', function (Blueprint $table) {
             $table->id();
             $table->string('chat_id')->index();
-            $table->text('message');
-            $table->string('sender_id')->nullable();
-            $table->timestamp('sent_at')->nullable();
-            // стандартные created_at и updated_at:
-            // $table->timestamps();
+            $table->text('gpt_prompt');
+            $table->boolean('is_gpt_active')->default(true);
+            $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('avito_messages');
+        Schema::dropIfExists('avito_chats');
     }
 }
