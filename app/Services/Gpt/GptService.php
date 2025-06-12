@@ -2,6 +2,7 @@
 
 namespace App\Services\Gpt;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 
 class GptService
@@ -61,6 +62,8 @@ class GptService
             );
         }
 
+        $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        Storage::put('data_messages.json', $content);
 
         $json_data = json_encode($data);
 

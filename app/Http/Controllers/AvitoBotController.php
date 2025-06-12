@@ -33,10 +33,23 @@ class AvitoBotController extends Controller
                 ], 422);
             }
 
-            // даем ответ
-            if ((string)$authorId != '320878714') {
+            // проверяем наличие записи
+            $isGptActive = DB::table('avito_chats')
+                ->where('chat_id', $chatId)
+                ->value('is_gpt_active');
 
+            // даем ответ
+            if (
+                (string)$authorId != '320878714' &&
+                $isGptActive !== null && $isGptActive == 1 // Проверка, что GPT активен
+            ) {
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
+
+                // Преобразуем массив в JSON-строку
+                $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                // Записываем в файл (например, storage/app/data.json)
+                Storage::put('data.json', $content);
+
                 $answer = GptService::Answer($array_conversation);
 
                 $postData = [
@@ -63,6 +76,7 @@ class AvitoBotController extends Controller
         }
     }
 
+    //отправляем ответ
     public function postmessage(Request $request)
     {
         $data = $request->all();
@@ -119,22 +133,10 @@ class AvitoBotController extends Controller
         }
     }
 
-    public function showChats()
-    {
-        $avitoService = app(\App\Services\AvitoApiService::class);
-
-        try {
-            $chats = $avitoService->getChats();
-            return response()->json($chats);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    // ChatController.php
+    // ajax request
     public function updateGptActive(Request $request)
     {
-        $updated = DB::table('avito_chats') // укажите правильное имя таблицы
+        $updated = DB::table('avito_chats')
             ->where('chat_id', $request->id)
             ->update(['is_gpt_active' => $request->is_gpt_active]);
 

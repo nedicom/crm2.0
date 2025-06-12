@@ -48,6 +48,7 @@ class AvitoApiService
         return 'sended';
     }
 
+    // Получить сообщения по id чата
     public function getMessages($chatId, $userId)
     {
         // Пример отправки сообщения через cURL
@@ -92,7 +93,9 @@ class AvitoApiService
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$token}",
             'Accept' => 'application/json',
-        ])->get('https://api.avito.ru/messenger/v2/accounts/320878714/chats');
+        ])
+        ->withoutVerifying() // Отключаем проверку SSL
+        ->get('https://api.avito.ru/messenger/v2/accounts/320878714/chats');
 
         if (!$response->successful()) {
             throw new Exception('Ошибка при получении списка чатов: ' . $response->body());
@@ -131,7 +134,9 @@ class AvitoApiService
     public function getToken(): ?string
     {
         try {
-            $response = Http::asForm()->post('https://api.avito.ru/token/', [
+            $response = Http::asForm()
+            ->withoutVerifying() // Отключаем проверку SSL
+            ->post('https://api.avito.ru/token/', [
                 'grant_type' => 'client_credentials',
                 'client_id' => config('services.avito.client_id'),
                 'client_secret' => config('services.avito.client_secret'),
