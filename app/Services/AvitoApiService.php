@@ -74,6 +74,7 @@ class AvitoApiService
         $data = json_decode($response, true);
 
         if (!empty($data['chats'])) {
+            dd($data['chats']);
             return $data['chats'];
         }
         return [];
