@@ -16,8 +16,7 @@ class AvitoBotController extends Controller
     {
         // Получаем все данные из запроса
         $data = $request->all();
-
-
+        
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
@@ -36,7 +35,7 @@ class AvitoBotController extends Controller
             // даем ответ
             if ((string)$authorId != '320878714') {
 
-                $array_conversation = app(AvitoApiService::class)->getMessages($data['chat_id'], 320878714);
+                $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
                 Storage::put('request_log.json', $array_conversation);
                /* $answer = GptService::Answer($array_conversation);
 
