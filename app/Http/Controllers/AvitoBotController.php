@@ -15,59 +15,46 @@ class AvitoBotController extends Controller
 
     public function getmessage(Request $request)
     {
-        // Получаем все данные из запроса
-        $data = $request->all();
 
-        try {
-            // Извлекаем необходимые поля с проверкой наличия
-            $chatId = $request->input('payload.value.chat_id');
-            $messageText = $request->input('payload.value.content.text');
-            $authorId = $request->input('payload.value.author_id');
+        // Извлекаем необходимые поля с проверкой наличия
+        $chatId = $request->input('payload.value.chat_id');
+        $messageText = $request->input('payload.value.content.text');
+        $authorId = $request->input('payload.value.author_id');
 
-            // Проверяем обязательные поля
-            if (!$chatId || !$messageText) {
-                Log::error('Error saving Avito message: empty request - ' . $chatId);
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Missing required fields: chat_id or message text.'
-                ], 422);
-            }
-
-            // проверяем наличие записи
-            $isGptActive = DB::table('avito_chats')
-                ->where('chat_id', $chatId)
-                ->value('is_gpt_active');
-
-            // даем ответ
-            if (
-                (string)$authorId != '320878714' &&
-                $isGptActive !== null && $isGptActive == 1 // Проверка, что GPT активен
-            ) {
-                $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
-
-                // Преобразуем массив в JSON-строку
-                $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-                // Записываем в файл (например, storage/app/data.json)
-                Storage::put('array_conversation.json', $content);
-
-                $answer = GptService::Answer($array_conversation);
-                Storage::put('answer.json', $answer);
-                $postData = [
-                    'chat_id' => $chatId,
-                    'message' => $answer,
-                ];
-                $newRequest = new Request($postData);
-                $this->postmessage($newRequest);
-            }
-        } catch (\Exception $e) {
-            // Логируем ошибку
-            Log::error('Error saving Avito message: ' . $e->getMessage(), ['data' => $data]);
-
+        // Проверяем обязательные поля
+        if (!$chatId || !$messageText) {
+            Log::error('Error saving Avito message: empty request - ' . $chatId);
             return response()->json([
                 'status' => 'error',
-                'message' => 'Failed',
-                'error' => $e->getMessage()
-            ], 500);
+                'message' => 'Missing required fields: chat_id or message text.'
+            ], 422);
+        }
+
+        // проверяем наличие записи
+        $isGptActive = DB::table('avito_chats')
+            ->where('chat_id', $chatId)
+            ->value('is_gpt_active');
+
+        // даем ответ
+        if (
+            (string)$authorId != '320878714' &&
+            $isGptActive !== null && $isGptActive == 1 // Проверка, что GPT активен
+        ) {
+            $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
+
+            // Преобразуем массив в JSON-строку
+            $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            // Записываем в файл (например, storage/app/data.json)
+            Storage::put('1.json', $content);
+
+            $answer = GptService::Answer($array_conversation);
+            Storage::put('4.json', $answer);
+            $postData = [
+                'chat_id' => $chatId,
+                'message' => $answer,
+            ];
+            $newRequest = new Request($postData);
+            $this->postmessage($newRequest);
         }
     }
 

@@ -56,7 +56,7 @@ class GptService
         ];
 
         $messagesss = json_encode($array_conversation['messages'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        Storage::put('messages.json', $messagesss);
+        Storage::put('2.json', $messagesss);
 
         // Добавляем сообщения из истории, если есть
         if (count($array_conversation['messages']) > 0) {
@@ -67,7 +67,7 @@ class GptService
         }
 
         $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        Storage::put('data_messages.json', $content);
+        Storage::put('3.json', $content);
 
         $json_data = json_encode($data);
 
