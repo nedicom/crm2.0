@@ -19,7 +19,11 @@ class AvitoBotController extends Controller
         // Извлекаем необходимые поля с проверкой наличия
         $chatId = $request->input('payload.value.chat_id');
         $messageText = $request->input('payload.value.content.text');
-        $authorId = $request->input('payload.value.author_id');
+        $authorId = (string)$request->input('payload.value.author_id');
+
+        if ((string)$authorId === '320878714') {
+            return response()->json(['status' => 'success'], 200);
+        }
 
         // Проверяем обязательные поля
         if (!$chatId || !$messageText) {
@@ -35,14 +39,8 @@ class AvitoBotController extends Controller
             ->where('chat_id', $chatId)
             ->value('is_gpt_active');
 
-        // проверяем автора
-        if ($authorId === '320878714') {
-            return response()->json(['status' => 'ignored_self_message']);
-        }
-
-
-        if ($isGptActive == 1 && $authorId != '320878714') // Проверка, что GPT активен
-        {
+        // Проверка, что GPT активен
+        if ($isGptActive == 1 && $authorId !== '320878714') {
             $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
 
             // Преобразуем массив в JSON-строку
@@ -50,7 +48,8 @@ class AvitoBotController extends Controller
             // Записываем в файл (например, storage/app/data.json)
             Storage::put('1.json', $content);
 
-            $answer = GptService::Answer($array_conversation);
+            //$answer = GptService::Answer($array_conversation);
+            $answer = 'привет, я тестовый ответ';
             Storage::put('4.json', $answer);
             $postData = [
                 'chat_id' => $chatId,
@@ -58,8 +57,10 @@ class AvitoBotController extends Controller
             ];
             $newRequest = new Request($postData);
             $this->postmessage($newRequest);
-            return response()->json(['status' => 'success']);
+            return response()->json(['status' => 'success'], 200);
         }
+
+        return response()->json(['status' => 'success'], 200);
     }
 
     //отправляем ответ
