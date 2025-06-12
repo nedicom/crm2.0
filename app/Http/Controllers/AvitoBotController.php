@@ -51,7 +51,7 @@ class AvitoBotController extends Controller
                 Storage::put('array_conversation.json', $content);
 
                 $answer = GptService::Answer($array_conversation);
-
+                Storage::put('answer.json', $answer);
                 $postData = [
                     'chat_id' => $chatId,
                     'message' => $answer,
