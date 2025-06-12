@@ -48,8 +48,8 @@ class AvitoBotController extends Controller
             // Записываем в файл (например, storage/app/data.json)
             Storage::put('1.json', $content);
 
-            //$answer = GptService::Answer($array_conversation);
-            $answer = 'привет, я тестовый ответ';
+            $answer = GptService::Answer($array_conversation);
+            //$answer = 'привет, я тестовый ответ';
             Storage::put('4.json', $answer);
             $postData = [
                 'chat_id' => $chatId,
