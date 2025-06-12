@@ -81,7 +81,7 @@ class AvitoBotController extends Controller
                     'message' => $answer,
                 ];
 
-                //app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
+                app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
 
                 return response()->json(['status' => 'success'], 200);
             }
