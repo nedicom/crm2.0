@@ -77,7 +77,7 @@
                     var isActive = $(this).is(':checked') ? 1 : 0;
 
                     $.ajax({
-                        url: '/update-gpt-active', // маршрут для обновления
+                        url: 'https://crm.nedicom.ru/update-gpt-active', // маршрут для обновления
                         type: 'POST',
                         data: {
                             id: chatId,
