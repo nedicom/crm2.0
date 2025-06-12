@@ -15,55 +15,62 @@ class AvitoBotController extends Controller
 
     public function getmessage(Request $request)
     {
+        try {
+            // Извлекаем необходимые поля с проверкой наличия
+            $chatId = $request->input('payload.value.chat_id');
+            $messageText = $request->input('payload.value.content.text');
+            $authorId = (string)$request->input('payload.value.author_id');
 
-        // Извлекаем необходимые поля с проверкой наличия
-        $chatId = $request->input('payload.value.chat_id');
-        $messageText = $request->input('payload.value.content.text');
-        $authorId = (string)$request->input('payload.value.author_id');
+            if ($authorId === '320878714') {
+                return response()->json(['status' => 'success'], 200);
+            }
 
-        if ((string)$authorId === '320878714') {
+            // Проверяем обязательные поля
+            if (!$chatId || !$messageText) {
+                Log::error('Error saving Avito message: empty request - ' . $chatId);
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Missing required fields: chat_id or message text.'
+                ], 422);
+            }
+
+            // проверяем наличие записи
+            $isGptActive = DB::table('avito_chats')
+                ->where('chat_id', $chatId)
+                ->value('is_gpt_active');
+
+            // Проверка, что GPT активен
+            if ($isGptActive == 1 && $authorId !== '320878714') {
+                $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
+
+                // Преобразуем массив в JSON-строку
+                $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                // Записываем в файл (например, storage/app/data.json)
+                Storage::put('1.json', $content);
+
+                $answer = GptService::Answer($array_conversation);
+                Storage::put('4.json', $answer);
+
+                $postData = [
+                    'chat_id' => $chatId,
+                    'message' => $answer,
+                ];
+
+                app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
+
+                return response()->json(['status' => 'success'], 200);
+            }
+
             return response()->json(['status' => 'success'], 200);
-        }
-
-        // Проверяем обязательные поля
-        if (!$chatId || !$messageText) {
-            Log::error('Error saving Avito message: empty request - ' . $chatId);
+        } catch (\Exception $e) {
+            Log::error('Exception in getmessage: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Missing required fields: chat_id or message text.'
-            ], 422);
+                'message' => 'Internal server error'
+            ], 500);
         }
-
-        // проверяем наличие записи
-        $isGptActive = DB::table('avito_chats')
-            ->where('chat_id', $chatId)
-            ->value('is_gpt_active');
-
-        // Проверка, что GPT активен
-        if ($isGptActive == 1 && $authorId !== '320878714') {
-            $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
-
-            // Преобразуем массив в JSON-строку
-            $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-            // Записываем в файл (например, storage/app/data.json)
-            Storage::put('1.json', $content);
-
-            $answer = GptService::Answer($array_conversation);
-            //$answer = 'привет, я тестовый ответ';
-            Storage::put('4.json', $answer);
-            $postData = [
-                'chat_id' => $chatId,
-                'message' => $answer,
-            ];
-            //$newRequest = new Request($postData);
-
-            app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
-
-            return response()->json(['status' => 'success'], 200);
-        }
-
-        return response()->json(['status' => 'success'], 200);
     }
+
 
     //отправляем ответ
     public function postmessage(Request $request)
