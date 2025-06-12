@@ -76,11 +76,6 @@ class AvitoBotController extends Controller
                 // Записываем обновлённое содержимое обратно в файл
                 Storage::put($filename, $newContent);
 
-                $postData = [
-                    'chat_id' => $chatId,
-                    'message' => $answer,
-                ];
-
                 app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
 
                 return response()->json(['status' => 'success'], 200);
