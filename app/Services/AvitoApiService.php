@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AvitoApiService
 {
@@ -84,8 +85,9 @@ class AvitoApiService
     {
         $token = $this->getToken();
 
-        if (!$token) {
+        if (!$token) {            
             throw new Exception('Не удалось получить access token от Авито');
+            return null;
         }
 
         $response = Http::withHeaders([
@@ -96,10 +98,6 @@ class AvitoApiService
         if (!$response->successful()) {
             throw new Exception('Ошибка при получении списка чатов: ' . $response->body());
         }
-
-        // В ответе обычно есть поле с массивом чатов, например 'conversations' или 'data'
-        // return $response->json();
-
 
         $data = json_decode($response, true);
 
@@ -114,7 +112,7 @@ class AvitoApiService
         $token = $this->getToken();
 
         if (!$token) {
-            throw new Exception('Не удалось получить access token от Авито');
+            return [];
         }
 
         $response = Http::withHeaders([
@@ -133,16 +131,28 @@ class AvitoApiService
 
     public function getToken(): ?string
     {
-        $response = Http::asForm()->post('https://api.avito.ru/token/', [
-            'grant_type' => 'client_credentials',
-            'client_id' => config('services.avito.client_id'),
-            'client_secret' => config('services.avito.client_secret'),
-        ]);
+        try {
+            $response = Http::asForm()->post('https://api.avito.ru/token/', [
+                'grant_type' => 'client_credentials',
+                'client_id' => config('services.avito.client_id'),
+                'client_secret' => config('services.avito.client_secret'),
+            ]);
 
-        if ($response->successful()) {
-            return $response->json('access_token');
+            if ($response->successful()) {
+                return $response->json('access_token');
+            }
+            Log::error('Ошибка при получении токена Avito: ' . $response->body());
+
+            return null;
+        } catch (\Exception $e) {
+            // Можно проверить на cURL error 60, если нужно
+            if (strpos($e->getMessage(), 'cURL error 60') !== false) {
+                // Можно логировать или обработать отдельно
+                return null;
+            }
+
+            // Для других ошибок пробросить или обработать
+            throw $e;
         }
-
-        return null;
     }
 }
