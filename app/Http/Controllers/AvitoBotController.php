@@ -14,15 +14,15 @@ class AvitoBotController extends Controller
 {
 
     public function getmessage(Request $request)
-    {
-
-        Storage::put('1.json', 'test');
+    {        
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
             $messageText = $request->input('payload.value.content.text');
             $authorId = (string)$request->input('payload.value.author_id');
 
+            Storage::put('1.json', 'test');
+            
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
             }
