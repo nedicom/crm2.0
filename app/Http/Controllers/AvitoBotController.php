@@ -48,7 +48,7 @@ class AvitoBotController extends Controller
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 // Записываем в файл (например, storage/app/data.json)
-                Storage::put('data.json', $content);
+                Storage::put('array_conversation.json', $content);
 
                 $answer = GptService::Answer($array_conversation);
 
@@ -59,11 +59,6 @@ class AvitoBotController extends Controller
                 $newRequest = new Request($postData);
                 $this->postmessage($newRequest);
             }
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Message saved successfully.'
-            ], 200);
         } catch (\Exception $e) {
             // Логируем ошибку
             Log::error('Error saving Avito message: ' . $e->getMessage(), ['data' => $data]);

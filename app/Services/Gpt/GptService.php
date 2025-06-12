@@ -30,6 +30,7 @@ class GptService
         curl_close($ch);
 
         $response_data = json_decode($result, true);
+
         if (empty($response_data['iamToken'])) {
             Log::error('Yandex IAM token not received');
             return 'Извините, юрист временно недоступен.';
@@ -53,6 +54,9 @@ class GptService
                 ]
             ]
         ];
+
+        $messagesss = json_encode($array_conversation['messages'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        Storage::put('messages.json', $messagesss);
 
         // Добавляем сообщения из истории, если есть
         if (count($array_conversation['messages']) > 0) {
