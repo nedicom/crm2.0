@@ -7,6 +7,7 @@ use App\Services\AvitoApiService;
 use App\Services\Gpt\GptService;
 use App\Models\AvitoChat;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AvitoBotController extends Controller
 {
@@ -15,7 +16,7 @@ class AvitoBotController extends Controller
     {
         // Получаем все данные из запроса
         $data = $request->all();
-        //Storage::put('request_log.json', $json);
+        
 
         try {
             // Извлекаем необходимые поля с проверкой наличия
@@ -36,7 +37,7 @@ class AvitoBotController extends Controller
             if ((string)$authorId != '320878714') {
 
                 $array_conversation = app(AvitoApiService::class)->getMessages($data['chat_id'], 320878714);
-
+Storage::put('request_log.json', $array_conversation);
                 $answer = GptService::Answer($array_conversation);
 
                 $postData = [
