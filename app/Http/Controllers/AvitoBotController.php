@@ -99,11 +99,7 @@ class AvitoBotController extends Controller
 
     public function avitoChats()
     {
-        $chats = DB::table('avito_messages')
-            ->select('chat_id', DB::raw('MAX(sent_at) as last_message_at'))
-            ->groupBy('chat_id')
-            ->orderByDesc('last_message_at')
-            ->get();
+        $chats = app(AvitoApiService::class)->getChats();
         return view('avito/avito_chats', compact('chats'));
     }
 
