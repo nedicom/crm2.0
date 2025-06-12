@@ -109,7 +109,7 @@ class GptService
     {
         $result = [];
         foreach ($messages as $msg) {
-            $role = ($msg['sender_id'] === '320878714') ? 'assistant' : 'user';
+            $role = ($msg['author_id'] === '320878714') ? 'assistant' : 'user';
             $result[] = [
                 'role' => $role,
                 'text' => $msg['content']['text'] ?? ''
