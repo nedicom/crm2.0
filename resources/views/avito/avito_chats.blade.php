@@ -29,7 +29,7 @@
 
                     {{-- Чекбокс GPT Active в правом верхнем углу --}}
                     <div class="gpt-active-checkbox" style="position: absolute; top: 10px; right: 10px;">
-                        <input type="checkbox" id="gpt-active-{{ $chat['id'] }}" disabled
+                        <input type="checkbox" id="gpt-active-{{ $chat['id'] }}"
                             {{ $chat['is_gpt_active'] ? 'checked' : '' }}>
                         <label for="gpt-active-{{ $chat['id'] }}" style="user-select: none;">GPT Active</label>
                     </div>
@@ -69,4 +69,34 @@
 
             </div>
         </div>
+
+
+    @endsection
+
+    @section('scripts')
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('input[type=checkbox]').change(function() {
+                    var chatId = $(this).attr('id').split('-').pop(); // получить id из id чекбокса
+                    var isActive = $(this).is(':checked') ? 1 : 0;
+
+                    $.ajax({
+                        url: '/update-gpt-active', // маршрут для обновления
+                        type: 'POST',
+                        data: {
+                            id: chatId,
+                            is_gpt_active: isActive,
+                            _token: '{{ csrf_token() }}' // CSRF токен для безопасности
+                        },
+                        success: function(response) {
+                            console.log('Статус обновлен');
+                        },
+                        error: function(xhr) {
+                            alert('Ошибка при обновлении статуса');
+                        }
+                    });
+                });
+            });
+        </script>
     @endsection

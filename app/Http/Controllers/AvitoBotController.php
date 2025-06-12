@@ -7,6 +7,7 @@ use App\Services\AvitoApiService;
 use App\Services\Gpt\GptService;
 use App\Models\AvitoChat;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class AvitoBotController extends Controller
@@ -128,5 +129,18 @@ class AvitoBotController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    // ChatController.php
+    public function updateGptActive(Request $request)
+    {
+        $updated = DB::table('chats') // укажите правильное имя таблицы
+            ->where('id', $request->id)
+            ->update(['is_gpt_active' => $request->is_gpt_active]);
+
+        if ($updated) {
+            return response()->json(['success' => true]);
+        }
+        return response()->json(['success' => false], 404);
     }
 }

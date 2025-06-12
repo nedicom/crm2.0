@@ -142,6 +142,8 @@ Route::controller(AvitoBotController::class)->group(function () {
     Route::get('/avito/chat/{id}', 'avitoChat')->name('avito.chat');
 })->middleware('auth');
 
+Route::post('/update-gpt-active', [AvitoBotController::class, 'updateGptActive'])->name('update-gpt-active');
+
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
 
 Route::post('/setstatus', [TaskAJAXController::class, 'setstatustask'])->name('setstatus');

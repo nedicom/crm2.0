@@ -86,7 +86,6 @@ class AvitoApiService
         $token = $this->getToken();
 
         if (!$token) {            
-            throw new Exception('Не удалось получить access token от Авито');
             return null;
         }
 
