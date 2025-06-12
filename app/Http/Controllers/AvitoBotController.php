@@ -134,8 +134,8 @@ class AvitoBotController extends Controller
     // ChatController.php
     public function updateGptActive(Request $request)
     {
-        $updated = DB::table('chats') // укажите правильное имя таблицы
-            ->where('id', $request->id)
+        $updated = DB::table('avito_chats') // укажите правильное имя таблицы
+            ->where('chat_id', $request->id)
             ->update(['is_gpt_active' => $request->is_gpt_active]);
 
         if ($updated) {

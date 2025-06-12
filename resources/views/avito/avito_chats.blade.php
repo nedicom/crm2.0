@@ -29,7 +29,7 @@
 
                     {{-- Чекбокс GPT Active в правом верхнем углу --}}
                     <div class="gpt-active-checkbox" style="position: absolute; top: 10px; right: 10px;">
-                        <input type="checkbox" id="gpt-active-{{ $chat['id'] }}"
+                        <input type="checkbox" id="{{ $chat['id'] }}"
                             {{ $chat['is_gpt_active'] ? 'checked' : '' }}>
                         <label for="gpt-active-{{ $chat['id'] }}" style="user-select: none;">GPT Active</label>
                     </div>
