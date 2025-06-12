@@ -60,10 +60,6 @@ class AvitoApiService
             "Content-Type: application/json"
         ]);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        //not for production    
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-
         $result = curl_exec($ch);
         curl_close($ch);
         if ($result === false) {
