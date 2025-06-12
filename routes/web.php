@@ -22,6 +22,8 @@ use App\Http\Controllers\AvitoBotController;
 
 Auth::routes();
 
+Route::post('/update-gpt-active', [AvitoBotController::class, 'updateGptActive']);
+
 Route::get('/verify/{token}', 'Auth\RegisterController@verify')->name('register.verify');
 
 Route::post('/bots/staff', \App\Http\Controllers\Bots\StaffController::class)->name('bots.staff');
@@ -141,8 +143,6 @@ Route::controller(AvitoBotController::class)->group(function () {
     Route::get('/avito/chats', 'avitoChats')->name('avito.chats');
     Route::get('/avito/chat/{id}', 'avitoChat')->name('avito.chat');
 })->middleware('auth');
-
-Route::post('/update-gpt-active', [AvitoBotController::class, 'updateGptActive']);
 
 
 Route::post('/getclient', [GetclientAJAXController::class, 'getclient'])->name('getclient')->middleware('auth');
