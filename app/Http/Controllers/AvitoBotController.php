@@ -41,7 +41,7 @@ class AvitoBotController extends Controller
         }
 
 
-        if ($isGptActive == 1 && $authorId === '320878714') // Проверка, что GPT активен
+        if ($isGptActive == 1 && $authorId != '320878714') // Проверка, что GPT активен
         {
             $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
 
