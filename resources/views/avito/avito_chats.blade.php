@@ -84,6 +84,7 @@
                             is_gpt_active: isActive,
                             _token: '{{ csrf_token() }}' // CSRF токен для безопасности
                         },
+                        alert(id);
                         success: function(response) {
                             console.log('Статус обновлен');
                         },
