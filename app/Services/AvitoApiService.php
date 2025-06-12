@@ -74,10 +74,9 @@ class AvitoApiService
         $data = json_decode($response, true);
 
         if (!empty($data['chats'])) {
-            return "Чаты найдены";
-        } else {
-            return "Чаты не найдены";
+            return $data['chats'];
         }
+        return [];
     }
 
     public function registerWebhook(string $webhookUrl): array
