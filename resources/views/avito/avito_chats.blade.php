@@ -75,9 +75,6 @@
                 $('input[type=checkbox]').change(function() {
                     var chatId = $(this).attr('id'); // получить id из id чекбокса
                     var isActive = $(this).is(':checked') ? 1 : 0;
-alert(chatId)
-alert(isActive)
-alert('{{ csrf_token() }}')
                     $.ajax({
                         url: 'https://crm.nedicom.ru/update-gpt-active', // маршрут для обновления
                         type: 'POST',
