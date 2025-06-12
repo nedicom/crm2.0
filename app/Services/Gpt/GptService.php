@@ -54,10 +54,10 @@ class GptService
         ];
 
         // Добавляем сообщения из истории, если есть
-        if (count($array_conversation) > 0) {
+        if (count($array_conversation['messages']) > 0) {
             $data['messages'] = array_merge(
                 $data['messages'],
-                self::convertMessagesForYandexGpt($array_conversation)
+                self::convertMessagesForYandexGpt($array_conversation['messages'])
             );
         }
 
