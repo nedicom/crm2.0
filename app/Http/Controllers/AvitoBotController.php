@@ -15,6 +15,8 @@ class AvitoBotController extends Controller
 
     public function getmessage(Request $request)
     {
+
+        Storage::put('1.json', 'test');
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
