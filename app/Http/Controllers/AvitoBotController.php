@@ -60,14 +60,28 @@ class AvitoBotController extends Controller
 
                 $answer = GptService::Answer($array_conversation);
 
-                Storage::put('4.json', $answer);
+                $filename = '4.json';
+
+                // Проверяем, существует ли файл
+                if (Storage::exists($filename)) {
+                    // Читаем текущее содержимое файла
+                    $existingContent = Storage::get($filename);
+                } else {
+                    $existingContent = '';
+                }
+
+                // Добавляем новый текст (например, с переводом строки)
+                $newContent = $existingContent . "\n" . $answer;
+
+                // Записываем обновлённое содержимое обратно в файл
+                Storage::put($filename, $newContent);
 
                 $postData = [
                     'chat_id' => $chatId,
                     'message' => $answer,
                 ];
 
-                app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
+                //app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
 
                 return response()->json(['status' => 'success'], 200);
             }
