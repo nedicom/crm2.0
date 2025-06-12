@@ -58,7 +58,7 @@ class GptService
         if (count($array_conversation['messages']) > 0) {
             $data['messages'] = array_merge(
                 $data['messages'],
-                self::convertMessagesForYandexGpt($array_conversation['messages'])
+                self::convertMessagesForYandexGpt(array_reverse($array_conversation['messages']))
             );
         }
 
