@@ -14,12 +14,12 @@ class AvitoBotController extends Controller
 {
 
     public function getmessage(Request $request)
-    {        
+    {
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
             $messageText = $request->input('payload.value.content.text');
-            $authorId = (string)$request->input('payload.value.author_id');            
+            $authorId = (string)$request->input('payload.value.author_id');
 
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
@@ -27,11 +27,22 @@ class AvitoBotController extends Controller
 
             // Проверяем обязательные поля
             if (!$chatId || !$messageText) {
-                Log::error('Error saving Avito message: empty request - ' . $chatId);
+                Log::error('Error saving Avito message: empty request');
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Missing required fields: chat_id or message text.'
                 ], 422);
+            }
+
+            // Проверяем, есть ли чат с таким chat_id
+            $chatExists = DB::table('avito_chats')->where('chat_id', $chatId)->exists();
+
+            if (!$chatExists) {
+                // Добавляем новый чат с chat_id
+                DB::table('avito_chats')->insert([
+                    'chat_id' => $chatId,
+                    'is_gpt_active' => 1, // или другое значение по умолчанию
+                ]);
             }
 
             // проверяем наличие записи
@@ -39,12 +50,10 @@ class AvitoBotController extends Controller
                 ->where('chat_id', $chatId)
                 ->value('is_gpt_active');
 
-                Storage::put('1.json', '2');
-
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
-
+                Storage::put('1.json', '2');
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 // Записываем в файл (например, storage/app/data.json)
