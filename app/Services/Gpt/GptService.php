@@ -4,144 +4,117 @@ namespace App\Services\Gpt;
 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 class GptService
 {
-    public static function Answer(array $array_conversation): string
-    {
-        try {
-            // 1. Получаем IAM-токен
-            $iamToken = self::getIamToken();
-            if (empty($iamToken)) {
-                throw new Exception('Failed to get IAM token');
-            }
-
-            // 2. Формируем запрос к Yandex GPT
-            $requestData = self::prepareGptRequest($array_conversation);
-            
-            // 3. Отправляем запрос к Yandex GPT
-            $gptResponse = self::callYandexGpt($iamToken, $requestData);
-            
-            // 4. Обрабатываем ответ
-            return self::processGptResponse($gptResponse);
-            
-        } catch (Exception $e) {
-            Log::error('GPT Service Error: ' . $e->getMessage());
-            return 'Извините, в данный момент сервис недоступен. Попробуйте позже.';
-        }
-    }
-
-    private static function getIamToken(): ?string
+    public static function Answer($array_conversation)
     {
         $ch = curl_init();
-        try {
-            curl_setopt_array($ch, [
-                CURLOPT_URL => 'https://iam.api.cloud.yandex.net/iam/v1/tokens',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode([
-                    'yandexPassportOauthToken' => env('YANDEX_GPT_API_KEY')
-                ]),
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            ]);
+        curl_setopt($ch, CURLOPT_URL, 'https://iam.api.cloud.yandex.net/iam/v1/tokens');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '{"yandexPassportOauthToken": "' . env('YANDEX_GPT_API_KEY') . '"}');
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-            $response = curl_exec($ch);
-            if ($response === false) {
-                throw new Exception('IAM request failed: ' . curl_error($ch));
-            }
-
-            $data = json_decode($response, true);
-            return $data['iamToken'] ?? null;
-
-        } finally {
+        $result = curl_exec($ch);
+        if ($result === false) {
+            $error = curl_error($ch);
             curl_close($ch);
+            Log::error("Yandex IAM token request failed: $error");
+            return 'Извините, я сейчас немного занят, но позже напишу Вам обязательно.';
         }
-    }
+        curl_close($ch);
 
-    private static function prepareGptRequest(array $conversation): array
-    {
+        $response_data = json_decode($result, true);
+
+        if (empty($response_data['iamToken'])) {
+            Log::error('Yandex IAM token not received');
+            return 'Извините, юрист временно недоступен.';
+        }
+
+        // Формируем базовый массив запроса
         $data = [
             'modelUri' => 'gpt://' . env('YANDEX_CT_ID') . '/yandexgpt',
             'completionOptions' => [
                 'stream' => false,
                 'temperature' => 0.6,
                 'maxTokens' => 2000,
+                'reasoningOptions' => [
+                    'mode' => 'DISABLED'
+                ]
             ],
             'messages' => [
                 [
                     'role' => 'system',
-                    'text' => 'Ты — специалист, который продает клиенту юридические услуги...'
+                    'text' => 'Ты — специалист, который продает клиенту юридические услуги на Авито в чат боте. Не говори об этом собеседнику. Твоя задача предложить вовлечение пользователя в беседу, чтобы потом попросить его номер телефона.'
                 ]
             ]
         ];
 
-        // Добавляем историю сообщений
-        if (!empty($conversation['messages'])) {
+        $messagesss = json_encode($array_conversation['messages'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        Storage::put('2.json', $messagesss);
+
+        // Добавляем сообщения из истории, если есть
+        if (count($array_conversation['messages']) > 0) {
+            $result = [];
+            foreach (array_reverse($array_conversation['messages']) as $msg) {
+                $role = ((string)$msg['author_id'] === '320878714') ? 'assistant' : 'user';
+                $result[] = [
+                    'role' => $role,
+                    'text' => $msg['content']['text'] ?? ''
+                ];
+            }
+            Storage::put('5.json', json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
             $data['messages'] = array_merge(
                 $data['messages'],
-                self::convertMessagesForYandexGpt(
-                    array_reverse($conversation['messages'])
-                )
+                $result
             );
         }
 
-        // Логирование для отладки
-        Storage::put('gpt_request.json', json_encode($data, JSON_PRETTY_PRINT));
+        $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        Storage::put('3.json', $content);
 
-        return $data;
-    }
+        $json_data = json_encode($data);
 
-    private static function callYandexGpt(string $iamToken, array $requestData): array
-    {
+        // Запрос к Yandex GPT API
+        $url = 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion';
         $ch = curl_init();
-        try {
-            curl_setopt_array($ch, [
-                CURLOPT_URL => 'https://llm.api.cloud.yandex.net/foundationModels/v1/completion',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => json_encode($requestData),
-                CURLOPT_HTTPHEADER => [
-                    'Content-Type: application/json',
-                    'Authorization: Bearer ' . $iamToken
-                ],
-            ]);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $response_data['iamToken']
+        ]);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-            $response = curl_exec($ch);
-            if ($response === false) {
-                throw new Exception('GPT request failed: ' . curl_error($ch));
-            }
-
-            return json_decode($response, true) ?? [];
-
-        } finally {
+        $result = curl_exec($ch);
+        if ($result === false) {
+            $error = curl_error($ch);
             curl_close($ch);
+            Log::error("Yandex GPT request failed: $error");
+            return 'Извините, ошибка взаимодействия с сервером. Мы скоро ее починим. Возможно завтра.';
         }
-    }
+        curl_close($ch);
 
-    private static function processGptResponse(array $response): string
-    {
-        if (empty($response['result']['alternatives'][0]['message']['text'])) {
-            throw new Exception('Empty GPT response');
+        $response_data = json_decode($result, true);
+
+        if (
+            isset($response_data['result']['alternatives'][0]['message']['text']) &&
+            !empty($response_data['result']['alternatives'][0]['message']['text'])
+        ) {
+            $generated_text = $response_data['result']['alternatives'][0]['message']['text'];
+            if (mb_stripos($generated_text, 'интеллект') !== false) {
+                return 'Простите, но Ваш вопрос представляет сложность. Нужно немного больше времени.';
+            }
+            return $generated_text;
         }
-
-        $text = $response['result']['alternatives'][0]['message']['text'];
-
-        // Фильтр нежелательных ответов
-        if (mb_stripos($text, 'интеллект') !== false) {
-            return 'Простите, но Ваш вопрос требует дополнительной проверки.';
-        }
-
-        return $text;
-    }
-
-    private static function convertMessagesForYandexGpt(array $messages): array
-    {
-        return array_map(function ($msg) {
-            return [
-                'role' => ((string)$msg['author_id'] === '320878714') ? 'assistant' : 'user',
-                'text' => $msg['content']['text'] ?? ''
-            ];
-        }, $messages);
+        return 'Простите, я сейчас немного занят';
     }
 }
