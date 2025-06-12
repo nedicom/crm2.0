@@ -29,6 +29,7 @@
 
                     {{-- Информация о предмете (item) из context --}}
                     <p><strong>Тема:</strong> {{ $chat['context']['value']['title'] ?? 'Без названия' }}</p>
+                    GPT Active: {{ $chat['is_gpt_active'] ? 'Да' : 'Нет' }}
                     <p><strong>Цена:</strong> {!! nl2br(e($chat['context']['value']['price_string'] ?? 'Не указана')) !!}</p>
                     <p><strong>Ссылка:</strong> <a href="{{ $chat['context']['value']['url'] ?? '#' }}"
                             target="_blank">Перейти</a></p>

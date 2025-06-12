@@ -36,19 +36,12 @@ class AvitoBotController extends Controller
             if ((string)$authorId != '320878714') {
 
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
-                Storage::put('request_log.json', json_encode($array_conversation));
                 $answer = GptService::Answer($array_conversation);
 
                 $postData = [
                     'chat_id' => $chatId,
                     'message' => $answer,
                 ];
-                /*
-                $postData = [
-                    'chat_id' => $chatId,
-                    'message' =>'перезвоню',
-                ];
-                */
                 $newRequest = new Request($postData);
                 $this->postmessage($newRequest);
             }
@@ -77,20 +70,27 @@ class AvitoBotController extends Controller
         return response()->json(['status' => $ok]);
     }
 
-    public function avitoChats()
-    {
-        $chats = app(AvitoApiService::class)->getChats();
-        foreach ($chats as $chat) {
-            AvitoChat::firstOrCreate(
-                ['chat_id' => $chat['id']],
-                [
-                    'gpt_prompt' => '',
-                    'is_gpt_active' => true,
-                ]
-            );
-        }
-        return view('avito/avito_chats', compact('chats'));
+public function avitoChats()
+{
+    $chats = app(AvitoApiService::class)->getChats();
+
+    foreach ($chats as &$chat) {
+        // Получаем или создаём запись в базе для чата
+        $chatModel = AvitoChat::firstOrCreate(
+            ['chat_id' => $chat['id']],
+            [
+                'gpt_prompt' => '',
+                'is_gpt_active' => true,
+            ]
+        );
+        // Добавляем значение в массив чата для Blade
+        $chat['is_gpt_active'] = $chatModel->is_gpt_active;
     }
+    unset($chat); // Разрываем ссылку
+
+    return view('avito/avito_chats', compact('chats'));
+}
+
 
     public function avitoChat($chat_id)
     {
