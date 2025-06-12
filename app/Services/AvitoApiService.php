@@ -47,7 +47,7 @@ class AvitoApiService
         return 'sended';
     }
 
-    public function getMessages($userId, $chatId)
+    public function getMessages($chatId, $userId)
     {
         // Пример отправки сообщения через cURL
         $token = $this->getToken();
