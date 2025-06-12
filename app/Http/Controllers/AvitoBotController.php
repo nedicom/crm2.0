@@ -38,17 +38,17 @@ class AvitoBotController extends Controller
 
                 $array_conversation = app(AvitoApiService::class)->getMessages($data['chat_id'], 320878714);
                 Storage::put('request_log.json', $array_conversation);
-                $answer = GptService::Answer($array_conversation);
+               /* $answer = GptService::Answer($array_conversation);
 
                 $postData = [
                     'chat_id' => $chatId,
                     'message' => $answer,
                 ];
-                /*
+                */
                 $postData = [
                     'chat_id' => $chatId,
                     'message' =>'перезвоню',
-                ];*/
+                ];
                 $newRequest = new Request($postData);
                 $this->postmessage($newRequest);
             }
