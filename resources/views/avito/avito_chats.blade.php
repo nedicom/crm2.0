@@ -24,12 +24,19 @@
 
         <div class="list-group">
             @forelse ($chats as $chat)
-                <div class="chat-item mb-3 p-3 border rounded">
+                <div class="chat-item mb-3 p-3 border rounded position-relative">
                     <h5>Чат ID: {{ $chat['id'] }}</h5>
+
+                    {{-- Чекбокс GPT Active в правом верхнем углу --}}
+                    <div class="gpt-active-checkbox" style="position: absolute; top: 10px; right: 10px;">
+                        <input type="checkbox" id="gpt-active-{{ $chat['id'] }}" disabled
+                            {{ $chat['is_gpt_active'] ? 'checked' : '' }}>
+                        <label for="gpt-active-{{ $chat['id'] }}" style="user-select: none;">GPT Active</label>
+                    </div>
 
                     {{-- Информация о предмете (item) из context --}}
                     <p><strong>Тема:</strong> {{ $chat['context']['value']['title'] ?? 'Без названия' }}</p>
-                    GPT Active: {{ $chat['is_gpt_active'] ? 'Да' : 'Нет' }}
+
                     <p><strong>Цена:</strong> {!! nl2br(e($chat['context']['value']['price_string'] ?? 'Не указана')) !!}</p>
                     <p><strong>Ссылка:</strong> <a href="{{ $chat['context']['value']['url'] ?? '#' }}"
                             target="_blank">Перейти</a></p>
@@ -49,13 +56,13 @@
                             <p><strong>Последнее сообщение:</strong></p>
                             <p>{{ $chat['last_message']['content']['text'] ?? '' }}</p>
                             <small class="text-muted">
-                                От {{ $chat['last_message']['author_id'] }}
-                                —
+                                От {{ $chat['last_message']['author_id'] }} —
                                 {{ \Carbon\Carbon::createFromTimestamp($chat['last_message']['created'])->format('d.m.Y H:i') }}
                             </small>
                         </div>
                     @endif
                 </div>
+
                 @empty
                     <p>Чаты не найдены</p>
                 @endforelse
