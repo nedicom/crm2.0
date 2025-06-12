@@ -19,10 +19,8 @@ class AvitoBotController extends Controller
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
             $messageText = $request->input('payload.value.content.text');
-            $authorId = (string)$request->input('payload.value.author_id');
+            $authorId = (string)$request->input('payload.value.author_id');            
 
-            Storage::put('1.json', 'test');
-            
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
             }
@@ -40,6 +38,8 @@ class AvitoBotController extends Controller
             $isGptActive = DB::table('avito_chats')
                 ->where('chat_id', $chatId)
                 ->value('is_gpt_active');
+
+                Storage::put('1.json', '2');
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
