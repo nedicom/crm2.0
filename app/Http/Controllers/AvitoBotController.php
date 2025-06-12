@@ -53,13 +53,13 @@ class AvitoBotController extends Controller
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
-                Storage::put('1.json', '2');
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
                 // Записываем в файл (например, storage/app/data.json)
                 Storage::put('1.json', $content);
 
                 $answer = GptService::Answer($array_conversation);
+
                 Storage::put('4.json', $answer);
 
                 $postData = [
@@ -80,16 +80,6 @@ class AvitoBotController extends Controller
                 'message' => 'Internal server error'
             ], 500);
         }
-    }
-
-
-    //отправляем ответ
-    public function postmessage(Request $request)
-    {
-        $data = $request->all();
-        // Пример ответа через сервис
-        $ok = app(AvitoApiService::class)->sendMessage(320878714, $data['chat_id'], $data['message']);
-        return response()->json(['status' => $ok]);
     }
 
     public function avitoChats()

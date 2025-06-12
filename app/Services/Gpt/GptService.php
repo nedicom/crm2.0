@@ -41,7 +41,7 @@ class GptService
             'completionOptions' => [
                 'stream' => false,
                 'temperature' => 0.6,
-                'maxTokens' => 2000,
+                'maxTokens' => 600,
                 'reasoningOptions' => [
                     'mode' => 'DISABLED'
                 ]
@@ -58,6 +58,36 @@ class GptService
         Storage::put('2.json', $messagesss);
 
         // Добавляем сообщения из истории, если есть
+        // Функция для объединения подряд идущих сообщений пользователя
+        function mergeConsecutiveUserMessages(array $messages): array
+        {
+            $merged = [];
+            $buffer = null;
+
+            foreach ($messages as $msg) {
+                if ($msg['role'] !== 'user') {
+                    if ($buffer !== null) {
+                        $merged[] = $buffer;
+                        $buffer = null;
+                    }
+                    $merged[] = $msg;
+                    continue;
+                }
+
+                if ($buffer === null) {
+                    $buffer = $msg;
+                } else {
+                    $buffer['text'] .= ' ' . $msg['text'];
+                }
+            }
+
+            if ($buffer !== null) {
+                $merged[] = $buffer;
+            }
+
+            return $merged;
+        }
+
         if (count($array_conversation['messages']) > 0) {
             $result = [];
             foreach (array_reverse($array_conversation['messages']) as $msg) {
@@ -68,11 +98,18 @@ class GptService
                 ];
             }
             Storage::put('5.json', json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+            // Объединяем подряд идущие сообщения пользователя
+            $mergedMessages = mergeConsecutiveUserMessages($result);
+
             $data['messages'] = array_merge(
                 $data['messages'],
-                $result
+                $mergedMessages
             );
+
+            Storage::put('6.json', json_encode($mergedMessages, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
         }
+
 
         $content = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         Storage::put('3.json', $content);
