@@ -55,8 +55,10 @@ class AvitoBotController extends Controller
                 'chat_id' => $chatId,
                 'message' => $answer,
             ];
-            $newRequest = new Request($postData);
-            $this->postmessage($newRequest);
+            //$newRequest = new Request($postData);
+
+            app(AvitoApiService::class)->sendMessage(320878714, $chatId, $answer);
+
             return response()->json(['status' => 'success'], 200);
         }
 
