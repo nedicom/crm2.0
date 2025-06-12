@@ -18,10 +18,6 @@ class AvitoBotController extends Controller
         // Получаем все данные из запроса
         $data = $request->all();
 
-        $data_first = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        // Записываем в файл (например, storage/app/data.json)
-        Storage::put('data_first.json', $data_first);
-
         try {
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
@@ -47,8 +43,6 @@ class AvitoBotController extends Controller
                 (string)$authorId != '320878714' &&
                 $isGptActive !== null && $isGptActive == 1 // Проверка, что GPT активен
             ) {
-
-
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
 
                 // Преобразуем массив в JSON-строку
