@@ -23,14 +23,17 @@
     <div class="container">
 
         <div class="list-group">
-            @foreach ($chats as $chat)
+            @forelse ($chats as $chat)
                 <a href="{{ url('/avito/chat/' . $chat->chat_id) }}"
                     class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                     Чат: {{ $chat->chat_id }}
                     <small
                         class="text-muted">{{ \Carbon\Carbon::parse($chat->last_message_at)->format('d.m.Y H:i') }}</small>
                 </a>
-            @endforeach
+            @empty
+                <p>Чаты не найдены</p>
+            @endforelse
+
         </div>
     </div>
 @endsection
