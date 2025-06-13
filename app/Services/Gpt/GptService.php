@@ -20,13 +20,15 @@ class GptService
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
         $result = curl_exec($ch);
+        curl_close($ch);
+
         if ($result === false) {
             $error = curl_error($ch);
             curl_close($ch);
             Log::error("Yandex IAM token request failed: $error");
             return 'Извините, я сейчас немного занят, но позже напишу Вам обязательно.';
         }
-        curl_close($ch);
+
 
         $response_data = json_decode($result, true);
 
@@ -96,14 +98,18 @@ class GptService
         ]);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
+
         $result = curl_exec($ch);
+
+
+        curl_close($ch);
         if ($result === false) {
             $error = curl_error($ch);
             curl_close($ch);
             Log::error("Yandex GPT request failed: $error");
             return 'Извините, ошибка взаимодействия с сервером. Мы скоро ее починим. Возможно завтра.';
         }
-        curl_close($ch);
+
 
         $response_data = json_decode($result, true);
 
@@ -113,9 +119,6 @@ class GptService
         ) {
             Storage::put('7.json', json_encode($response_data['result'], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
             $generated_text = $response_data['result']['alternatives'][0]['message']['text'];
-            if (mb_stripos($generated_text, 'интеллект') !== false) {
-                return 'Простите, но Ваш вопрос представляет сложность. Нужно немного больше времени.';
-            }
             return $generated_text;
         }
         return 'Простите, я сейчас немного занят';
