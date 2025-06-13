@@ -9,6 +9,7 @@ use App\Models\AvitoChat;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 
 class AvitoBotController extends Controller
 {
@@ -16,12 +17,23 @@ class AvitoBotController extends Controller
     public function getmessage(Request $request)
     {
         try {
-            
+
             // Извлекаем необходимые поля с проверкой наличия
             $chatId = $request->input('payload.value.chat_id');
             $messageText = $request->input('payload.value.content.text');
             $authorId = (string)$request->input('payload.value.author_id');
-Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 1, 'pay' => $request->input('payload.value'), 'time' => now()]);
+            $messageId = $request->input('payload.value.id') ?? null;
+            // Проверяем, обработано ли уже это сообщение
+            if (Cache::has('avito_message_' . $messageId)) {
+                Log::info("Duplicate webhook ignored for message_id: $messageId");
+                return response()->json(['status' => 'success'], 200);
+            }
+
+            // Если сообщение разбито на части, можно сохранять части в кэш или БД и объединять, когда все получены
+            // Для простоты отметим, что сообщение обработано
+            Cache::put('avito_message_' . $messageId, true, 300);
+
+            Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 1, 'pay' => $request->input('payload.value'), 'time' => now()]);
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
             }
@@ -60,8 +72,8 @@ Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, '
                 // Записываем в файл (например, storage/app/data.json)
                 Storage::put('1.json', $content);
 
-                $answer = GptService::Answer($array_conversation);
-
+                //$answer = GptService::Answer($array_conversation);
+                $answer = "добрый день";
                 $filename = '4.json';
 
                 // Проверяем, существует ли файл
