@@ -65,7 +65,7 @@ class AvitoBotController extends Controller
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
-                Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
+                //Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -74,8 +74,8 @@ class AvitoBotController extends Controller
 
                 //$answer = GptService::Answer($array_conversation);
                 $answer = "добрый день";
-                $filename = '4.json';
 
+                $filename = '4.json';
                 // Проверяем, существует ли файл
                 if (Storage::exists($filename)) {
                     // Читаем текущее содержимое файла
@@ -83,10 +83,8 @@ class AvitoBotController extends Controller
                 } else {
                     $existingContent = '';
                 }
-
                 // Добавляем новый текст (например, с переводом строки)
                 $newContent = $existingContent . "\n" . $answer;
-
                 // Записываем обновлённое содержимое обратно в файл
                 Storage::put($filename, $newContent);
 
