@@ -23,6 +23,11 @@ class AvitoBotController extends Controller
             $messageText = $request->input('payload.value.content.text');
             $authorId = (string)$request->input('payload.value.author_id');
             $messageId = $request->input('payload.value.id') ?? null;
+
+
+            Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
+
+
             // Проверяем, обработано ли уже это сообщение
             if (Cache::has('avito_message_' . $messageId)) {
                 Log::info("Duplicate webhook ignored for message_id: $messageId");
@@ -33,7 +38,7 @@ class AvitoBotController extends Controller
             // Для простоты отметим, что сообщение обработано
             Cache::put('avito_message_' . $messageId, true, 300);
 
-           
+
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
             }
@@ -65,11 +70,9 @@ class AvitoBotController extends Controller
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
-                
-                
-                Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
-                
-                
+
+
+
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
