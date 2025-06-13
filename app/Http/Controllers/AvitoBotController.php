@@ -33,7 +33,7 @@ class AvitoBotController extends Controller
             // Для простоты отметим, что сообщение обработано
             Cache::put('avito_message_' . $messageId, true, 300);
 
-            Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 1, 'pay' => $request->input('payload.value'), 'time' => now()]);
+           
             if ($authorId === '320878714') {
                 return response()->json(['status' => 'success'], 200);
             }
@@ -65,7 +65,11 @@ class AvitoBotController extends Controller
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714') {
-                //Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
+                
+                
+                Log::info('getmessage called', ['chat_id' => $chatId, 'authorId' => $authorId, 'first' => 2, 'pay' => $request->input('payload.value'), 'time' => now()]);
+                
+                
                 $array_conversation = app(AvitoApiService::class)->getMessages($chatId, 320878714);
                 // Преобразуем массив в JSON-строку
                 $content = json_encode($array_conversation, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
