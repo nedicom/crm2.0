@@ -110,7 +110,6 @@ class GptService
             return 'Извините, ошибка взаимодействия с сервером. Мы скоро ее починим. Возможно завтра.';
         }
 
-
         $response_data = json_decode($result, true);
 
         if (
