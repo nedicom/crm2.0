@@ -18,11 +18,16 @@ use \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use App\Http\Controllers\CsvController;
 use App\Http\Controllers\YandexmapController;
 use App\Http\Controllers\AvitoBotController;
+use App\Http\Controllers\PromptController;
 
 
 Auth::routes();
 
 Route::post('/update-gpt-active', [AvitoBotController::class, 'updateGptActive']);
+Route::post('/prompt/store', [PromptController::class, 'store'])->name('prompt.store');
+Route::middleware('auth')->group(function () {
+    Route::post('/toggle-gpt', [PromptController::class, 'toggle'])->name('gpt.toggle');
+});
 
 Route::get('/verify/{token}', 'Auth\RegisterController@verify')->name('register.verify');
 

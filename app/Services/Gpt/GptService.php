@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Log;
 
 class GptService
 {
-    public static function Answer($array_conversation)
+    public static function Answer($array_conversation, $prompt)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://iam.api.cloud.yandex.net/iam/v1/tokens');
@@ -51,8 +51,7 @@ class GptService
             'messages' => [
                 [
                     'role' => 'system',
-                    'text' => 'Ты — мужчина специалист (юрист), который продает клиенту юридические услуги на Авито в чате. 
-                    Ответь коротко на вопрос пользователя.'
+                    'text' => 'Ты — специалист (юрист), который продает клиенту юридические услуги на Авито в чате. '.$prompt
                 ]
             ]
         ];
