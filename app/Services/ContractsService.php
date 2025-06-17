@@ -38,7 +38,7 @@ class ContractsService
         } else {
             $performer = env('COMPANY_NAME', 'Адвокатский кабинет Мина Марк Анатольевич');
             $psthxml = public_path('dogovor-template/document.xml');
-            $tmpFile = storage_path('app/public/dogovor/soglashenie.docx');  
+            $tmpFile = storage_path('app/public/dogovor/soglashenie.docx'); // /home/forge/crm.nedicom.ru/storage/app/public/dogovor/ip
         }
 
         $addressPerformer = env('COMPANY_ADDRESS', '295000, РФ, Респ. Крым, ул. Долгоруковская 5');
