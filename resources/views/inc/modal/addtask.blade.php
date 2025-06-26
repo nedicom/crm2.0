@@ -35,7 +35,7 @@
                         <div class="row">
                             <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала: <span class="text-danger">*</span></label>
-                                <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}" required>
+                                <input type="text" id="date" class="form-control" name="date" required>
                             </div>
                             <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span>

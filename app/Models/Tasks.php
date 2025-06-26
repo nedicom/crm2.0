@@ -58,6 +58,7 @@ class Tasks extends Model
 
     protected $guarded = [];
 
+
     protected function date(): Attribute
     {
         $weekMap = [1 => 'Понедельник', 2 => 'Вторник', 3 => 'Среда', 4 => 'Четерг', 5 => 'Пятница', 6 => 'Суббота', 7 => 'Воскресенье'];
@@ -72,7 +73,6 @@ class Tasks extends Model
                 'currentTime' => Carbon::parse($value)->format('H:i'),
                 'currentDay' => Carbon::parse($value)->format('j'),
                 'currentHour' => Carbon::parse($value)->format('H'),
-
             ],
         );
     }
@@ -84,7 +84,6 @@ class Tasks extends Model
      */
     public static function new(TasksRequest $request): self
     {
-
         $task = new self();
         $task->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', '_token']));
         $task->name = $request->nameoftask;
