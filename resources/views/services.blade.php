@@ -56,7 +56,6 @@
             $('.btn-edit-service').on('click', function (e) {
                 e.preventDefault();
                 var url = $(this).attr('data-url');
-
                 $.ajax({
                     method: "POST",
                     url: url,

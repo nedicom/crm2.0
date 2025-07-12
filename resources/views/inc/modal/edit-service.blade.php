@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class ="modal-header">
-                <h2>Изменить дело</h2>
+                <h2>Изменить услугу</h2>
             </div>
             <div class ="modal-body d-flex justify-content-center">
                 <!-- Generate content from ajax request (view: _part_edit_service) -->

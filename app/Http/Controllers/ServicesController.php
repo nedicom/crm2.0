@@ -112,6 +112,7 @@ class ServicesController extends Controller
             'success' => true,
             'id' => $service->id,
             'name' => $service->name,
+            'service_type' => $service->service_type,
             'duration' => [
                 'hours' => $duration['hours'],
                 'minutes' => $duration['minutes'],

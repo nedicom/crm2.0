@@ -11,4 +11,6 @@ enum Type: string
     case Consultation = 'консультация';
     case Control = 'контроль';
     case Sending = 'отправка';
+    case Payment = 'платеж';
+    case Review = 'отзыв';
 }
