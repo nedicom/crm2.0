@@ -27,7 +27,7 @@ class ServicesRequest extends FormRequest
             'price' => 'required|numeric',
             'name' => 'required|string|max:255',
             'execution_time.*' => 'nullable|numeric',
-            'description' => 'nullable|string|max:500',
+            'description' => 'nullable|string|max:1000',
             'url_disk' => 'nullable|url',
         ];
     }
