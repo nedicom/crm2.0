@@ -104,7 +104,7 @@
                                                 @if (Auth::user()->id == $el->id) checked @endif style="display:none;">
                                             <label class="form-check-label" for="lawyer{{ $el->id }}"
                                                 style="cursor: pointer;">
-                                                <img src="https://crm.nedicom.ru/{{ $el->avatar && file_exists(public_path($el->avatar)) ? $el->avatar : 'avatars/VwUQrsFZYI66e4foI0NFbDkX2QpJBfGcSFD9g6LO.png'}}"
+                                                <img src="https://crm.nedicom.ru/{{ $el->avatar && file_exists(public_path($el->avatar)) ? $el->avatar : 'avatars/VwUQrsFZYI66e4foI0NFbDkX2QpJBfGcSFD9g6LO.png' }}"
                                                     alt="{{ $el->name }}" class="rounded-circle"
                                                     style="width:40px; height:40px; object-fit: cover; border: 2px solid transparent;">
                                             </label>
@@ -134,7 +134,7 @@
                                     @endforeach
                                 </select>
                             </div>
-                                                        <div class="col-md-3 form-group mb-3 hideme">
+                            <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="tag">Сделайте отметку</label>
                                 <select class="form-select" name="tag" id="tag">
                                     <option value="неважно">неважно</option>
@@ -198,33 +198,32 @@
 </div>
 
 <script>
-   document.addEventListener('DOMContentLoaded', function() {
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
 
-    const inputs = document.querySelectorAll('input[name="lawyer"]');
-    inputs.forEach(input => {
-        input.addEventListener('change', () => {
-            inputs.forEach(i => {
-                const img = i.nextElementSibling.querySelector('img');
-                if (i.checked) {
-                    img.style.borderColor = '#0d6efd'; // Bootstrap primary color
-                } else {
-                    img.style.borderColor = 'transparent';
-                }
+        const inputs = document.querySelectorAll('input[name="lawyer"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                inputs.forEach(i => {
+                    const img = i.nextElementSibling.querySelector('img');
+                    if (i.checked) {
+                        img.style.borderColor = '#0d6efd'; // Bootstrap primary color
+                    } else {
+                        img.style.borderColor = 'transparent';
+                    }
+                });
             });
         });
-    });
 
-    // Начальная подсветка
-    inputs.forEach(i => {
-        const img = i.nextElementSibling.querySelector('img');
-        if (i.checked) {
-            img.style.borderColor = '#0d6efd';
-        }
+        // Начальная подсветка
+        inputs.forEach(i => {
+            const img = i.nextElementSibling.querySelector('img');
+            if (i.checked) {
+                img.style.borderColor = '#0d6efd';
+            }
+        });
     });
-});
-
 </script>

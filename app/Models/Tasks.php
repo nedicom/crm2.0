@@ -141,9 +141,12 @@ class Tasks extends Model
      */
     public function edit(TasksRequest $request): void
     {
-        $this->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', 'lawyer_agree', 'sales_agree', '_token', 'status']));
+        $this->fill($request->except(['nameoftask', 'clientidinput', 'deals', 'payID', 'payClient', 'lawyer_agree', 'sales_agree', '_token', 'status', 'lawyer']));
         $this->name = $request->nameoftask;
         $this->clientid = $request->clientidinput;
+        if ($request->has('lawyer')) {
+            $this->lawyer = $request->input('lawyer');
+        }
         $this->deal_id = ($request->deals !== null) ? $request->deals : null;
         $this->setDuration($request->input('duration'));
         $this->setAgreed($request);

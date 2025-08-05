@@ -79,12 +79,70 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 form-group mb-3">
+                            <div class="col-md-9 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
                                 <input type = "text" name="client" id="client" value="{{ $data->client }}"
                                     class="form-control">
                                 <div id="clientList">
                                 </div>
+                            </div>
+
+                            <div class="col-md-3 form-group mb-3">
+                                <label for="status">Cтатус</label>
+                                {!! \App\Helpers\TaskHelper::statusList($data, $data->isOverdueAtDepartment()) !!}
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="form-group mb-3">
+                                <label for="lawyer">Укажите исполнителя <span class="text-danger">*</span></label>
+                                <div id="lawyer" class="d-flex flex-wrap gap-1">
+                                    @foreach ($datalawyers as $el)
+                                        <div class="form-check" style="position: relative;" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="{{ $el->name }}">
+                                            <input class="form-check-input" type="radio" name="lawyer"
+                                                id="lawyer{{ $el->id }}" value="{{ $el->id }}"
+                                                @if (isset($data) && $data->lawyer == $el->id) checked
+                           @elseif(!isset($data) && Auth::user()->id == $el->id) checked @endif
+                                                style="display:none;">
+                                            <label class="form-check-label" for="lawyer{{ $el->id }}"
+                                                style="cursor: pointer;">
+                                                <img src="https://crm.nedicom.ru/{{ $el->avatar && file_exists(public_path($el->avatar)) ? $el->avatar : 'avatars/VwUQrsFZYI66e4foI0NFbDkX2QpJBfGcSFD9g6LO.png' }}"
+                                                    alt="{{ $el->name }}" class="rounded-circle"
+                                                    style="width:40px; height:40px; object-fit: cover; border: 2px solid transparent;">
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row">
+                            <div class="col-md-4 form-group mb-3">
+                                <label for="type">Тип</label>
+                                <select class="form-select" name="type" id="type">
+                                    @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
+                                        <option value="{{ $type->value }}"
+                                            @if ($data->type == $type->value) selected @endif>{{ $type->value }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 form-group mb-3">
+                                <label for="soispolintel">соИсполнитель</label>
+                                <select class="form-select" name="soispolintel" id="soispolintel"
+                                    class="form-control">
+                                    @foreach ($datalawyers as $el)
+                                        <option value="{{ $el->id }}"
+                                            @if ($data->soispolintel == $el->id) selected @endif>{{ $el->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-md-3 form-group mb-3">
                                 <label for="tag">Отметка</label>
@@ -97,43 +155,6 @@
                                     </option>
                                     <option value="приоритет" @if ($data->tag == 'приоритет') selected @endif>
                                         приоритет</option>
-                                </select>
-                            </div>
-                            <div class="col-md-3 form-group mb-3">
-                                <label for="status">Cтатус</label>
-                                {!! \App\Helpers\TaskHelper::statusList($data, $data->isOverdueAtDepartment()) !!}
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="type">Тип</label>
-                                <select class="form-select" name="type" id="type">
-                                    @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
-                                        <option value="{{ $type->value }}"
-                                            @if ($data->type == $type->value) selected @endif>{{ $type->value }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="lawyer">Исполнитель<span class="text-danger">*</span></label>
-                                <select class="form-select" name="lawyer" id="lawyer" class="form-control">
-                                    @foreach ($datalawyers as $el)
-                                        <option value="{{ $el->id }}"
-                                            @if ($data->lawyer == $el->id) selected @endif>{{ $el->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="soispolintel">соИсполнитель</label>
-                                <select class="form-select" name="soispolintel" id="soispolintel"
-                                    class="form-control">
-                                    @foreach ($datalawyers as $el)
-                                        <option value="{{ $el->id }}"
-                                            @if ($data->soispolintel == $el->id) selected @endif>{{ $el->name }}
-                                        </option>
-                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -196,3 +217,38 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Инициализация тултипов Bootstrap
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        const inputs = document.querySelectorAll('input[name="lawyer"]');
+
+        // Функция для обновления подсветки рамок у картинок
+        function updateHighlight() {
+            inputs.forEach(i => {
+                const img = document.querySelector('label[for="' + i.id + '"] img');
+                if (i.checked) {
+                    img.style.borderColor = '#0d6efd'; // Bootstrap primary color
+                } else {
+                    img.style.borderColor = 'transparent';
+                }
+            });
+        }
+
+        // Изначальная подсветка при загрузке страницы
+        updateHighlight();
+
+        // Обработчик смены выбора
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                updateHighlight();
+            });
+        });
+    });
+</script>
