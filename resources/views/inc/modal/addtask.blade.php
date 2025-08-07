@@ -210,7 +210,7 @@
                 inputs.forEach(i => {
                     const img = i.nextElementSibling.querySelector('img');
                     if (i.checked) {
-                        img.style.borderColor = '#0d6efd'; // Bootstrap primary color
+                        img.style.borderColor = '#fd0d0d'; // Bootstrap primary color
                     } else {
                         img.style.borderColor = 'transparent';
                     }
@@ -222,7 +222,7 @@
         inputs.forEach(i => {
             const img = i.nextElementSibling.querySelector('img');
             if (i.checked) {
-                img.style.borderColor = '#0d6efd';
+                img.style.borderColor = '#fd0d0d';
             }
         });
     });

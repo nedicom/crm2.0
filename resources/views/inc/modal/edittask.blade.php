@@ -234,7 +234,7 @@
             inputs.forEach(i => {
                 const img = document.querySelector('label[for="' + i.id + '"] img');
                 if (i.checked) {
-                    img.style.borderColor = '#0d6efd'; // Bootstrap primary color
+                    img.style.borderColor = '#fd0d0d'; // Bootstrap primary color
                 } else {
                     img.style.borderColor = 'transparent';
                 }
