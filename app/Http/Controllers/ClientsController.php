@@ -69,7 +69,7 @@ class ClientsController extends Controller
 
     public function show(int $id)
     {
-        $client =  $this->repository->findById($id);       
+        $client =  $this->repository->findById($id);
 
         return view('clients/clientbyid', [
             'data' => $client,
@@ -96,31 +96,41 @@ class ClientsController extends Controller
         }
 
         $client->saveOrFail();
-        //dd($client);
+
         //добавляем в лиды с тем же телефоном id клиента
         if ($client->id) {
             //и id первого лида в клиента
             if (Leads::where('phone', 'like', '%' . $client->phone . '%')->first()) {
-                Leads::where('phone', 'like', '%' . $client->phone . '%')->update(['client_id' => $client->id, 'status' => Status::Converted->value]);
+                Leads::where('phone', 'like', '%' . $client->phone . '%')->update([
+                    'client_id' => $client->id,
+                    'name' => $client->name,
+                    'description' => $client->description,
+                    'phone' => $client->phone,
+                    'status' => Status::Converted->value,
+                    'city_id' => $client->city_id,
+                    'description' => $client->description,
+                    'casettype' => $client->casettype,
+                    'source' => $client->source,
+                ]);
                 ClientsModel::where('id', $client->id)->update(['lead_id' => Leads::where('phone', 'like', '%' . $client->phone . '%')->first()->id]);
                 return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен, лид обновлен');
-            }
-            else{
+            } else {
                 $lead = new Leads();
                 $lead->name = $client->name;
                 $lead->source = $client->source;
+                $lead->casettype = $client->casettype;
                 $lead->description = 'лид создан из клиента';
                 $lead->phone = $client->phone;
                 $lead->lawyer = $client->lawyer;
                 $lead->responsible = $client->lawyer;
                 $lead->city_id = $client->city_id;
                 $lead->service = 11;
-                $lead->status = 'конвертирован';        
+                $lead->status = 'конвертирован';
                 $lead->save();
 
                 ClientsModel::where('id', $client->id)->update(['lead_id' => $lead->id]);
                 return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен, лид создан');
-            }            
+            }
         }
 
         return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент добавлен');
@@ -128,13 +138,33 @@ class ClientsController extends Controller
 
     public function update(int $id, ClientsRequest $request)
     {
-        $client = ClientsModel::find($id);        
+        $client = ClientsModel::find($id);
+
+        if (!$client) {
+            return redirect()->back()->withErrors(['Клиент не найден']);
+        }
+
         $client->edit($request);
         if (!$request->status) {
             $client->status = null;
         };
-        
+
         $client->save();
+
+        if (Leads::where('phone', 'like', '%' . $client->phone . '%')->first()) {
+            Leads::where('phone', 'like', '%' . $client->phone . '%')->update([
+                'client_id' => $client->id,
+                'name' => $client->name,
+                'description' => $client->description,
+                'phone' => $client->phone,
+                'status' => Status::Converted->value,
+                'city_id' => $client->city_id,
+                'description' => $client->description,
+                'casettype' => $client->casettype,
+                'source' => $client->source,
+            ]);
+            return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент и лид обновлен, лид обновлен');
+        }
 
         return redirect()->route('showClientById', $id)->with('success', 'Все в порядке, клиент обновлен');
     }
