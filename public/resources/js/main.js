@@ -138,6 +138,14 @@ $(document).ready(function () {
 
     // Выбор клиента из выпадающего списка в форме Задачи
     $(document).on('click', '.clientAJAX', function () {
+        let consultValue = $(this).attr('consult');
+        let attractValue = $(this).attr('attract');
+        if (consultValue != null && consultValue !== '') {
+            $('#nameOfSeller').val(consultValue);
+        }
+        if (attractValue != null && attractValue !== '') {
+            $('#nameOfAttractioner').val(attractValue);
+        }
         $('#clientidinput').val($(this).val());
         $('#client').val($(this).text());
         $('#clientList').fadeOut();

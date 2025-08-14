@@ -106,6 +106,8 @@ class ClientsController extends Controller
                     'name' => $client->name,
                     'description' => $client->description,
                     'phone' => $client->phone,
+                    'lawyer' => 41,
+                    'responsible' => $client->attract,
                     'status' => Status::Converted->value,
                     'city_id' => $client->city_id,
                     'description' => $client->description,
@@ -121,7 +123,7 @@ class ClientsController extends Controller
                 $lead->casettype = $client->casettype;
                 $lead->description = 'лид создан из клиента';
                 $lead->phone = $client->phone;
-                $lead->lawyer = $client->lawyer;
+                $lead->lawyer = 41;
                 $lead->responsible = $client->lawyer;
                 $lead->city_id = $client->city_id;
                 $lead->service = 11;

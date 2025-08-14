@@ -6,8 +6,7 @@
 
 @section('head')
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
-        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
-    </script>
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
         integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="/resources/datetimepicker/jquery.datetimepicker.css">
@@ -29,7 +28,28 @@
     <div class="row">
         <div class='col-md-4 col-12 my-3'>
             <div class='card border-light shadow'>
-                <div class='d-inline-flex justify-content-end px-2'>
+
+                <div class='d-inline-flex justify-content-between px-2'>
+                    <div class='d-inline-flex py-1'>
+                        @if ($data->userFunc)
+                            <img src="https://crm.nedicom.ru{{ $data->userFunc->avatar }}" class="rounded-circle m-1"
+                                style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="юрист - {{ $data->userFunc->name }}">
+                        @endif
+
+                        @if ($data->consultFunc)
+                            <img src="https://crm.nedicom.ru{{ $data->consultFunc->avatar }}" class="rounded-circle m-1"
+                                style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="консультант - {{ $data->consultFunc->name }}">
+                        @endif
+
+                        @if ($data->attractFunc)
+                            <img src="https://crm.nedicom.ru{{ $data->attractFunc->avatar }}" class="rounded-circle m-1"
+                                style="width:30px;height:30px" data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="привлек - {{ $data->attractFunc->name }}">
+                        @endif
+                    </div>
+
                     @if ($data->status == 1)
                         <i class="bi bi-circle-fill" style="color: #0acf97;"></i>
                     @else
@@ -38,32 +58,35 @@
                 </div>
                 <div class="text-center">
                     <h5 class="mb-2 px-3 text-muted">{{ $data->name }}</h5>
-                    <p class="mb-0 text-muted">{{ $data->phone }}</p>
-                    <p class="mb-0 text-muted">идентификатор - {{ $data->id }}</p>
-                    <p class="mb-0 text-muted">{{ $data->email }}</p>
-                    @if ($data->userFunc)
-                        <p class="mb-0 text-muted">закреплен за: </br>{{ $data->userFunc->name }}</p>
+                    <h5 class="mb-0 text-muted">{{ $data->phone }}</h5>
+
+                    @if (!empty($data->email) && $data->email !== 'empty@empty.ru')
+                        <p class="mb-0 text-muted"><strong>{{ $data->email }}</strong></p>
                     @endif
+
                     @if ($data->city)
-                        <p class="mb-0 text-muted">город: </br><strong>{{ $data->city->city }}</strong></p>
+                        <p class="mb-0 text-muted">{{ $data->city->city }}</p>
                     @endif
                     @if ($data->created_at)
-                        <p class="mb-0 text-muted">Создан: </br><strong>{{ $data->created_at }}</strong></p>
+                        <p class="mb-0 text-muted">Создан: <strong>{{ $data->created_at->format('Y-m-d') }}</strong></p>
                     @endif
-                    <p class="mb-0 text-muted">Код telegram: @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer)
+                    <p class="mb-0 text-muted">
+                        @if (auth()->user()->role == 'admin' || auth()->user()->id == $data->lawyer)
+                            Код telegram:
                             {{ $data->tgid }}
+                            <p class="mb-0 text-muted text-xs">id: {{ $data->id }}</p>
                         @else
-                            скрыто
                         @endif
                     </p>
-                    <p class="my-3 text-muted">описание: {{ $data->description }}</p>
+
+                    <p class="my-3 text-muted">{{ $data->description }}</p>
                     @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role == 'head_sales')
                         <p class="my-3 text-muted">договор: @foreach ($dogovors as $dogovor)
                                 <a href="/{{ $dogovor->url }}">{{ $dogovor->name }}</a></br>
                             @endforeach
                         </p>
                     @endif
-                    <p class="mb-0 text-muted">тип: {{ $data->casettype }}</p>
+                    <p class="mb-0 text-muted">{{ $data->casettype }}</p>
                     @if ($data->url)
                         <div class="d-flex justify-content-center">
                             <div class="my-3">
@@ -138,8 +161,8 @@
                                         @if ($task->id == $paytask->task_id)
                                             @if (!auth()->user()->role == 'admin')
                                                 <i class="bi bi-clipboard-heart"
-                                                    style="font-size: 2rem; color: cornflowerblue;" data-bs-toggle="tooltip"
-                                                    data-bs-title="оплачена"></i>
+                                                    style="font-size: 2rem; color: cornflowerblue;"
+                                                    data-bs-toggle="tooltip" data-bs-title="оплачена"></i>
                                             @else
                                                 <a href="/payments/{{ $paytask->payment_id }}" target="_blank">
                                                     <i class="bi bi-clipboard-heart"
