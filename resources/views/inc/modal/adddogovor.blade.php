@@ -54,7 +54,7 @@
                             <div class="form-group mb-3">
                                 <label for="name">Укажите название<span class="text-danger">*</span></label>
                                 <input type = "text" name="name" placeholder="Мой самый успешный договор"
-                                    id="name" value="{{ old('name') }}" class="form-control" required>
+                                    id="name" value="{{ old('name') }}" class="form-control" maxlength="55" required>
                                 <div id="name" class="form-text">Название поможет Вам найти договор в общем списке
                                 </div>
                             </div>

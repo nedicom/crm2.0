@@ -18,5 +18,6 @@ enum Type: string
     case Energy = 'Крымэнерго';
     case Migration = 'Миграционный';
     case Customers = 'Потребительский';
+    case Bussines = 'Сопровождение';
     case Dontknow = 'Другой';
 }
