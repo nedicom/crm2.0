@@ -25,6 +25,8 @@ class LeadService
 
         if (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::CLIENTS_TABLE_NAME)) !== null) {
             /** @var ClientsModel $client */
+            
+            /* do nothing
             $client = ClientsModel::find($id);
             $clientName = $client->name;
             $source = 'существующий клиент';
@@ -32,6 +34,7 @@ class LeadService
             $lead = Leads::newFromServiceMyCalls($valueObject, $clientName, $source);
             $lead->save();
             LeadTg::SendleadTg($lead);
+            */
 
         } elseif (($id = $this->checkExistsPhone($valueObject->getFormatClientPhone(), static::LEAD_TABLE_NAME)) !== null) {
             $task = new Tasks;

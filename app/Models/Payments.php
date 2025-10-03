@@ -51,7 +51,7 @@ class Payments extends Model
 
         $this->nameOfAttractioner = $request->input('nameOfAttractioner');
         $this->nameOfSeller = $request->input('nameOfSeller');
-        $this->directionDevelopment = $request->input('directionDevelopment');
+        $this->directionDevelopment = 41;
         $this->firmearning = ($summ - $this->SallerSalary - $this->AttaractionerSalary
             - $this->DeveloperSalary - $this->modifyAttraction - $this->modifySeller);
     }

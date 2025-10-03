@@ -1,15 +1,15 @@
-$(document).ready(function() {
+$(document).ready(function () {
     // При клике на кнопку 'Добавить дело'
     // берем значения аттрибутов (имя клиента, id клиента) и подставляем по умолчанию в input text, input hidden
-    $(".addDeal").on('click', function() {
+    $(".addDeal").on('click', function () {
         var clientId = $(this).attr('data-client-id');
         document.getElementById("clientId").value = clientId;
     });
 
-    
+
     // При клике на кнопку 'Добавить задачу' из раздела 'Клиенты'
     // берем значения аттрибутов (имя клиента, id клиента) и подставляем по умолчанию в input text, input hidden
-    $(".nameToForm").click(function(el) {
+    $(".nameToForm").click(function (el) {
         // Заполнение формы при создании задачи
         if (!$(this).hasClass('edit')) {
             fillForm($(this));
@@ -17,8 +17,8 @@ $(document).ready(function() {
 
         if ($(this).hasClass('lead')) {
             var leadIdValue = $(this).attr('data-lead-id');
-//
-            document.getElementById('lead_id').value = leadIdValue; 
+            //
+            document.getElementById('lead_id').value = leadIdValue;
 
             //var TaskType = $(this).attr('data-type');
             //document.getElementById('tasktype').value = TaskType;
@@ -39,7 +39,7 @@ $(document).ready(function() {
             $.ajax({
                 url: "/tasks/get-deals",
                 method: "POST",
-                data: {clientId: clientIdValue, taskId: taskIdValue},
+                data: { clientId: clientIdValue, taskId: taskIdValue },
                 success: function (data) {
                     $('.list-deals-block').html(data);
                 }
@@ -49,9 +49,20 @@ $(document).ready(function() {
 
     // Заполнение полей формы в модальном окне "Добавить задачу" в разделе Клиенты
     function fillForm(element) {
-        var type = element.attr('data-type');        
+        let type = element.attr('data-type');
+        let dataClient = element.attr('data-client');
+        let dataClientId = element.attr('data-value-id');
+
+        const clientElement = document.getElementById("client");
+        clientElement ? clientElement.value = dataClient : console.warn('Элемент с id="client" не найден');
+
+        const clientIdElement = document.getElementById("clientidinput");
+        clientIdElement ? clientIdElement.value = dataClientId : console.warn('Элемент с id="clientidinput" не найден');
+
+        const tasktypeElement = document.getElementById("tasktype");
+        tasktypeElement ? tasktypeElement.value = type : console.warn('Элемент с id="tasktype" не найден');
+
         document.getElementById("taskname").innerHTML = type;
-        document.getElementById("tasktype").value = type;
         document.getElementById("nameoftask").value = type;
         document.getElementById("type").value = type;
         var collection = document.getElementsByClassName("hideme")
@@ -64,7 +75,7 @@ $(document).ready(function() {
         var now = new Date();
         now.setHours(23);
         now.setMinutes(00);
-        document.getElementById("date").value = now.toISOString().slice(0,16);
+        document.getElementById("date").value = now.toISOString().slice(0, 16);
     }
 
     $('[data-toggle="tooltip"]').tooltip();
@@ -92,8 +103,8 @@ $(document).ready(function() {
         jQuery.datetimepicker.setLocale('ru');
         $('input#date').datetimepicker({
             step: 15, //more useful for lawyers
-            minTime:'8:00',
-            maxTime:'22:00',
+            minTime: '8:00',
+            maxTime: '22:00',
             mask: true,
         });
     }
@@ -102,21 +113,21 @@ $(document).ready(function() {
         jQuery.datetimepicker.setLocale('ru');
         $('input#dateedittask').datetimepicker({
             step: 15, //more useful for lawyers
-            minTime:'8:00',
-            maxTime:'22:00',
+            minTime: '8:00',
+            maxTime: '22:00',
         });
     }
 
     // Подгрузка списка клиентов при клике на поле "Клиент" у формы Задач
-    $('#client').keyup(function() {
+    $('#client').keyup(function () {
         var query = $(this).val();
         var quantity = $(this).val().length;
 
-        if(quantity > 2) {
+        if (quantity > 2) {
             $.ajax({
                 url: "/getclient",
                 method: "POST",
-                data: {query:query},
+                data: { query: query },
                 success: function (data) {
                     $('#clientList').fadeIn();
                     $('#clientList').html(data);
@@ -126,23 +137,31 @@ $(document).ready(function() {
     });
 
     // Выбор клиента из выпадающего списка в форме Задачи
-    $(document).on('click', '.clientAJAX', function() {
+    $(document).on('click', '.clientAJAX', function () {
+        let consultValue = $(this).attr('consult');
+        let attractValue = $(this).attr('attract');
+        if (consultValue != null && consultValue !== '') {
+            $('#nameOfSeller').val(consultValue);
+        }
+        if (attractValue != null && attractValue !== '') {
+            $('#nameOfAttractioner').val(attractValue);
+        }
         $('#clientidinput').val($(this).val());
         $('#client').val($(this).text());
         $('#clientList').fadeOut();
     });
 
     // Подгрузка списка платежей при клике на поле "Выбор платежа" у формы Задач
-    $(document).on('keyup', '.payment-input', function() {
+    $(document).on('keyup', '.payment-input', function () {
         var query = $(this).val();
         var quantity = $(this).val().length;
         var elem = $(this);
 
-        if(quantity > 2) {
+        if (quantity > 2) {
             $.ajax({
                 url: "/payments/list/ajax",
                 method: "POST",
-                data: {query: query},
+                data: { query: query },
                 success: function (data) {
                     var list = elem.parents($('.paymentsIndex')).children('.paymentsList');
                     list.fadeIn();
@@ -153,7 +172,7 @@ $(document).ready(function() {
     });
 
     // Динамические поля платежей
-    $("#add-payment").on('click', function() {
+    $("#add-payment").on('click', function () {
         $("#paymentsTable").append('<tr><td width="300">' +
             '<div class="payment-input-block">' +
             '<input type="text" name="payClient[]" placeholder="Введите имя клиента" class="payment-input form-control" />' +
@@ -167,12 +186,12 @@ $(document).ready(function() {
     });
 
     // Удаление в таблице строки платежа
-    $(document).on('click', '.remove-tr', function() {
+    $(document).on('click', '.remove-tr', function () {
         $(this).parents('tr').remove();
     });
 
     // Выбор платежа из выпадающего списка в форме Задачи
-    $(document).on('click', '.paymentIndex', function() {
+    $(document).on('click', '.paymentIndex', function () {
         var parent = $(this).parents($('.payment-input-block'));
         parent.children('.payment-id').val($(this).attr('data-payment-id'));
         parent.children('input.payment-input').val($(this).find($('.name-client')).text());
@@ -181,13 +200,13 @@ $(document).ready(function() {
     });
 
     // Подгрузка списка услуг при клике на поле "Название задачи" у формы Задач
-    $(document).on('keyup', '.field-name-task', function() {
+    $(document).on('keyup', '.field-name-task', function () {
         var value = $(this).val();
 
         if (value.length >= 3) {
             $.ajax({
                 url: "/services/ajax/list",
-                data: {query: value},
+                data: { query: value },
                 method: "GET",
                 success: function (data) {
                     var list = $('.popup-list-services');
@@ -199,13 +218,13 @@ $(document).ready(function() {
     });
 
     // Выбор услуги из выпадающего списка в форме Задачи
-    $(document).on('click', '.serviceIndex', function() {
+    $(document).on('click', '.serviceIndex', function () {
         var valueId = $(this).attr('data-service-id');
-
+        const select = document.getElementById('type');
         $.ajax({
             url: "/services/ajax/element",
             method: "POST",
-            data: {serviceId: valueId},
+            data: { serviceId: valueId },
             success: function (data) {
                 if (data.success) {
                     $('.taskModal input[name="service_id"]').val(data.id);
@@ -215,6 +234,8 @@ $(document).ready(function() {
                         $('.taskModal input[name="duration[hours]"]').val(data.duration.hours);
                         $('.taskModal input[name="duration[minutes]"]').val(data.duration.minutes);
                     }
+                    $('.taskModal select[name="type"]').val(data.service_type).change();
+                    $('.taskModal input[name="nameoftask"]').val(data.name);
                 } else {
                     $('.taskModal .service_ref_name').text(data.message).css('color', 'red');
                 }
@@ -228,7 +249,7 @@ $(document).ready(function() {
 
     // Скрыть выпадающие список услуг в форме Задач
     $(document).on('click', '.popup-list-services .close', function () {
-       $(this).parent($('.popup-list-services')).fadeOut();
+        $(this).parent($('.popup-list-services')).fadeOut();
     })
 });
 

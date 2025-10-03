@@ -30,8 +30,18 @@ class TaskRepository
         $query = Tasks::select("*");
         if ($request->input('calendar') !== null && $request->input('calendar') !== DateInterval::AllTime->name)
             $query = $this->betweenDate($query, $request);
-        if ($request->input('checkedlawyer')) $query->where('lawyer', '=', $request->input('checkedlawyer'));
+        if ($request->input('checkedlawyer')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('lawyer', '=', $request->input('checkedlawyer'))
+                    ->orWhere('postanovshik', '=', $request->input('checkedlawyer'));
+            });
+            $query->orderByRaw(
+                "CASE WHEN lawyer = ? THEN 0 ELSE 1 END",
+                [$request->input('checkedlawyer')]
+            );
+        }
         if ($request->input('type')) $query->where('type', '=', $request->input('type'));
+
         $query->orderBy('date');
         return $query;
     }
@@ -46,7 +56,7 @@ class TaskRepository
     {
         $month = ($request->input('months')) ? ($request->input('months')) : ((Carbon::now()->month) - 1);
 
-        return match($request->input('calendar')) {
+        return match ($request->input('calendar')) {
             DateInterval::Yesterday->name => $query->whereBetween('date', [Carbon::yesterday()->startOfDay(), Carbon::yesterday()->endOfDay()]),
             DateInterval::Today->name => $query->whereBetween('date', [Carbon::today()->startOfDay(), Carbon::today()->endOfDay()]),
             DateInterval::Tomorrow->name => $query->whereBetween('date', [Carbon::tomorrow()->startOfDay(), Carbon::tomorrow()->endOfDay()]),

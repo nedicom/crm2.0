@@ -14,7 +14,7 @@ class TaskDeleted
     public Tasks $task;
 
     public function __construct(Tasks $task)
-    {
+    {        
         $this->task = $task;
     }
 }

@@ -8,8 +8,9 @@ use Eluceo\iCal\Domain\Enum\EventStatus;
 use Eluceo\iCal\Domain\ValueObject\UniqueIdentifier;
 use Eluceo\iCal\Domain\ValueObject\TimeSpan;
 use Eluceo\iCal\Presentation\Factory\CalendarFactory;
-use Eluceo\iCal\Domain\ValueObject\DateTime;
+use Eluceo\iCal\Domain\ValueObject\DateTime as iCalDateTime;
 use App\Models\Tasks;
+use Carbon\Carbon;
 
 final class GenerateCalendar
 {
@@ -31,7 +32,7 @@ final class GenerateCalendar
         /** @var Tasks $element */
         // Записываем предыдущие задачи
         if ($tasks) {
-            foreach ($tasks as $element) {                
+            foreach ($tasks as $element) {
                 if ($element->id !== $task->id) {
                     //if($task->date['value'] == true){
                     $events[] = $this->createEvent($element);
@@ -54,7 +55,6 @@ final class GenerateCalendar
                 mkdir($dir, 0777, true);
             }
             file_put_contents($dir . "/calendar.ics", (string) $calendarComponent);
-            
         }
     }
 
@@ -66,6 +66,7 @@ final class GenerateCalendar
      */
     private function createEvent(Tasks $task, bool $updateUid = false): Event
     {
+
         $eventUid = md5('task-' . $task->lawyer . '-' . $task->id);
         $uniqueIdentifier = new UniqueIdentifier($eventUid);
         // Обновляем calendar_uid
@@ -73,16 +74,37 @@ final class GenerateCalendar
         $description = (!empty($task->description)) ? $task->description : 'Описание отсувствует';
         //dd(new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  (string) $task->date['value']), true));
         // Создаем сущность домена события
-        $dateStart = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  (string) $task->date['value']), false);
-        $dateEnd = new DateTime(\DateTimeImmutable::createFromFormat('Y-m-d H:i',  $task->date['rawValue']->addMinutes($task->duration)->format('Y-m-d H:i')), false);
-        $event = (new Event($uniqueIdentifier))
-            ->setStatus(EventStatus::CONFIRMED())
-            ->setSummary($task->name)
-            ->setDescription($description)
-            ->setOccurrence(
-                new TimeSpan($dateStart, $dateEnd)
-            );
 
-        return $event;
+        // Получаем исходную дату
+        $ourdate = $task->getRawOriginal('date') ?? null;
+        if (!$ourdate) {
+            throw new \Exception('Дата отсутствует');
+        }
+
+        // Создаём объект Carbon из строки
+        try {
+            $startDate = Carbon::parse($ourdate);
+            $endDate = (clone $startDate)->addMinutes($task->duration);
+
+            // Создаем объекты DateTimeImmutable
+            $dateTimeStart = \DateTimeImmutable::createFromMutable($startDate->toDateTime());
+            $dateTimeEnd = \DateTimeImmutable::createFromMutable($endDate->toDateTime());
+
+            // Создаем объекты DateTime для iCal
+            $iCalDateStart = new iCalDateTime($dateTimeStart, false);
+            $iCalDateEnd = new iCalDateTime($dateTimeEnd, false);
+
+            $event = (new Event($uniqueIdentifier))
+                ->setStatus(EventStatus::CONFIRMED())
+                ->setSummary($task->name)
+                ->setDescription($description)
+                ->setOccurrence(
+                    new TimeSpan($iCalDateStart, $iCalDateEnd)
+                );
+
+            return $event;
+        } catch (\Exception $e) {
+            throw new \Exception('Ошибка при создании события: ' . $e->getMessage());
+        }
     }
 }

@@ -35,4 +35,9 @@ return [
         'username' => env('MY_CALLS_USERNAME'),
         'api_key' => env('MY_CALLS_API_KEY'),
     ],
+    'avito' => [
+        'client_id' => env('AVITO_CLIENT_ID'),
+        'client_secret' => env('AVITO_CLIENT_SECRET'),
+    ],
+
 ];

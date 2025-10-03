@@ -6,12 +6,13 @@
             </div>
             <div class ="modal-body d-flex justify-content-center">
                 <div class ="col-10">
-                    <form action="{{route('addtask')}}" autocomplete="off" method="post">
+                    <form action="{{ route('addtask') }}" autocomplete="off" method="post">
                         @csrf
                         <div class="form-group mb-3 hideme">
                             <label for="nameoftask">Укажите название задачи <span class="text-danger">*</span></label>
-                            <input type="text" name="nameoftask" placeholder="Получить решение по делу" value="{{ old('nameoftask') }}"
-                                id="nameoftask" class="field-name-task form-control" required>
+                            <input type="text" name="nameoftask" placeholder="Получить решение по делу"
+                                value="{{ old('nameoftask') }}" id="nameoftask" class="field-name-task form-control"
+                                required>
                             <!-- Связанная услуга -->
                             <span style="display: none" class="service_ref_name">
                                 <strong style="color: red;">Закрепленная услуга: </strong>
@@ -25,58 +26,60 @@
                         </div>
                         <div class="form-group mb-3">
                             <label for="description">Описание</label>
-                            <textarea rows="3" name="description" placeholder="Немного подробнее, если это нужно" id="description" class="form-control">{{ old('description') }}</textarea>
+                            <textarea rows="3" name="description" placeholder="Немного подробнее, если это нужно" id="description"
+                                class="form-control">{{ old('description') }}</textarea>
                         </div>
                         <div class="form-group mb-3 hideme">
                             <label for="name">Яндекс-диск</label>
-                            <input type="url" name="hrftodcm" placeholder="https://disk.yandex.ru" id="hrftodcm" class="form-control">
+                            <input type="url" name="hrftodcm" placeholder="https://disk.yandex.ru" id="hrftodcm"
+                                class="form-control">
                         </div>
 
                         <div class="row">
                             <div class="col-md-4 form-group mb-3">
                                 <label for="date">Время начала: <span class="text-danger">*</span></label>
-                                <input type="text" id="date" class="form-control" name="date" min="{{ date('Y-m-d H:i') }}" required>
+                                <input type="text" id="date" class="form-control" name="date" required>
                             </div>
                             <div class="col-md-8 form-group mb-3">
                                 <span>Продолжительность<span class="text-danger">*</span>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <!-- Продолжительность в часах -->
-                                        <div class="input-group">
-                                            <label class="input-group-text" for="duration_h"><i class="bi bi-stopwatch"></i></label>
-                                            <input @cannot('manage-services') readonly @endcannot type="number" name="duration[hours]"
-                                                value="{{ \App\Helpers\TaskHelper::transformDuration(0)['hours'] }}" min="0" max="24" step="1" id="duration_h" class="form-control" 
-                                                 />
-                                            <span class="input-group-text">час</span>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <!-- Продолжительность в часах -->
+                                            <div class="input-group">
+                                                <label class="input-group-text" for="duration_h"><i
+                                                        class="bi bi-stopwatch"></i></label>
+                                                <input @cannot('manage-services') readonly @endcannot type="number"
+                                                    name="duration[hours]"
+                                                    value="{{ \App\Helpers\TaskHelper::transformDuration(0)['hours'] }}"
+                                                    min="0" max="24" step="1" id="duration_h"
+                                                    class="form-control" />
+                                                <span class="input-group-text">час</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <!-- Продолжительность в минутах -->
+                                            <div class="input-group">
+                                                <label class="input-group-text" for="duration_m"><i
+                                                        class="bi bi-stopwatch"></i></label>
+                                                <input @cannot('manage-services') readonly @endcannot type="number"
+                                                    name="duration[minutes]"
+                                                    value="{{ \App\Helpers\TaskHelper::transformDuration(0)['minutes'] }}"
+                                                    min="0" max="60" step="1" id="duration_m"
+                                                    class="form-control" />
+                                                <span class="input-group-text">мин</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <!-- Продолжительность в минутах -->
-                                        <div class="input-group">
-                                            <label class="input-group-text" for="duration_m"><i class="bi bi-stopwatch"></i></label>
-                                            <input @cannot('manage-services') readonly @endcannot type="number" name="duration[minutes]"
-                                            value="{{ \App\Helpers\TaskHelper::transformDuration(0)['minutes'] }}" min="0" max="60" step="1" id="duration_m" class="form-control" />
-                                            <span class="input-group-text">мин</span>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6 form-group mb-3">
+                            <div class="col-md-9 form-group mb-3">
                                 <label for="client">Клиент<span class="text-danger">*</span></label>
-                                <input type="text" name="client" id="client" class="form-control" @if(isset($data->name) ) value="{{$data->name}}" @endif required>
-                                <div id="clientList"></div>                                 
+                                <input type="text" name="client" id="client" class="form-control"
+                                    @if (isset($data->name)) value="{{ $data->name }}" @endif required>
+                                <div id="clientList"></div>
                             </div>
-                            <div class="col-md-3 form-group mb-3 hideme">
-                                <label for="tag">Сделайте отметку</label>
-                                <select class="form-select" name="tag" id="tag">
-                                    <option value="неважно">неважно</option>
-                                    <option value="перенос">перенос</option>
-                                    <option value="срочно">срочно</option>
-                                    <option value="приоритет">приоритет</option>
-                                </select>
-                            </div>
+
                             <div class="col-md-3 form-group mb-3 hideme">
                                 <label for="status">Cтатус</label>
                                 <select class="form-select" name="status" id="status">
@@ -87,6 +90,30 @@
                                 </select>
                             </div>
                         </div>
+
+
+                        <div class="row">
+                            <div class="form-group mb-3">
+                                <label for="lawyer">Укажите исполнителя <span class="text-danger">*</span></label>
+                                <div id="lawyer" class="d-flex flex-wrap gap-1">
+                                    @foreach ($datalawyers as $el)
+                                        <div class="form-check" style="position: relative;" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="{{ $el->name }}">
+                                            <input class="form-check-input" type="radio" name="lawyer"
+                                                id="lawyer{{ $el->id }}" value="{{ $el->id }}"
+                                                @if (Auth::user()->id == $el->id) checked @endif style="display:none;">
+                                            <label class="form-check-label" for="lawyer{{ $el->id }}"
+                                                style="cursor: pointer;">
+                                                <img src="https://crm.nedicom.ru/{{ $el->avatar && file_exists(public_path($el->avatar)) ? $el->avatar : 'avatars/VwUQrsFZYI66e4foI0NFbDkX2QpJBfGcSFD9g6LO.png' }}"
+                                                    alt="{{ $el->name }}" class="rounded-circle"
+                                                    style="width:40px; height:40px; object-fit: cover; border: 2px solid transparent;">
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-4 form-group mb-3 hideme">
                                 <label for="type">Тип</label>
@@ -96,20 +123,24 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4 form-group mb-3">
-                                <label for="lawyer">Укажите исполнителя <span class="text-danger">*</span></label>
-                                <select name="lawyer" id="lawyer" class="form-select">
-                                    @foreach ($datalawyers as $el)
-                                        <option value="{{$el->id}}" @if ((Auth::user()->id) == $el->id) selected @endif>{{$el->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+
                             <div class="col-md-4 form-group mb-3 hideme">
                                 <label for="soispolintel">Укажите соИсполнителя</label>
                                 <select class="form-select" name="soispolintel" id="soispolintel">
                                     @foreach ($datalawyers as $el)
-                                        <option value="{{$el->id}}" @if ((Auth::user()->id) == $el->id) selected @endif>{{$el->name}}</option>
+                                        <option value="{{ $el->id }}"
+                                            @if (Auth::user()->id == $el->id) selected @endif>{{ $el->name }}
+                                        </option>
                                     @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3 form-group mb-3 hideme">
+                                <label for="tag">Сделайте отметку</label>
+                                <select class="form-select" name="tag" id="tag">
+                                    <option value="неважно">неважно</option>
+                                    <option value="перенос">перенос</option>
+                                    <option value="срочно">срочно</option>
+                                    <option value="приоритет">приоритет</option>
                                 </select>
                             </div>
                         </div>
@@ -118,7 +149,9 @@
                             <label>Согласовано</label>
                             <div class="col-md-6">
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" role="switch" name="lawyer_agree" id="lawyer_agree" @cannot('manage-users') disabled @endcan>
+                                    <input class="form-check-input" type="checkbox" role="switch"
+                                        name="lawyer_agree" id="lawyer_agree"
+                                        @cannot('manage-users') disabled @endcan>
                                     <label class="form-check-label" for="lawyer_agree">Начальником юр. отдела</label>
                                 </div>
                             </div>
@@ -152,10 +185,11 @@
                                 <button style="margin-bottom:15px;" type="button" name="add-payment" id="add-payment" class="btn btn-success col-md-4 col-12">Добавить платеж</button>
                         </div>
 
-                        <input type="hidden" name="clientidinput" id="clientidinput" class="form-control" @if(isset($data->id)) value="{{$data->id}}" @endif>
-                        <div class="row">
-                            <button type="submit" id='submit' class="btn btn-primary col-md-4">Сохранить</button>
-                        </div>
+                        <input type="hidden" name="clientidinput" id="clientidinput" class="form-control" @if (isset($data->id)) value="{{ $data->id }}" @endif>
+                                    <div class="row">
+                                        <button type="submit" id='submit'
+                                            class="btn btn-primary col-md-4">Сохранить</button>
+                                    </div>
                     </form>
                 </div>
             </div>
@@ -163,4 +197,33 @@
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
 
+        const inputs = document.querySelectorAll('input[name="lawyer"]');
+        inputs.forEach(input => {
+            input.addEventListener('change', () => {
+                inputs.forEach(i => {
+                    const img = i.nextElementSibling.querySelector('img');
+                    if (i.checked) {
+                        img.style.borderColor = '#fd0d0d'; // Bootstrap primary color
+                    } else {
+                        img.style.borderColor = 'transparent';
+                    }
+                });
+            });
+        });
+
+        // Начальная подсветка
+        inputs.forEach(i => {
+            const img = i.nextElementSibling.querySelector('img');
+            if (i.checked) {
+                img.style.borderColor = '#fd0d0d';
+            }
+        });
+    });
+</script>

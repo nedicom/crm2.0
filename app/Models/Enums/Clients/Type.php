@@ -12,10 +12,12 @@ enum Type: string
     case Tax = 'Налоговый';
     case War = 'Военный';
     case Pension = 'Пенсионный';
-    case Family = 'Семейный';    
+    case Family = 'Семейный';
+    case Debt = 'Долговой';       
     case Auto = 'Автоюрист';
     case Energy = 'Крымэнерго';
     case Migration = 'Миграционный';
     case Customers = 'Потребительский';
+    case Bussines = 'Сопровождение';
     case Dontknow = 'Другой';
 }

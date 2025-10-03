@@ -70,6 +70,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        <!--
                         <div class="form-group mb-3">
                             <label for="directionDevelopment">Укажите кто развивал направление</label>
                             <select class="form-select" name="directionDevelopment" id="directionDevelopment" class="form-control">
@@ -78,12 +79,13 @@
                                 @endforeach
                             </select>
                         </div>
+                    -->
                         <div class="form-group mb-3">
                             <label for="calculation">Куда поступили деньги</label>
                             <select class="form-select" name="calculation" id="calculation" aria-label="Default select example">
-                                <option value="РНКБ" selected>РНКБ</option>
+                                <option value="РНКБ" >РНКБ</option>
                                 <option value="СБЕР">СБЕР</option>
-                                <option value="БАНКРОССИИ">БАНКРОССИИ</option>
+                                <option value="БАНКРОССИИ" selected>БАНКРОССИИ</option>
                                 <option value="ГЕНБАНК">ГЕНБАНК</option>
                                 <option value="НАЛИЧНЫЕ">НАЛИЧНЫЕ</option>
                             </select>

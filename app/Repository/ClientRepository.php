@@ -36,10 +36,9 @@ class ClientRepository
     {
         $findclient = $request->findclient;
         //dd($request->findclient);
-        if($request->findclient){
+        if ($request->findclient) {
             $query = ClientsModel::where('name', 'LIKE', '%' . $findclient . '%')->orWhere('phone', 'LIKE', '%' . $findclient . '%');
-        }
-        else{
+        } else {
             $query = ClientsModel::where('name', 'LIKE', '%' . $findclient . '%');
         }
         if ($request->checkedlawyer && $adminRole) $query->where('lawyer', $request->checkedlawyer);
@@ -57,7 +56,15 @@ class ClientRepository
      */
     public function findById(int $id)
     {
-        $query = ClientsModel::with('userFunc', 'tasksFunc', 'serviceFunc', 'paymentsFunc', 'paymsThroughTask') 
+        $query = ClientsModel::with([
+            'userFunc',
+            'tasksFunc' => function ($query) {
+                $query->orderBy('created_at', 'desc'); // сортируем от новых к старым
+            },
+            'serviceFunc',
+            'paymentsFunc',
+            'paymsThroughTask',
+        ])
         ->find($id);
         return $query;
     }

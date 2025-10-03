@@ -314,6 +314,8 @@ class LeadsController extends Controller
         $client->source = $lead->source;
         $client->status = 1;
         $client->lawyer = $lead->lawyer;
+        $client->attract = 41;
+        $client->consult = $lead->lawyer;
         $client->save();
 
         $clientid = $client->id;

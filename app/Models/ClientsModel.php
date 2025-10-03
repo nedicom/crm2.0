@@ -36,7 +36,21 @@ class ClientsModel extends Model
     protected $guarded = [];
 
     protected $fillable = [
-        'lead_id', 'name', 'phone', 'description', 'address', 'email', 'source', 'rating', 'lawyer', 'status', 'url', 'casettype', 'city_id'
+        'lead_id',
+        'name',
+        'phone',
+        'description',
+        'address',
+        'email',
+        'source',
+        'rating',
+        'lawyer',
+        'consult',
+        'attract',        
+        'status',
+        'url',
+        'casettype',
+        'city_id'
     ];
 
     /**
@@ -45,14 +59,19 @@ class ClientsModel extends Model
      */
     public static function new(ClientsRequest $request): self
     {
-        $client = new self();        
+        $client = new self();
         $client->fill($request->except(['_token']));
-            if (is_null($request->input('email'))) { $client->email = 'empty@empty.ru'; }
-            if (is_null($request->input('address'))) { $client->address = 'адрес не указан'; }            
+        $client->consult =  $request->lawyer;
+        if (is_null($request->input('email'))) {
+            $client->email = 'empty@empty.ru';
+        }
+        if (is_null($request->input('address'))) {
+            $client->address = 'адрес не указан';
+        }
         $client->tgid = rand(0, 1000000);
-            $replacePhone = ['+7', ' ', '(', ')' , '-'];
-            $client->phone = str_replace($replacePhone, '', $request->input('phone'));
-        
+        $replacePhone = ['+7', ' ', '(', ')', '-'];
+        $client->phone = str_replace($replacePhone, '', $request->input('phone'));
+
         return $client;
     }
 
@@ -62,16 +81,15 @@ class ClientsModel extends Model
      */
     public function edit(ClientsRequest $request): void
     {
-        $this->fill($request->except('_token', 'status'));        
+        $this->fill($request->except('_token', 'status'));
         //if (!is_null($request->input('email'))) { $this->email = $request->input('email'); }
         //if (!is_null($request->input('address'))) { $this->address = $request->input('address'); }
         if (!$request->input('status')) {
             $this->status = static::STATUS_INACTIVE;
-        }
-        else{
+        } else {
             $this->status = static::STATUS_ACTIVE;
         }
-        if (!$request->input('status')) $this->change_status_at = Carbon::now()->toDateTimeString();        
+        if (!$request->input('status')) $this->change_status_at = Carbon::now()->toDateTimeString();
     }
 
     /**
@@ -81,9 +99,15 @@ class ClientsModel extends Model
      */
     public function editFromClient(Request $request)
     {
-        if (!is_null($request->input('adress'))) { $this->address = $request->input('adress'); }
-        if (!is_null($request->input('client'))) { $this->name = $request->input('client'); }
-        if (!is_null($request->input('phone'))) { $this->phone = $request->input('phone'); }
+        if (!is_null($request->input('adress'))) {
+            $this->address = $request->input('adress');
+        }
+        if (!is_null($request->input('client'))) {
+            $this->name = $request->input('client');
+        }
+        if (!is_null($request->input('phone'))) {
+            $this->phone = $request->input('phone');
+        }
     }
 
     /**
@@ -107,12 +131,12 @@ class ClientsModel extends Model
      */
     public function paymentsFunc()
     {
-        return $this->hasMany(Payments::class, 'clientid' , 'id');
+        return $this->hasMany(Payments::class, 'clientid', 'id');
     }
 
     public function city()
     {
-        return $this->hasOne(Cities::class, 'id' , 'city_id');
+        return $this->hasOne(Cities::class, 'id', 'city_id');
     }
 
     /**
@@ -124,18 +148,31 @@ class ClientsModel extends Model
         return $this->belongsTo(User::class, 'lawyer');
     }
 
+    public function consultFunc()
+    {
+        return $this->belongsTo(User::class, 'consult')->select(['id', 'name', 'avatar']);
+    }
+
+    public function attractFunc()
+    {
+        return $this->belongsTo(User::class, 'attract')->select(['id', 'name', 'avatar']);
+    }
+
+
     /**
      * Relations Tasks[]
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tasksFunc()
     {
-        return $this->hasMany(Tasks::class, 'clientid' , 'id');
+        return $this->hasMany(Tasks::class, 'clientid', 'id');
     }
 
     public function paymsThroughTask()
     {
-        return $this->hasManyThrough(TaskPaymentAssign::class, Tasks::class,  
+        return $this->hasManyThrough(
+            TaskPaymentAssign::class,
+            Tasks::class,
             'clientid', // Foreign key on the environments table...
             'task_id', // Foreign key on the deployments table...
             'id', // Local key on the projects table...

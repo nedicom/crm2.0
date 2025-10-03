@@ -21,7 +21,7 @@ class Services extends Model
     const TYPE_DURATION_OLD = 'old';
     const TYPE_DURATION_NEW = 'new';
 
-    protected  $fillable = ['name', 'price', 'execution_time', 'type_execution_time', 'description', 'url_disk'];
+    protected  $fillable = ['name', 'price', 'execution_time', 'type_execution_time', 'description', 'url_disk', 'service_type'];
 
     /** Устанавливаем значение продоолжительности
      * @param array $duration

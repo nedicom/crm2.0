@@ -20,6 +20,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{route('leads.filter', 'new')}}">Лиды</a></li>
                         <li><a class="dropdown-item" href="{{route('leadanalitics')}}">Аналитика</a></li>
+                        <li><a class="dropdown-item" href="{{route('avito.chats')}}">Авито</a></li>
                     </ul>
                 </li>
 

@@ -69,7 +69,7 @@ $(document).ready(function(){
             <div class="col-4 form-group mb-3">
               <label for="date">Время начала: <span class="text-danger">*</span></label>
               <input type="text" id="date" class="form-control" name="date"
-                    min="{{ date('Y-m-d H:i') }}">
+                    >
             </div>
 
             <div class="col-4 form-group mb-3">

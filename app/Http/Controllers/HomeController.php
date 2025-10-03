@@ -62,7 +62,7 @@ class HomeController extends Controller
                 'tasks' => Tasks::with('userFunc')
                     ->where('lawyer', $crtuser)
                     ->count(),
-                'datalawyers' =>  User::all()
+                'datalawyers' =>  User::where('status', 'active')->get()
             ],
         ], [
             'all' => [

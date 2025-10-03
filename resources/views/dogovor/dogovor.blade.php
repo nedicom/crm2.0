@@ -16,7 +16,7 @@
 
     <div class="row">
         @php /** @var \App\Models\Dogovor $el */ @endphp
-        @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales')
+        @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role  == 'head_sales' || $currentuser->role  == 'user_service_clients')
 
             @foreach ($data as $el)
                 @include('dogovor/_item_dogovor', compact('datalawyers', 'dataclients', 'el'))
