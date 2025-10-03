@@ -21,6 +21,12 @@ class UserHelper
             case $user::ROLE_HEAD_SALES:
                 $role = 'Начальник отдела продаж';
                 break;
+            case $user::ROLE_LEAD_HANDLER:
+                $role = 'Лидменеджер';
+                break;
+            case $user::ROLE_USER_SERVICE_CLIENTS:
+                $role = 'Юрист по работе с клиентами';
+                break;
             default:
                 $role = 'Пользователь';
         }
@@ -30,7 +36,7 @@ class UserHelper
 
     public static function nameStatus(User $user): string
     {
-        $status = ($user->isWait()) ? 'Ожидает' : 'Активен';
+        $status = $user->isActive() ? 'Активен' : ($user->isWait() ? 'Ожидает' : 'Выключен');
 
         return $status;
     }
