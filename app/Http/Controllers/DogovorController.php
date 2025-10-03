@@ -22,17 +22,33 @@ class DogovorController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        //$avg = Dogovor::avg('allstoimost');
-
-        return view('dogovor/dogovor', [
-            'data' => Dogovor::orderByDesc('created_at')
-            ->where( 'created_at', '>', Carbon::now()->subDays(365))
+        $query = Dogovor::orderByDesc('created_at')
+            ->where('created_at', '>', Carbon::now()->subDays(365))
             ->with('userFunc')
             ->with('clientFunc')
-            ->with('city')   
-            ->get(['lawyer_id','name', 'allstoimost', 'created_at', 'url', 'client_id', 'subject', 'city_id',])
+            ->with('city');
+
+        // Поиск по фамилии клиента
+        if ($request->has('search') && !empty($request->search)) {
+            $searchTerm = $request->search;
+            $query->whereHas('clientFunc', function ($q) use ($searchTerm) {
+                $q->where('name', 'LIKE', "%{$searchTerm}%");
+            });
+        }
+
+        return view('dogovor/dogovor', [
+            'data' => $query->limit(21)->get([
+                'lawyer_id',
+                'name',
+                'allstoimost',
+                'created_at',
+                'url',
+                'client_id',
+                'subject',
+                'city_id'
+            ])
         ], [
             //'avg' => $avg,
             'dataservice' => Services::all(),
@@ -56,14 +72,13 @@ class DogovorController extends Controller
     public function store(Request $request)
     {
         $today = Carbon::now()->toDateString(); // Дата без времени
-        
-        if($request->input('ispolnitelinput') == 'ipmina'){
-            $name = 'ИП Мина ' . $request->input('name'); 
+
+        if ($request->input('ispolnitelinput') == 'ipmina') {
+            $name = 'ИП Мина ' . $request->input('name');
+        } else {
+            $name = 'Адвокат Мина ' . $request->input('name');
         }
-        else{
-            $name = 'Адвокат Мина ' . $request->input('name'); 
-        }
-        $contractUrl = 'dogovors/'.$name.' - '. $today .'.docx';
+        $contractUrl = 'dogovors/' . $name . ' - ' . $today . '.docx';
 
         try {
             $contacts = $this->service->new($today, $contractUrl, $request);
@@ -80,7 +95,7 @@ class DogovorController extends Controller
                 'Content-Type' => 'application/octet-stream',
                 'Accept-Ranges' => 'bytes',
                 'Content-Length' => File::size($file),
-                'Content-Disposition' => "attachment; filename=".$name.".docx",
+                'Content-Disposition' => "attachment; filename=" . $name . ".docx",
             ])
             ->with('success', "Все в порядке, договор $contacts->name добавлен");
     }
