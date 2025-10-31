@@ -138,11 +138,13 @@
                     делам<span>({{ $data->tasksFunc->count() }})</span></h6>
                 <hr class="bg-dark-lighten my-3">
                 <div class="mx-3 row">
-                    <p class="mt-3 px-1 text-center col-2">поставлена</p>
+                    <p class="mt-3 px-1 text-center col-1">поставлена</p>
+                    <p class="mt-3 px-1 text-center col-1">срок</p>
+                    <p class="mt-3 px-1 text-center col-2">выполнена</p>
                     <p class="mt-3 px-1 text-center col-2">статус</p>
                     <p class="mt-3 px-1 text-center col-1">$
                     </p>
-                    <p class="mt-3 px-1 text-center col-6">название</p>
+                    <p class="mt-3 px-1 text-center col-4">название</p>
                     <p class="mt-3 px-1 text-center col-1">юрист</p>
                 </div>
                 @php
@@ -153,8 +155,41 @@
                 <div class="tasks-list">
                     {{-- Выводим первые 5 задач --}}
                     @foreach ($tasks->take(5) as $task)
-                    <div class="mx-3 row">
-                        <p class="mt-3 px-1 text-center col-2">{{ $task->created_at->format('d.m.Y') }}</p>
+
+                    <div class="mx-1 row">
+                        <p class="mt-3 px-1 text-center col-1">
+                            @if($task->donetime)
+                            {{ \Carbon\Carbon::parse($task->donetime)->format('d.m.Y') }}
+                            @else
+                            —
+                            @endif
+                        </p>
+
+                        <p class="mt-3 px-1 text-center col-1">
+                            @if(isset($task->date['value']) && $task->date['value'])
+                            {{ \Carbon\Carbon::parse($task->date['value'])->format('d.m.Y H:i') }}
+                            @else
+                            —
+                            @endif
+                        </p>
+
+                        <p class="mt-3 px-1 text-center col-2">
+                            @if($task->donetime)
+                            {{ \Carbon\Carbon::parse($task->donetime)->format('d.m.Y H:i') }}
+                            @else
+                            —
+                            @endif
+
+                            @if(isset($task->date['value']) && $task->date['value'] && $task->donetime)
+                            @php
+                            $start = \Carbon\Carbon::parse($task->date['value']);
+                            $end = \Carbon\Carbon::parse($task->donetime);
+                            @endphp
+                            <span class="text-success">({{ $start->diffInHours($end) }} ч)</span>
+                            @endif
+                        </p>
+
+
                         <p class="mt-3 px-1 text-center col-2">{{ $task->status }}</p>
                         <p class="px-1 col-1">
                             @foreach ($data->paymsThroughTask as $paytask)
@@ -173,8 +208,12 @@
                             @endif
                             @endforeach
                         </p>
-                        <p class="mt-3 px-1 text-center col-6">
-                            <a href="/tasks/{{ $task->id }}" target="_blank">{{ $task->name }}</a>
+                        <p class="mt-3 px-1 text-center col-4">                        
+                            <button type="button" class="btn btn-sm btn-outline-secondary copy-title-btn me-2"
+                                data-title="{{$data->name}} - {{$task->name}} - {{$task->status}} - https://crm.nedicom.ru/tasks/{{$task->id}}" title="Скопировать название">
+                                <i class="bi bi-clipboard"></i>
+                            </button>                        
+                        <a href="/tasks/{{ $task->id }}" target="_blank">{{ $task->name }}</a>
                         </p>
                         <p class="mt-3 px-1 text-center col-1">
                             <span class="mt-3 text-center">
@@ -191,7 +230,38 @@
                     <div class="collapse" id="moreTasksCollapse">
                         @foreach ($tasks->slice(5) as $task)
                         <div class="mx-3 row">
-                            <p class="mt-3 px-1 text-center col-2">{{ $task->created_at->format('d.m.Y') }}
+
+
+                            <p class="mt-3 px-1 text-center col-1">
+                                @if($task->donetime)
+                                {{ \Carbon\Carbon::parse($task->donetime)->format('d.m.Y') }}
+                                @else
+                                —
+                                @endif
+                            </p>
+
+                            <p class="mt-3 px-1 text-center col-1">
+                                @if(isset($task->date['value']) && $task->date['value'])
+                                {{ \Carbon\Carbon::parse($task->date['value'])->format('d.m.Y H:i') }}
+                                @else
+                                —
+                                @endif
+                            </p>
+
+                            <p class="mt-3 px-1 text-center col-2">
+                                @if($task->donetime)
+                                {{ \Carbon\Carbon::parse($task->donetime)->format('d.m.Y H:i') }}
+                                @else
+                                —
+                                @endif
+
+                                @if(isset($task->date['value']) && $task->date['value'] && $task->donetime)
+                                @php
+                                $start = \Carbon\Carbon::parse($task->date['value']);
+                                $end = \Carbon\Carbon::parse($task->donetime);
+                                @endphp
+                                <span class="text-success">({{ $start->diffInHours($end) }} ч)</span>
+                                @endif
                             </p>
                             <p class="mt-3 px-1 text-center col-2">{{ $task->status }}</p>
                             <p class="px-1 col-1">
@@ -211,7 +281,7 @@
                                 @endif
                                 @endforeach
                             </p>
-                            <p class="mt-3 px-1 text-center col-6">
+                            <p class="mt-3 px-1 text-center col-4">
                                 <a href="/tasks/{{ $task->id }}" target="_blank">{{ $task->name }}</a>
                             </p>
                             <p class="mt-3 px-1 text-center col-1">
@@ -331,3 +401,49 @@
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 </script>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButtons = document.querySelectorAll('.copy-title-btn');
+
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+
+                // Создаем временный textarea для копирования
+                const textarea = document.createElement('textarea');
+                textarea.value = title;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+
+                // Выделяем и копируем текст
+                textarea.select();
+                textarea.setSelectionRange(0, 99999); // Для мобильных устройств
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        // Визуальная обратная связь
+                        const originalHtml = this.innerHTML;
+                        this.innerHTML = '<i class="bi bi-check"></i>';
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-success');
+
+                        // Возвращаем исходное состояние через 2 секунды
+                        setTimeout(() => {
+                            this.innerHTML = originalHtml;
+                            this.classList.remove('btn-success');
+                            this.classList.add('btn-outline-secondary');
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Ошибка при копировании: ', err);
+                }
+
+                // Удаляем временный элемент
+                document.body.removeChild(textarea);
+            });
+        });
+    });
+</script>

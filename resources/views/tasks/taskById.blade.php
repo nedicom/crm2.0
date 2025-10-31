@@ -28,6 +28,15 @@
     @endphp
     <div class="card border-light">
         <div class="card-body">
+
+
+            <div class="d-flex align-items-center justify-content-center py-3">
+                <button type="button" class="btn btn-sm btn-outline-secondary copy-title-btn"
+                    data-title="{{$data->client}} - {{$data->name}} - {{$data->status}} - https://crm.nedicom.ru/tasks/{{$data->id}}" title="Скопировать название">
+                    <i class="bi bi-clipboard"></i>
+                </button>
+            </div>
+
             <h5 class="card-title text-truncate">{{$data->name}}</h5>
             <h6>
                 @foreach($datalawyers as $ellawyer)
@@ -39,7 +48,7 @@
             <p class="">количество часов: <strong>{{$data->duration/60}}</strong></p>
             <p class="">платеж: <strong> @if (!$data->payments->isEmpty()) есть @else нет @endif</strong></p>
             @can('manage-users')
-            @if (!$data->payments->isEmpty())<p class="">сумма - <a href="http://crm.nedicom.ru/payments/{{$data->payments[0]->id}}" >{{$data->payments[0]->summ}}</a></p>@endif
+            @if (!$data->payments->isEmpty())<p class="">сумма - <a href="http://crm.nedicom.ru/payments/{{$data->payments[0]->id}}">{{$data->payments[0]->summ}}</a></p>@endif
             @endcan
             @if ($data->donetime) <p class="">выполнена: {{$data->donetime}}</p> @endif
             <p class="">{{$data->description}}</p>
@@ -96,3 +105,49 @@
     </div>
 </div>
 @endsection
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const copyButtons = document.querySelectorAll('.copy-title-btn');
+
+        copyButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const title = this.getAttribute('data-title');
+
+                // Создаем временный textarea для копирования
+                const textarea = document.createElement('textarea');
+                textarea.value = title;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+
+                // Выделяем и копируем текст
+                textarea.select();
+                textarea.setSelectionRange(0, 99999); // Для мобильных устройств
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        // Визуальная обратная связь
+                        const originalHtml = this.innerHTML;
+                        this.innerHTML = '<i class="bi bi-check"></i> Скопировано!';
+                        this.classList.remove('btn-outline-secondary');
+                        this.classList.add('btn-success');
+
+                        // Возвращаем исходное состояние через 2 секунды
+                        setTimeout(() => {
+                            this.innerHTML = originalHtml;
+                            this.classList.remove('btn-success');
+                            this.classList.add('btn-outline-secondary');
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Ошибка при копировании: ', err);
+                }
+
+                // Удаляем временный элемент
+                document.body.removeChild(textarea);
+            });
+        });
+    });
+</script>

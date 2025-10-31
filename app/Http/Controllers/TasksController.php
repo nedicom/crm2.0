@@ -134,7 +134,7 @@ class TasksController extends Controller
             $lead->status = Status::In_Working->value;
             $lead->save();
         }
-//dd($request->status);
+
         // Events
         if($request->status != $task->status){
             if ($request->status == $task::STATUS_COMPLETE) {
