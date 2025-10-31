@@ -208,12 +208,13 @@
                             @endif
                             @endforeach
                         </p>
-                        <p class="mt-3 px-1 text-center col-4">                        
-                            <button type="button" class="btn btn-sm btn-outline-secondary copy-title-btn me-2"
+                        <p class="mt-3 px-1 text-end col-4">
+
+                            <a href="/tasks/{{ $task->id }}" target="_blank">{{ $task->name }}</a>
+                            <button type="button" class="btn btn-sm btn-outline-secondary copy-title-btn ms-2"
                                 data-title="{{$data->name}} - {{$task->name}} - {{$task->status}} - https://crm.nedicom.ru/tasks/{{$task->id}}" title="Скопировать название">
                                 <i class="bi bi-clipboard"></i>
-                            </button>                        
-                        <a href="/tasks/{{ $task->id }}" target="_blank">{{ $task->name }}</a>
+                            </button>
                         </p>
                         <p class="mt-3 px-1 text-center col-1">
                             <span class="mt-3 text-center">
