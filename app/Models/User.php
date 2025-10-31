@@ -192,7 +192,8 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_MODERATOR
             || $this->role === self::ROLE_HEAD_SALES
-            || $this->role === self::ROLE_HEAD_LAWYER;
+        //    || $this->role === self::ROLE_HEAD_LAWYER
+        ;
     }
 
     public function isUserServiceClients(): bool
