@@ -39,7 +39,7 @@ class DogovorController extends Controller
         }
 
         return view('dogovor/dogovor', [
-            'data' => $query->limit(21)->get([
+            'data' => $query->limit(90)->get([
                 'lawyer_id',
                 'name',
                 'allstoimost',
