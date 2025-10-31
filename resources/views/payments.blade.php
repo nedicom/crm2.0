@@ -118,14 +118,12 @@
                         <div class="d-flex">
                             <div class="px-1">
                                 <select class="form-select form-select-sm" name="month">
-                                    @foreach ($months as $number => $name)
-                                    @if($number >= $month - 2 || $number <= 2 && $month <=2)
+                                    @foreach ($months as $number => $name)                                    
                                         <option value="{{ $number }}"
                                         @if ($number==request()->get('month')) selected @endif
                                         @if (request()->get('month') == '' && $number == $month) selected @endif>{{ $name }}
                                         </option>
-                                        @endif
-                                        @endforeach
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="px-1">
