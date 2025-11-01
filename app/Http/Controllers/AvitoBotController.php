@@ -46,7 +46,7 @@ class AvitoBotController extends Controller
                     'status' => 'error',
                     'message' => 'Missing required fields: chat_id or message text.'
                 ], 422);
-            }           
+            }
 
             // Проверяем, есть ли чат с таким chat_id
             $chatExists = DB::table('avito_chats')->where('chat_id', $chatId)->exists();
@@ -77,6 +77,8 @@ class AvitoBotController extends Controller
             $isGlobalGptActive = DB::table('gptsettings')
                 ->where('id', 1)
                 ->value('global_gpt_active');
+
+            sleep(4);
 
             // Проверка, что GPT активен
             if ($isGptActive == 1 && $authorId !== '320878714' &&  $isGlobalGptActive) {
