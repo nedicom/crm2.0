@@ -83,7 +83,7 @@ class PaymentsController extends Controller
         $month = Carbon::now()->format('m');
         $months = PaymentHelper::monthsList();
 
-        if ($user->isAdmin() || $user->isModerator()) { //для роли админа
+        if ($user->isHeadSales()) { //для роли админа
             return view ('payments', [
                     'data' => $this->repository->searchByAdmin($req)->get()
                 ], [
