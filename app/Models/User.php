@@ -198,7 +198,7 @@ class User extends Authenticatable
 
         public function isHeadSales(): bool
     {
-        return $this->role === self::ROLE_MODERATOR
+        return $this->role === self::ROLE_ADMIN
             || $this->role === self::ROLE_HEAD_SALES
         ;
     }
