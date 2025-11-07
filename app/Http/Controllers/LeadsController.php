@@ -63,7 +63,12 @@ class LeadsController extends Controller
         $lead->state = $req->input('state');
         $lead->service = 11;
         $lead->status = 'поступил';
-
+        $lead->is_qualified = match ($req->is_qualified) {
+            '' => null,
+            '1' => true,
+            '0' => false,
+            default => null
+        };
         $lead->save();
 
         LeadTg::SendleadTg($lead);
@@ -116,7 +121,7 @@ class LeadsController extends Controller
                         ->orderBy('created_at', 'desc')
                         ->with('lazycons')
                         ->with('userFunc')->with('responsibleFunc')->with('city')->with('tasks')
-                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id' ,'leadconsstatus'])
+                        ->select(['id', 'name', 'source', 'casettype', 'description', 'phone', 'lawyer', 'created_at', 'updated_at', 'responsible', 'service', 'status', 'state', 'city_id', 'leadconsstatus'])
                         ->simplePaginate(100);
                     break;
 
@@ -265,7 +270,7 @@ class LeadsController extends Controller
                 'cities'  => Cities::all(),
                 'today'  => Carbon::now()->format('d'),
                 'start'  => $now->startOfWeek()->format('d'),
-                
+
             ]
         );
     }
@@ -284,6 +289,12 @@ class LeadsController extends Controller
         $lead->state = $req->input('state');
         $lead->service = 11;
         $lead->status == Status::Entered->value ? $lead->status = Status::Lazy->value : null;
+        $lead->is_qualified = match ($req->is_qualified) {
+            '' => null,
+            '1' => true,
+            '0' => false,
+            default => null
+        };
         $lead->save();
 
         return redirect()->route('showLeadById', $id)->with('success', 'Все в порядке, лид обновлен');

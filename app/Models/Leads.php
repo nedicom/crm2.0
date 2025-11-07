@@ -44,7 +44,8 @@ class Leads extends Model
         'lawyer',
         'responsible',
         'status',
-        'client_id'
+        'client_id',
+        'is_qualified'
     ];
 
     /**

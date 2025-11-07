@@ -13,6 +13,10 @@ class LeadTg
      */
     public static function SendleadTg($lead)
     {
+        // Пропускаем выполнение на локальной машине
+        if (app()->environment('local')) {
+            return;
+        }
         //чекаем сущестование полей. Внимание, laravel выдает string "null", is_null не сработает
         $lawyer = (!is_null(User::find($lead->lawyer))) ? User::find($lead->lawyer)->name : 'Адвокатский кабинет';
         $responsible = (!is_null(User::find($lead->responsible))) ? User::find($lead->responsible)->name : 'Авдокатский кабинет';

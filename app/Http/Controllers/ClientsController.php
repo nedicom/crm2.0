@@ -128,6 +128,7 @@ class ClientsController extends Controller
                 $lead->city_id = $client->city_id;
                 $lead->service = 11;
                 $lead->status = 'конвертирован';
+                $lead->is_qualified = true;
                 $lead->save();
 
                 ClientsModel::where('id', $client->id)->update(['lead_id' => $lead->id]);
@@ -164,6 +165,7 @@ class ClientsController extends Controller
                 'description' => $client->description,
                 'casettype' => $client->casettype,
                 'source' => $client->source,
+                'is_qualified' => true,
             ]);
             return redirect()->route('showClientById', $client->id)->with('success', 'Все в порядке, клиент и лид обновлен, лид обновлен');
         }

@@ -6,25 +6,41 @@
             </div>
             <div class="modal-body d-flex justify-content-center">
                 <div class="px-2">
-                    <form action="{{route('addlead')}}" class='' autocomplete="off" method="post">
+                    <form action="{{ route('addlead') }}" class='' autocomplete="off" method="post">
                         @csrf
 
                         <div class="row g-3 mb-1">
                             <div class="col">
                                 <label for="name">ФИО <span class="text-danger">*</span></label>
-                                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+                                <input type="text" name="name" id="name" class="form-control"
+                                    value="{{ old('name') }}" required>
                             </div>
                             <div class="col">
                                 <label for="phone">Введите телефон <span class="text-danger">*</span></label>
-                                <input type="phone" name="phone" placeholder="+7" id="phone" value="{{ old('phone') }}" class="form-control" required>
+                                <input type="phone" name="phone" placeholder="+7" id="phone"
+                                    value="{{ old('phone') }}" class="form-control" required>
                             </div>
+                            <div class="col">
+                                <label for="is_qualified">Квалификация</label>
+                                <select class="form-select" name="is_qualified" id="is_qualified" class="form-control">
+                                    <option value="">Не
+                                        обработан</option>
+                                    <option value="1" selected>
+                                        квал лид</option>
+                                    <option value="0"> не квал
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-text">Квал лид - это тот кому можно предложить услуги</div>  
                         </div>
 
 
                         <div class="form-floating my-3">
-                            <textarea rows="3" name="description" placeholder="Не увольняют военнослужащего" id="description" class="form-control" required>{{ old('description') }}</textarea>
-                            <label for="description">Описание проблемы</label>
+                            <textarea rows="5" name="description" placeholder="Не увольняют военнослужащего" id="description"
+                                class="form-control" required>{{ old('description') }}</textarea>
+                            <label for="description">Описание проблемы</label>                            
                         </div>
+                        
 
                         <div class="row g-3 mb-3">
                             <div class="col">
@@ -34,8 +50,8 @@
                             <div class="col">
                                 <label for="source">источник</label>
                                 <select class="form-select" name="source" id="source" class="form-control">
-                                    @foreach($datasource as $el)
-                                    <option value="{{$el->name}}">{{$el->name}}</option>
+                                    @foreach ($datasource as $el)
+                                        <option value="{{ $el->name }}">{{ $el->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -44,8 +60,8 @@
                                 <label for="city">город</label>
                                 <select class="form-select" name="city" id="city" class="form-control">
                                     <option value=null>не выбрано</option>
-                                    @foreach($cities as $el)
-                                    <option value="{{$el->id}}">{{$el->city}}</option>
+                                    @foreach ($cities as $el)
+                                        <option value="{{ $el->id }}">{{ $el->city }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -53,19 +69,19 @@
                         <div class="form-group mb-3">
                             <label for="service">Что можно предложить</label>
                             <select class="form-select" name="service" id="service" class="form-control">
-                                @foreach($dataservices as $el)
-                                    <option value="{{$el->id}}">{{$el->name}}</option>
-                                @endforeach
+                                @foreach ($dataservices as $el)
+<option value="{{ $el->id }}">{{ $el->name }}</option>
+@endforeach
                             </select>
                         </div>                   -->
 
                             <div class="col">
                                 <label for="lawyer">привлек</label>
                                 <select class="form-select" name="lawyer" id="lawyer" class="form-control">
-                                    @foreach($datalawyers as $el)
-                                    <option value="{{$el->id}}">
-                                        {{$el->name}}
-                                    </option>
+                                    @foreach ($datalawyers as $el)
+                                        <option value="{{ $el->id }}">
+                                            {{ $el->name }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -73,8 +89,8 @@
                             <div class="col">
                                 <label for="responsible">ответственный</label>
                                 <select class="form-select" name="responsible" id="responsible" class="form-control">
-                                    @foreach($datalawyers as $el)
-                                    <option value="{{$el->id}}">{{$el->name}}</option>
+                                    @foreach ($datalawyers as $el)
+                                        <option value="{{ $el->id }}">{{ $el->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
