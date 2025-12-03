@@ -30,7 +30,11 @@ class ContractsService
     public function attachFile(string $contractUrl, $today, Request $request): string
     {
         $data = $request->only(['client', 'adress', 'phone', 'subject', 'allstoimost', 'preduslugi', 'predoplata']);
-       
+       /* как поменять договор
+       берем файл soglashenie.docx из папки app/public/dogovor/ip и вставляем в него document.xml
+       из папки app/public/dogovor-template/ip - получили чистый договор. редактируем его и достаем из него
+       document.xml. Возвращаем его в app/public/dogovor-template/ip
+       */
         if ($request->ispolnitelinput == 'ipmina') {
             $performer = env('COMPANY_NAME', 'Индивидуальный предприниматель Мина Ольга Викторовна');
             $psthxml = public_path('dogovor-template/ip/document.xml');
