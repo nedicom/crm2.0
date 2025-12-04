@@ -80,7 +80,7 @@
                 </p>
 
                 <p class="my-3 text-muted">{{ $data->description }}</p>
-                @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role == 'head_sales')
+                @if ($currentuser->role == 'admin' || $currentuser->role == 'head_lawyer' || $currentuser->role == 'head_lawyer')
                 <p class="my-3 text-muted">договор: @foreach ($dogovors as $dogovor)
                     <a href="/{{ $dogovor->url }}">{{ $dogovor->name }}</a></br>
                     @endforeach
@@ -365,7 +365,7 @@
                 <hr class="bg-dark-lighten my-3">
                 @endif
 
-                @if ($currentuser->role == 'admin' || $currentuser->role == 'head_sales')
+                @if ($currentuser->role == 'admin' || $currentuser->role == 'head_sales' || $currentuser->role == 'head_sales')
                 <h6 class="mb-2 px-3 text-muted">платежи <span>({{ $data->serviceFunc->count() }})</span></h6>
                 <hr class="bg-dark-lighten my-3">
                 <div class="row">
