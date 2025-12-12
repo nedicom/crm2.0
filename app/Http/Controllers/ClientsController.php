@@ -148,8 +148,13 @@ class ClientsController extends Controller
         }
 
         $client->edit($request);
+
         if (!$request->status) {
             $client->status = null;
+        };
+
+        if (!$request->api_access) {
+            $client->api_access = false;
         };
 
         $client->save();
@@ -162,7 +167,6 @@ class ClientsController extends Controller
                 'phone' => $client->phone,
                 'status' => Status::Converted->value,
                 'city_id' => $client->city_id,
-                'description' => $client->description,
                 'casettype' => $client->casettype,
                 'source' => $client->source,
                 'is_qualified' => true,
