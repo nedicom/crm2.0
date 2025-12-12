@@ -7,10 +7,11 @@ use App\Models\ClientsModel;
 
 class CrmApiController extends Controller
 {
-    public function clientSummary($id)
+    public function clientSummary($email)
     {
         // Находим клиента
-        $client = ClientsModel::find($id);
+        $email = urldecode($email);        
+        $client = ClientsModel::where('email', $email)->first();
         
         if (!$client) {
             return response()->json([
