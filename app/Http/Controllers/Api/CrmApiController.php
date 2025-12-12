@@ -10,16 +10,18 @@ class CrmApiController extends Controller
     public function clientSummary($email)
     {
         // Находим клиента
-        $email = urldecode($email);        
-        $client = ClientsModel::where('email', $email)->first();
-        
+        $email = urldecode($email);
+        $client = ClientsModel::where('email', $email)
+            ->with(['payments', 'tasks'])
+            ->first();
+
         if (!$client) {
             return response()->json([
                 'success' => false,
                 'message' => 'Клиент не найден'
             ], 404);
         }
-        
+
         // Возвращаем минимум данных
         return response()->json([
             'success' => true,
