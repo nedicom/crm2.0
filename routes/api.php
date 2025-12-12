@@ -8,9 +8,9 @@ use App\Http\Controllers\AvitoBotController;
 
 use App\Http\Controllers\Api\CrmApiController;
 
-//Route::middleware(['api.auth', 'throttle:60,1'])->group(function () {
+Route::middleware(['api.auth', 'throttle:60,1'])->group(function () {
     Route::get('/client/{id}/summary', [CrmApiController::class, 'clientSummary']);
-//});
+});
 
 //avito integration
 Route::post('/avito/postmessage', [AvitoBotController::class, 'postmessage']);
