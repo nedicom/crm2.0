@@ -21,21 +21,30 @@ class CrmApiController extends Controller
                 $q->select('id', 'name', 'status', 'clientid', 'created_at', 'status', 'donetime', 'hrftodcm')
                     ->orderBy('created_at', 'desc');
             }])
-            ->first(['id', 'name', 'email']);
+            ->first(['id', 'name', 'email', 'api_access']);
         /* 
         $client = ClientsModel::where('email', $email)
             ->with(['paymentsForClient', 'tasksForClient'])
             ->first();
         */
+
         if (!$client) {
             return response()->json([
                 'success' => false,
                 'message' => 'Клиент не найден'
             ], 404);
-        } else {
-            $client->payments_count = $client->paymentsForClient->count();
-            $client->tasks_count = $client->tasksForClient->count();
         }
+
+        // Проверяем доступ к API
+        if (!$client->api_access) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Доступ к данным клиента запрещен. Запросите его у юриста'
+            ], 403);
+        }
+
+        $client->payments_count = $client->paymentsForClient->count();
+        $client->tasks_count = $client->tasksForClient->count();
 
         // Возвращаем минимум данных
         return response()->json([

@@ -50,7 +50,13 @@ class ClientsModel extends Model
         'status',
         'url',
         'casettype',
+        'api_access',
         'city_id'
+    ];
+
+
+    protected $casts = [
+        'api_access' => 'boolean',
     ];
 
     /**
