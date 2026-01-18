@@ -58,8 +58,7 @@
 
                 <li class="nav-item col-6 col-md-auto">
                     <a href="{{ route('payments', [
-                    'month' => \Carbon\Carbon::now()->format('m'),
-                    'year' => \Carbon\Carbon::now()->format('Y'),
+                    'month' => \Carbon\Carbon::now()->format('m')
                     ]) }}" class="nav-link {{ (request()->is('payments*')) ? 'active' : '' }}">Платежи</a>
                 </li>
 
