@@ -67,7 +67,6 @@ class PaymentsController extends Controller
 
         return redirect()->route('payments', [
             'month' => Carbon::now()->format('m'),
-            'year'  => Carbon::now()->format('Y'),
         ])->with('success', 'Все в порядке, платеж добавлен');
     }
 
@@ -83,27 +82,23 @@ class PaymentsController extends Controller
         $month = Carbon::now()->format('m');
         $months = PaymentHelper::monthsList();
 
-        if ($user->isHeadSales()) { //для роли админа
-            return view ('payments', [
-                    'data' => $this->repository->searchByAdmin($req)->get()
-                ], [
-                    'months' => $months,
-                    'month' => $month,
-                    'datalawyers' => User::active()->get(),
-                    'dataservices' => Services::all()->sortBy('name'),
-                    'dataclients' => ClientsModel::all(),
-                ]);
-        } else { // для остальных ролей
-            return view ('payments', [
-                'data' => $this->repository->searchByOwner($req)->get()
-                ], [
-                    'months' => $months,
-                    'month' => $month,
-                    'datalawyers' => User::active()->get(),
-                    'dataservices' => Services::all()->sortBy('name'),
-                    'dataclients' => ClientsModel::all(),
-                ]);
-        }
+        // Получаем данные с фильтрами
+        $query = $user->isHeadSales()
+            ? $this->repository->searchByAdmin($req)
+            : $this->repository->searchByOwner($req);
+
+        // Получаем отфильтрованный результат
+        $data = $query->get();
+
+        return view('payments', [
+            'data' => $data
+        ], [
+            'months' => $months,
+            'month' => $month,
+            'datalawyers' => User::active()->get(),
+            'dataservices' => Services::all()->sortBy('name'),
+            'dataclients' => ClientsModel::all(),
+        ]);
     }
 
     /**
@@ -119,9 +114,9 @@ class PaymentsController extends Controller
             $creator = "создатель платежа не указан";
         }
 
-        return view ('showPaymentById', [
+        return view('showPaymentById', [
             'data' => Payments::with('serviceFunc', 'AttractionerFunc', 'sellerFunc', 'developmentFunc')->find($id)
-        ],[
+        ], [
             'creator' => $creator,
             'datalawyers' => User::active()->get(),
             'dataservices' => Services::all()->sortBy('name'),
@@ -174,7 +169,6 @@ class PaymentsController extends Controller
 
         return redirect()->route('payments', [
             'month' => Carbon::now()->format('m'),
-            'year'  => Carbon::now()->format('Y'),
         ])->with('success', 'Все в порядке, платеж обновлен');
     }
 
@@ -189,7 +183,6 @@ class PaymentsController extends Controller
 
         return redirect()->route('payments', [
             'month' => Carbon::now()->format('m'),
-            'year'  => Carbon::now()->format('Y'),
         ])->with('success', 'Все в порядке, платеж удален');
     }
 
@@ -204,8 +197,8 @@ class PaymentsController extends Controller
             $output = '<ul class="list-group">';
             foreach ($query as $value) {
                 $output .= '<li class="list-group-item paymentList paymentIndex"
-                    data-payment-id="'. $value->id .'"><a href="#" class="text-decoration-none"><span class="name-client">'.
-                    $value->client . '</span> - ' . $value->service_name . ' - ' .$value->created_at .'</a></li>';
+                    data-payment-id="' . $value->id . '"><a href="#" class="text-decoration-none"><span class="name-client">' .
+                    $value->client . '</span> - ' . $value->service_name . ' - ' . $value->created_at . '</a></li>';
             }
             $output .= '</ul>';
 

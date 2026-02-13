@@ -28,6 +28,7 @@ class ClientsRequest extends FormRequest
             'name' => 'required|string',
             'email' => 'email|string|nullable',
             'address' => 'string|max:250|nullable',
+            'api_access' => 'boolean',
         ];
     }
 

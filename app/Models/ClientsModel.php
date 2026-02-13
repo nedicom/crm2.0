@@ -46,11 +46,17 @@ class ClientsModel extends Model
         'rating',
         'lawyer',
         'consult',
-        'attract',        
+        'attract',
         'status',
         'url',
         'casettype',
+        'api_access',
         'city_id'
+    ];
+
+
+    protected $casts = [
+        'api_access' => 'boolean',
     ];
 
     /**
@@ -166,6 +172,16 @@ class ClientsModel extends Model
     public function tasksFunc()
     {
         return $this->hasMany(Tasks::class, 'clientid', 'id');
+    }
+
+    public function tasksForClient()
+    {
+        return $this->hasMany(Tasks::class, 'clientid', 'id');
+    }
+
+    public function paymentsForClient()
+    {
+        return $this->hasMany(Payments::class, 'clientid', 'id');
     }
 
     public function paymsThroughTask()

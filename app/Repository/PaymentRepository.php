@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Payments;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class PaymentRepository
 {
@@ -37,15 +38,16 @@ class PaymentRepository
                     ->orWhere('nameOfSeller', $currentuser)
                     ->orWhere('directionDevelopment', $currentuser);
             });
-       $query = $this->queryParams($query, $request);
+        $query = $this->queryParams($query, $request);
 
         return $query;
     }
 
     private function queryParams(\Illuminate\Database\Eloquent\Builder $query, Request $request)
     {
+        $currentYear = Carbon::now()->format('Y');
+        $query->whereYear('created_at', $currentYear);
         if (empty($request->month)) $query->whereMonth('created_at', 1);
-        if (empty($request->year)) $query->whereYear('created_at', 2025);
         if (!empty($request->nameOfAttractioner)) $query->where('nameOfAttractioner', $request->nameOfAttractioner);
         if (!empty($request->nameOfSeller)) $query->where('nameOfSeller', $request->nameOfSeller);
         if (!empty($request->directionDevelopment)) $query->where('directionDevelopment', $request->directionDevelopment);

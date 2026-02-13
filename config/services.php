@@ -13,6 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    'api' => [
+        'token' => env('API_TOKEN'),
+    ],
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),

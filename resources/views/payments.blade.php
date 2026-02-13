@@ -118,11 +118,11 @@
                         <div class="d-flex">
                             <div class="px-1">
                                 <select class="form-select form-select-sm" name="month">
-                                    @foreach ($months as $number => $name)                                    
-                                        <option value="{{ $number }}"
+                                    @foreach ($months as $number => $name)
+                                    <option value="{{ $number }}"
                                         @if ($number==request()->get('month')) selected @endif
                                         @if (request()->get('month') == '' && $number == $month) selected @endif>{{ $name }}
-                                        </option>
+                                    </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -161,6 +161,7 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <!--
                             <div class="px-1">
                                 <select class="form-select form-select-sm" name="directionDevelopment"
                                     id="directionDevelopment">
@@ -172,9 +173,10 @@
                                     @endforeach
                                 </select>
                             </div>
+-->
                             <div class="d-flex px-1">
                                 <button type="submit" class="mx-1 btn btn-primary  btn-sm">Применить</button>
-
+                                <a href="{{ route('payments', ['month' => date('m')]) }}" class="mx-1 btn btn-secondary btn-sm">Сбросить</a>
                             </div>
                         </div>
                     </div>

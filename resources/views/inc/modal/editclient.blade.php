@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <div class ="modal-body">
+                <div class="modal-body">
                     <div class="row g-3 mb-1">
                         <div class="col">
                             <label for="name">ФИО <span class="text-danger">*</span></label>
@@ -53,7 +53,7 @@
                     </div>
 
                     <div class="form-group mb-1 form-floating">
-                        <textarea type="text" name="description" id="description" class="form-control">{{ $data->description }}</textarea>
+                        <textarea type="text" name="description" id="description" class="form-control" style="min-height: 120px; height: 120px;">{{ $data->description }}</textarea>
                         <label for="description">Введите описание</label>
                     </div>
 
@@ -63,8 +63,8 @@
                             <select class="form-select" name="source" value="{{ old('source') }}" id="source"
                                 class="form-control">
                                 @foreach ($datasource as $el)
-                                    <option value="{{ $el->name }}"
-                                        @if ($data->source == $el->name) selected @endif>{{ $el->name }}</option>
+                                <option value="{{ $el->name }}"
+                                    @if ($data->source == $el->name) selected @endif>{{ $el->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -72,8 +72,8 @@
                             <label for="lawyer">юрист</label>
                             <select class="form-select" name="lawyer" id="lawyer">
                                 @foreach ($datalawyers as $el)
-                                    <option value="{{ $el->id }}"
-                                        @if ($data->lawyer == $el->id) selected @endif>{{ $el->name }}</option>
+                                <option value="{{ $el->id }}"
+                                    @if ($data->lawyer == $el->id) selected @endif>{{ $el->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -86,8 +86,8 @@
                             </label>
                             <select class="form-select" name="consult" id="consult">
                                 @foreach ($datalawyers as $el)
-                                    <option value="{{ $el->id }}"
-                                        @if ($data->consult == $el->id) selected @endif>{{ $el->name }}</option>
+                                <option value="{{ $el->id }}"
+                                    @if ($data->consult == $el->id) selected @endif>{{ $el->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -99,8 +99,8 @@
                             </label>
                             <select class="form-select" name="attract" id="attract">
                                 @foreach ($datalawyers as $el)
-                                    <option value="{{ $el->id }}"
-                                        @if ($data->attract == $el->id) selected @endif>{{ $el->name }}</option>
+                                <option value="{{ $el->id }}"
+                                    @if ($data->attract == $el->id) selected @endif>{{ $el->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -111,8 +111,8 @@
                             <select class="form-select" name="city_id" id="city_id" class="form-control">
                                 <option value=null>не выбрано</option>
                                 @foreach ($cities as $el)
-                                    <option value="{{ $el->id }}"
-                                        @if ($data->city_id == $el->id) selected @endif>{{ $el->city }}</option>
+                                <option value="{{ $el->id }}"
+                                    @if ($data->city_id == $el->id) selected @endif>{{ $el->city }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -123,28 +123,65 @@
                         </div>
                     </div>
 
-                    <div class="row g-3 mb-1 align-items-center">
-                        <div class="col-8 rating-list">
-                            @php $i = 0; @endphp
-                            <label style="display: block">рейтинг</label>
-                            @foreach (\App\Models\Enums\Clients\Rating::cases() as $rating)
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input rating" type="radio" name="rating"
-                                        id="rating{{ ++$i }}" value="{{ lcfirst($rating->name) }}"
+                    <div class="row g-3 my-3 align-items-center">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <div class="d-flex flex-wrap justify-content-center gap-3">
+                                @php $i = 0; @endphp
+                                @foreach (\App\Models\Enums\Clients\Rating::cases() as $rating)
+                                <div class="form-check">
+                                    <input class="form-check-input rating"
+                                        type="radio"
+                                        name="rating"
+                                        id="rating{{ ++$i }}"
+                                        value="{{ lcfirst($rating->name) }}"
                                         @if (lcfirst($rating->name) == $data->rating) checked @endif>
                                     <label class="form-check-label"
                                         for="rating{{ $i }}">{{ $rating->value }}</label>
                                 </div>
-                            @endforeach
-                            <div class="form-text">У положительных будем просить отзывы</div>
-                        </div>
-
-                        <div class="col-4">
-                            <div class="float-end">
-                                <button type="submit" class="btn btn-primary">Обновить</button>
+                                @endforeach
+                            </div>
+                            <div class="form-text text-muted text-center">
+                                У положительных будем просить отзывы
                             </div>
                         </div>
                     </div>
+
+                    <div class="row g-3 mb-1 align-items-center">
+                        <!-- Доступ к ЛК -->
+                        <div class="col-12 col-lg-8">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="api_access"
+                                    id="api_access" value="1"
+                                    @if ($data->api_access == 1) checked @endif>
+                                <label class="form-check-label" for="api_access"
+                                    data-bs-toggle="tooltip"
+                                    title="Разрешить доступ к данным клиента через API">
+                                    Доступ к личному кабинету
+                                    <i class="bi bi-question-circle" style="cursor: pointer; color: #0d6efd;"></i>
+                                </label>
+                                <div class="form-text">Если включено, данные будут доступны клиенту на nedicom.ru</div>
+                            </div>
+                        </div>
+
+                        <!-- Кнопка для десктопа -->
+                        <div class="col-12 col-lg-4 d-none d-lg-block">
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-primary btn-md px-4 py-2">
+                                    Обновить
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопка для мобильных -->
+                    <div class="d-lg-none mt-4">
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 py-3">
+                                Обновить данные клиента
+                            </button>
+                        </div>
+                    </div>
+
             </form>
         </div>
     </div>
