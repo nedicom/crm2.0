@@ -80,8 +80,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::controller(LeadsController::class)->group(function () {
         Route::post('/leads/change/{id}', 'changeStatus')->name('change.status');
-        Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter');
-        Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics');
+        Route::get('/filterleads/{leadfilter}', 'leadsfilter')->name('leads.filter')->middleware('check.role');
+        Route::get('/leadanalitics', 'leadanalitics')->name('leadanalitics')->middleware('check.role');
         Route::post('/leads/add', 'addlead')->name('addlead');
         Route::get('/leads/{id}', 'showLeadById')->name('showLeadById');
         Route::post('/leads/{id}/edit', 'LeadUpdateSubmit')->name('LeadUpdateSubmit');
@@ -145,8 +145,8 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::controller(AvitoBotController::class)->group(function () {
-    Route::get('/avito/chats', 'avitoChats')->name('avito.chats');
-    Route::get('/avito/chat/{id}', 'avitoChat')->name('avito.chat');
+    Route::get('/avito/chats', 'avitoChats')->name('avito.chats')->middleware('check.role');
+    Route::get('/avito/chat/{id}', 'avitoChat')->name('avito.chat')->middleware('check.role');
 })->middleware('auth');
 
 
