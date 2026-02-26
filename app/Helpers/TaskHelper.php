@@ -8,6 +8,7 @@ use App\Repository\TaskRepository;
 use App\Models\Enums\Tasks\Type;
 use App\Models\Enums\Tasks\Status;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class TaskHelper
 {
@@ -58,7 +59,7 @@ class TaskHelper
             $str_time['minutes'] = $duration % 60;
         }
 
-       return $str_time;
+        return $str_time;
     }
 
     /**
@@ -99,14 +100,34 @@ class TaskHelper
     public static function formListMonths(Request $request): string
     {
         $months = [
-            'январь', 'февраль', 'март', 'апрель',
-            'май', 'июнь', 'июль', 'август', 'сентябрь',
-            'октябрь', 'ноябрь', 'декабрь',
+            'январь',
+            'февраль',
+            'март',
+            'апрель',
+            'май',
+            'июнь',
+            'июль',
+            'август',
+            'сентябрь',
+            'октябрь',
+            'ноябрь',
+            'декабрь',
         ];
-        $html = "<select class='form-select' name='months' id='months'>" . PHP_EOL
-            . "<option value=''>не выбрано</option>";
+
+        // Получаем текущий месяц (0-11)
+        $currentMonth = Carbon::now()->month - 1;
+
+        // Если параметр months не передан в запросе, используем текущий месяц
+        $selectedMonth = $request->input('months', $currentMonth);
+
+        $html = "<select class='form-select' name='months' id='months'>" . PHP_EOL;
+
+        // Опция "не выбрано" больше не нужна, если мы хотим всегда иметь выбранный месяц
+        // Но если вы хотите её оставить, то раскомментируйте следующую строку
+        // $html .= "<option value=''>не выбрано</option>";
+
         foreach ($months as $key => $month) {
-            $selected = ($request->input('months') == $key) ? 'selected' : '';
+            $selected = ($selectedMonth == $key) ? 'selected' : '';
             $html .= "<option value='$key' $selected >$month</option>";
         }
         $html .= "</select>";

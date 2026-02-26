@@ -27,6 +27,7 @@ class TaskRepository
      */
     public function search(Request $request)
     {
+        // dd($request);
         $query = Tasks::select("*");
         if ($request->input('calendar') !== null && $request->input('calendar') !== DateInterval::AllTime->name)
             $query = $this->betweenDate($query, $request);
@@ -42,6 +43,17 @@ class TaskRepository
         }
         if ($request->input('type')) $query->where('type', '=', $request->input('type'));
 
+        if ($request->input('tasktime')) {
+            switch ($request->input('tasktime')) {
+                case 'lesshour':
+                    $query->where('duration', '<', 60);
+                    break;
+                case 'morehour':
+                    $query->where('duration', '>=', 60);
+                    break;
+            }
+        }
+
         $query->orderBy('date');
         return $query;
     }
@@ -54,7 +66,12 @@ class TaskRepository
      */
     private function betweenDate(Builder $query, Request $request): Builder
     {
-        $month = ($request->input('months')) ? ($request->input('months')) : ((Carbon::now()->month) - 1);
+        $month = $request->input('months');
+
+        // Если months не передан, используем текущий месяц
+        if ($month === null) {
+            $month = Carbon::now()->month - 1;
+        }
 
         return match ($request->input('calendar')) {
             DateInterval::Yesterday->name => $query->whereBetween('date', [Carbon::yesterday()->startOfDay(), Carbon::yesterday()->endOfDay()]),
@@ -62,7 +79,10 @@ class TaskRepository
             DateInterval::Tomorrow->name => $query->whereBetween('date', [Carbon::tomorrow()->startOfDay(), Carbon::tomorrow()->endOfDay()]),
             DateInterval::Day->name => $query->whereBetween('date', [Carbon::now()->startOfDay(), Carbon::now()->endOfDay()]),
             DateInterval::Week->name => $query->whereBetween('date', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]),
-            DateInterval::Month->name => $query->whereBetween('date', [Carbon::now()->startOfYear()->addMonth($month), Carbon::now()->startOfYear()->addMonth($month + 1)]),
+            DateInterval::Month->name => $query->whereBetween('date', [
+                Carbon::now()->month($month + 1)->startOfMonth(),
+                Carbon::now()->month($month + 1)->endOfMonth()
+            ]),
         };
     }
 

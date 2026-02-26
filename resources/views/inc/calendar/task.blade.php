@@ -9,21 +9,22 @@
                 @else border: 3px solid Black; background-color: MistyRose;
                 @endif">
                 
-          <div class="task-header d-flex justify-content-between align-items-center">        
+          <div class="task-header d-flex justify-content-between align-items-center"> 
                   <span>
                     @foreach($datalawyers as $ellawyer)
                       @if ($ellawyer -> id == $el -> lawyer)  
                         <a class="w-100" href="{{ route ('showTaskById', $el->id) }}">
-                          <img src="{{$ellawyer -> avatar}}" style="width: 20px;" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="исполнитель">
+                          <img src="{{$ellawyer -> avatar}}" style="width: 20px;" class="rounded-circle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="исполнитель - {{$ellawyer -> name}}">
                         </a>
                       @endif
                     @endforeach
-                  </span>
+                  </span>              
                   
-                  <div style="font-size: 12px;" class=" text-truncate text-center fw-normal" tabindex="0" data-bs-toggle="popover" 
+                  <div style="font-size: 8px;" class="text-truncate text-left fw-normal w-full" tabindex="0" data-bs-toggle="popover" 
                     data-bs-trigger="hover focus" title="{{$el -> name}}" data-bs-content="{{$el -> client}} - {{$el -> description}}">
                     <strong>{{$el -> name}}</strong>
                   </div>
+
                   <span  style="">
                       <i class="bi bi-tag-fill" id="tagspan{{$el -> id}}" style="color:  
                       @if($el -> tag == 'неважно') LightGray
@@ -34,6 +35,7 @@
                       @endif                
                       ;"></i>
                   </span>
+
                   @if($el -> new == 1)
                     <span  style="position: absolute; top:-15px; right:-10px;">
                       <span class="badge rounded-pill bg-danger">
@@ -41,6 +43,7 @@
                       </span>
                     </span>
                   @endif
+
           </div>                  
       </div>
 </div>

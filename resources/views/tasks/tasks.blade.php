@@ -67,12 +67,25 @@
                     <div class="col-12 col-md-3">{!! \App\Helpers\TaskHelper::formListMonths($request) !!}</div>
                 @endif
 
+                <div class="col-12 col-md-4">
+                    <select class="form-select" name="tasktime" id="tasktime">
+                        <option value=''>не выбрано</option>
+                        <option value="morehour" @if ($request->input('tasktime') == 'morehour') selected @endif>
+                            больше часа
+                        </option>
+                        <option value="lesshour" @if ($request->input('tasktime') == 'lesshour') selected @endif>
+                            меньше часа
+                        </option>
+                    </select>
+                </div>
+
+
             </div>
 
             <div class="row">
                 <div class="col-md-6 mt-2">
                     <div class="row justify-content-start">
-                        <div class="col-6 col-md-4">
+                        <div class="col-6 col-md-6">
                             <select class="form-select" name="checkedlawyer" id="checkedlawyer">
                                 <option value=''>не выбрано</option>
                                 @foreach ($datalawyers as $el)
@@ -83,7 +96,7 @@
                             </select>
                         </div>
 
-                        <div class="col-6 col-md-">
+                        <div class="col-6 col-md-6">
                             <select class="form-select" name="type" id="type">
                                 <option value="" @if ($request->input('type') == '') selected @endif>все типы</option>
                                 @foreach (\App\Models\Enums\Tasks\Type::cases() as $type)
@@ -93,6 +106,7 @@
                                 @endforeach
                             </select>
                         </div>
+
                     </div>
                 </div>
 
